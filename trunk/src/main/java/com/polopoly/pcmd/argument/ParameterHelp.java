@@ -53,7 +53,7 @@ public class ParameterHelp {
     }
 
     public void setArguments(Parser<?> parser, String string) {
-        arguments.add(new OptionHelp("<command line argument " + (arguments.size()+1) + ">", parser, string));
+        arguments.add(new OptionHelp("argument " + (arguments.size()+1), parser, string));
     }
 
     public void print(PrintStream stream) {

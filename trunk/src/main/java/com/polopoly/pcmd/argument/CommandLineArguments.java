@@ -23,6 +23,7 @@ public class CommandLineArguments implements Arguments {
     private Map<String, String> options = new HashMap<String, String>();
     private List<String> arguments = new ArrayList<String>();
     private PolopolyContext context;
+    private String toolName;
 
     public CommandLineArguments(String[] args, PolopolyContext context) throws ArgumentException {
         this(args);
@@ -52,7 +53,12 @@ public class CommandLineArguments implements Arguments {
                }
             }
             else {
-                arguments.add(arg);
+                if (arguments.size() == 0 && toolName == null) {
+                    toolName = arg;
+                }
+                else {
+                    arguments.add(arg);
+                }
             }
         }
     }
@@ -176,5 +182,13 @@ public class CommandLineArguments implements Arguments {
 
     public int getArgumentCount() {
         return arguments.size();
+    }
+
+    public String getToolName() throws NotProvidedException {
+        if (toolName == null) {
+            throw new NotProvidedException("Expected tool name as first argument.");
+        }
+
+        return toolName;
     }
 }
