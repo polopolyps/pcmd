@@ -11,6 +11,7 @@ import com.polopoly.application.ConnectionProperties;
 import com.polopoly.application.StandardApplication;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.CmClient;
+import com.polopoly.cm.client.EjbCmClient;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.cm.search.index.RmiSearchClient;
 import com.polopoly.management.ManagedBeanRegistry;
@@ -26,8 +27,8 @@ import com.polopoly.pcmd.tool.PolopolyContext;
 import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.pcmd.util.ToolRetriever;
 import com.polopoly.pcmd.util.ToolRetriever.NoSuchToolException;
+import com.polopoly.statistics.client.StatisticsClient;
 import com.polopoly.statistics.message.logging.UDPLogMsgClient;
-import com.polopoly.statistics.thinclient.StatisticsThinClient;
 import com.polopoly.user.server.Caller;
 import com.polopoly.user.server.UserId;
 
@@ -77,7 +78,7 @@ public class Main {
         CmClient cmClient = null;
         StandardApplication app = null;
         RmiSearchClient searchClient = null;
-        StatisticsThinClient statisticsThinClient = null;
+        StatisticsClient statisticsClient = null;
         UDPLogMsgClient logMsgClient = null;
 
         try {
@@ -90,7 +91,7 @@ public class Main {
                 new JMXManagedBeanRegistry(ManagementFactory.getPlatformMBeanServer());
 
             // Create a CM client ApplicationComponent.
-            cmClient = new CmClient();
+            cmClient = new EjbCmClient();
 
             // Create the Application.
             app = new StandardApplication("pcmd");
@@ -104,8 +105,8 @@ public class Main {
             searchClient = new RmiSearchClient();
             app.addApplicationComponent(searchClient);
 
-            statisticsThinClient = new StatisticsThinClient();
-            app.addApplicationComponent(statisticsThinClient);
+            statisticsClient = new StatisticsClient();
+            app.addApplicationComponent(statisticsClient);
 
             logMsgClient = new UDPLogMsgClient();
             app.addApplicationComponent(logMsgClient);

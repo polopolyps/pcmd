@@ -4,15 +4,15 @@
   <artifactId>pcmd</artifactId>
   <packaging>jar</packaging>
   <name>Polopoly Command Tool</name>
-  <version>9.9.3.0</version>
+  <version>9.10.0.0</version>
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.5</source>
+          <target>1.5</target>
         </configuration>
       </plugin>
      <plugin>
@@ -61,7 +61,7 @@
     <dependency>
       <groupId>com.polopoly</groupId>
       <artifactId>polopoly</artifactId>
-      <version>9.9.3</version>
+      <version>9.10.0</version>
     </dependency>
     <dependency>
         <groupId>jboss</groupId>
