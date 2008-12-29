@@ -1,0 +1,39 @@
+#!/bin/bash
+
+dir=`dirname $0`
+
+# if jbossall-client exists in the current directory, use it
+if [ -f $dir/jbossall-client.jar ] 
+then
+        classpath=$dir/jbossall-client.jar
+else
+        # otherwise, try to find a running jboss and use it's jbossall-client
+        jbossmain=`ps -ef | grep -o "[^ ]*/run.sh" | grep -v ]`
+
+        if [ "" = "$jbossmain" ]
+        then
+                echo "JBoss must either be running on the machine you are running pcmd from or the jbossall-client.jar must be placed in the same directory as the pcmd scrip
+t.";
+                exit;
+        fi
+
+        jbossdir=`dirname $jbossmain`
+        classpath=$jbossdir/../client/jbossall-client.jar
+fi
+
+if [ "" != "$POLOPOLY_SERVER" ]
+then
+        options="$options --server=$POLOPOLY_SERVER"
+fi
+
+if [ "" != "$POLOPOLY_USER" ]
+then
+        options="$options --user=$POLOPOLY_USER"
+fi
+
+if [ "" != "$POLOPOLY_PASSWORD" ]
+then
+        options="$options --password=$POLOPOLY_USER"
+fi
+
+java -cp $classpath:$dir/pcmd-9.9.3.0.jar com.polopoly.pcmd.Main$options $*
