@@ -78,6 +78,6 @@ public class InspectTool implements Tool<ContentIdListParameters> {
     }
 
     public String getHelp() {
-        return "Prints the componenents, content references and meta data of the specified objects.";
+        return "Prints the components, content references and meta data of the specified objects.";
     }
 }
