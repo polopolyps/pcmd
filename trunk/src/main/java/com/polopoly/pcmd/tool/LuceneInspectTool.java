@@ -7,6 +7,8 @@ import java.util.Enumeration;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TermQuery;
@@ -20,8 +22,6 @@ import com.polopoly.management.ServiceNotAvailableException;
 import com.polopoly.pcmd.util.ContentIdToContentIterator;
 
 public class LuceneInspectTool implements Tool<LuceneInspectParameters> {
-    public static final int DEFAULT_BATCH_SIZE = 100;
-
     public LuceneInspectParameters createParameters() {
         return new LuceneInspectParameters();
     }
@@ -48,9 +48,13 @@ public class LuceneInspectTool implements Tool<LuceneInspectParameters> {
 
                 Query query = new TermQuery(new Term("contentid", contentIdString));
 
+                BooleanQuery bool = new BooleanQuery();
+                bool.add(new BooleanClause(query, BooleanClause.Occur.MUST));
+                query = bool;
+
                 SearchResult result;
 
-                result = searchService.search(query, null, Sort.RELEVANCE, 0, 3);
+                result = searchService.search(query, null, Sort.INDEXORDER, 10, 0);
 
                 if (result.getContentIds().size() != 1) {
                     System.err.println("There were " + result.getContentIds().size() + " results when searching for " + contentIdString + ".");

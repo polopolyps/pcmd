@@ -32,7 +32,7 @@ public class LuceneTool implements Tool<LuceneParameters> {
             SearchResult result;
 
             do {
-                result = searchService.search(parameters.getQuery(), null, Sort.INDEXORDER, at, limit);
+                result = searchService.search(parameters.getQuery(), null, Sort.INDEXORDER, limit, at);
 
                 for (ContentId contentId : (List<ContentId>) result.getContentIds()) {
                     System.out.println(AbstractContentIdField.get(contentId, context));

@@ -32,8 +32,7 @@ public class CommandLineArguments implements Arguments {
     }
 
     public CommandLineArguments(String[] args) throws ArgumentException {
-        // argument 0 is the tool name
-        for (int i = 1; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++) {
             String arg = args[i];
 
             if (arg.startsWith("--")) {

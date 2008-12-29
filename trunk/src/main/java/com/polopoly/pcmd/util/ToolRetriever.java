@@ -21,6 +21,8 @@ public class ToolRetriever {
             throw new NoSuchToolException("The tool " + toolClassName + " did not implement the Tool interface.");
         } catch (InstantiationException e) {
             throw new NoSuchToolException("The tool " + toolClassName + " could not be instantiated: " + e);
+        } catch (NoClassDefFoundError e) {
+            throw new NoSuchToolException("The tool " + toolClassName + " could not be instantiated: " + e);
         } catch (IllegalAccessException e) {
             throw new NoSuchToolException("The tool " + toolClassName + " could not be instantiated: " + e);
         } catch (ClassNotFoundException e) {
