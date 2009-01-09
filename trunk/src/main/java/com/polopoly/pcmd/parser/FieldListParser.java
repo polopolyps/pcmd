@@ -88,7 +88,7 @@ public class FieldListParser implements Parser<List<Field>> {
         else if (field.equals(INPUT_TEMPLATE)) {
             return new InputTemplateField();
         }
-        else if (field.startsWith(NAME + ':')) {
+        else if (field.startsWith(COMPONENT + ':')) {
             return new ComponentField(new ComponentParser().parse(field.substring(NAME.length() + 1)));
         }
         else if (field.startsWith(CONTENT_REF + PREFIX_FIELD_SEPARATOR)) {
