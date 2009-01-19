@@ -51,7 +51,7 @@ public class GroupTool implements Tool<GroupParameters> {
             else {
                 for (Group group : parameters) {
                     System.out.println("group:" + group.getName());
-                    System.out.println("groupId:" + group.getGroupId());
+                    System.out.println("groupId:" + group.getGroupId().getGroupIdInt());
 
                     Iterator<PrincipalId> it = group.owners();
 

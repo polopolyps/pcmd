@@ -64,7 +64,16 @@ public class AclTool implements Tool<ContentIdListParameters> {
 
                         Iterator<String> permissions = entry.permissions();
 
+                        boolean first = true;
+
                         while (permissions.hasNext()) {
+                            if (first) {
+                                first = false;
+                            }
+                            else {
+                                System.out.print(",");
+                            }
+
                             System.out.print(permissions.next());
                         }
 
