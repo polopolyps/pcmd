@@ -2,6 +2,7 @@ package com.polopoly.pcmd.tool;
 
 import java.util.Iterator;
 
+import com.polopoly.cm.ContentId;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.ContentRead;
 import com.polopoly.pcmd.argument.ContentIdListParameters;
@@ -29,10 +30,19 @@ public class AclTool implements Tool<ContentIdListParameters> {
 
             System.out.println(AbstractContentIdField.get(content.getContentId(), context));
 
-            AclId aclId = content.getAclId();
+            try {
+                ContentId parent = content.getSecurityParentId();
+                int generation = 1;
 
-            if (aclId != null) {
-                try {
+                while (parent != null) {
+                    System.out.println("parent(" + generation++ + "):" + AbstractContentIdField.get(parent.getContentId(), context));
+
+                    parent = context.getPolicyCMServer().getContent(parent).getSecurityParentId();
+                }
+
+                AclId aclId = content.getAclId();
+
+                if (aclId != null) {
                     Acl acl = context.getUserServer().findAcl(aclId);
 
                     System.out.print("aclId:" + aclId.getAclIdInt() + " ");
@@ -60,17 +70,17 @@ public class AclTool implements Tool<ContentIdListParameters> {
 
                         System.out.println();
                     }
-                } catch (Exception e) {
-                    if (parameters.isStopOnException()) {
-                        throw new CMRuntimeException(e);
-                    }
-                    else {
-                        System.err.println(content.getContentId().getContentIdString() + ": " + e);
-                    }
                 }
-            }
-            else {
-                System.out.println("No ACL ID.");
+                else {
+                    System.out.println("No ACL ID.");
+                }
+            } catch (Exception e) {
+                if (parameters.isStopOnException()) {
+                    throw new CMRuntimeException(e);
+                }
+                else {
+                    System.err.println(content.getContentId().getContentIdString() + ": " + e);
+                }
             }
         }
     }

@@ -37,8 +37,7 @@ public class GroupTool implements Tool<GroupParameters> {
                         try {
                             Group group = userServer.findGroup(groupId);
 
-                            System.out.println("group:" + group.getName());
-                            System.out.println("groupId:" + groupId.getGroupIdInt());
+                            System.out.println(group.getName());
                         } catch (FinderException e) {
                             System.err.println(e.toString());
                             System.exit(1);
