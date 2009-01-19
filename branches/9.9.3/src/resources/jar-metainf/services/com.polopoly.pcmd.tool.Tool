@@ -11,3 +11,5 @@ com.polopoly.pcmd.tool.TouchTool
 com.polopoly.pcmd.tool.UnversionedTool
 com.polopoly.pcmd.tool.VersionsTool
 com.polopoly.pcmd.tool.UnlockTool
+com.polopoly.pcmd.tool.AclTool
+com.polopoly.pcmd.tool.GroupTool

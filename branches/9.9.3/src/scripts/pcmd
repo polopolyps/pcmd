@@ -2,6 +2,21 @@
 
 dir=`dirname $0`
 
+version=9.9.3.1
+polopolyversion=9.9.3
+luceneversion=1.9.1
+
+# if the JAR doesn't exist in the current directory, this is probably
+# a symlink to the script
+if [ ! -f $dir/pcmd-$version.jar ] 
+then
+    realscript=`readlink $0`
+    if [ "" != "$realscript" ]
+    then
+	dir=`dirname $realscript`
+    fi
+fi
+
 # if jbossall-client exists in the current directory, use it
 if [ -f $dir/jbossall-client.jar ] 
 then
@@ -9,7 +24,7 @@ then
 else
         # otherwise, try to find a running jboss and use it's jbossall-client
         # External JBoss:
-        jbossmain=`ps -ef | grep -o "[^ ]*/run.sh" | grep -v ]`
+        jbossmain=`ps -ef | grep org.jboss.Main | grep -o "[^ ]*/run.sh" | grep -v ]`
 
         if [ "" = "$jbossmain" ]
         then
@@ -28,6 +43,54 @@ t.";
         classpath=$jbossdir/../client/jbossall-client.jar
 fi
 
+polopolyjar=$dir/polopoly-$polopolyversion.jar
+
+if [ -f $polopolyjar ] 
+then
+    classpath=$classpath:$polopolyjar
+else 
+    polopolyjar=~/.m2/repository/com/polopoly/polopoly/$polopolyversion/polopoly-$polopolyversion.jar 
+    if [ -f $polopolyjar ]
+    then
+	classpath=$classpath:$polopolyjar
+    else
+        echo "Could not find Polopoly JAR, neither in $bin nor in $polopolyjar.";
+        exit;
+    fi
+fi
+
+lucenejar=$dir/lucene-core-$luceneversion.jar
+
+if [ -f $lucenejar ]
+then
+    classpath=$classpath:$lucenejar
+else
+    lucenejar=~/.m2/repository/org/apache/lucene/lucene-core/$luceneversion/lucene-core-$luceneversion.jar
+
+    if [ -f $lucenejar ]
+    then
+        classpath=$classpath:$lucenejar
+    else
+        echo "Could not find Lucene JAR, neither in $bin nor in $lucenejar.";
+        exit;
+    fi
+fi
+
+
+jar=$dir/pcmd-$version.jar
+
+if [ ! -f $jar ]
+then
+    # check if we can use JAR from MVN repository rather than current dir
+    jar=~/.m2/repository/com/polopoly/pcmd/$version/pcmd-$version.jar
+
+    if [ ! -f $jar ]
+    then
+	echo "The JAR for PCMD did not exist either in $dir, nor in Maven repository $jar.";
+	exit;
+    fi
+fi
+
 if [ "" != "$POLOPOLY_SERVER" ]
 then
         options="$options --server=$POLOPOLY_SERVER"
@@ -40,7 +103,7 @@ fi
 
 if [ "" != "$POLOPOLY_PASSWORD" ]
 then
-        options="$options --password=$POLOPOLY_PASSWORD"
+        options="$options --password=$POLOPOLY_USER"
 fi
 
-java -cp $classpath:$dir/pcmd-9.9.3.0.jar com.polopoly.pcmd.Main$options $*
+java -cp $classpath:$jar com.polopoly.pcmd.Main$options "$@"

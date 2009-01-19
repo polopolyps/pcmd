@@ -43,7 +43,7 @@ public class ContentIdListParameters implements Parameters {
 
     public void getHelp(ParameterHelp help) {
         help.addOption(STOPONEXCEPTION, new BooleanParser(),
-                "Whether to interrupt the operation when an exception occurrs or just ignore it and continue.");
+                "Whether to interrupt the operation when an exception occurs or just ignore it and continue.");
         help.setArguments(new ContentIdParser(), "A series of content IDs.");
     }
 }

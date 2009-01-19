@@ -4,7 +4,7 @@
   <artifactId>pcmd</artifactId>
   <packaging>jar</packaging>
   <name>Polopoly Command Tool</name>
-  <version>9.9.3.0</version>
+  <version>9.9.3.1</version>
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <plugins>

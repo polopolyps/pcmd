@@ -19,11 +19,14 @@ import com.polopoly.pcmd.argument.Parameters;
 import com.polopoly.pcmd.field.AbstractContentIdField;
 import com.polopoly.pcmd.parser.ComponentParser;
 import com.polopoly.pcmd.parser.ContentIdParser;
+import com.polopoly.pcmd.parser.ContentRefParser;
 import com.polopoly.pcmd.parser.IntegerParser;
 import com.polopoly.pcmd.util.Component;
+import com.polopoly.pcmd.util.ContentReference;
 
 public class SearchTool implements Tool<SearchToolParameters> {
     static final int DEFAULT_BATCH_SIZE = 500;
+    private static final String WILDCARD = "weirdUnlikelyString";
 
     public SearchToolParameters createParameters() {
         return new SearchToolParameters();
@@ -53,6 +56,35 @@ public class SearchTool implements Tool<SearchToolParameters> {
                 searchExpr = add(searchExpr, new ComponentValue(component.getGroup(),
                         component.getComponent(), "thisIsAVeryUnlikelyValue4711", ComponentValue.NOT_EQUALS));
             }
+        }
+
+        ContentReference contentref = parameters.getContentRef();
+        ContentId contentrefValue = parameters.getContentRefValue();
+
+        if (contentref != null || contentrefValue != null) {
+            String group = contentref.getGroup();
+
+            if (group == null || group.equals("*")) {
+                group = WILDCARD;
+            }
+
+            String name = contentref.getReference();
+
+            if (name == null || name.equals("*")) {
+                name = WILDCARD;
+            }
+
+            ReferringTo referringTo = new ReferringTo(group, name, contentrefValue);
+
+            if (group == WILDCARD) {
+                referringTo.setGroupOp(ReferringTo.NOT_EQUALS);
+            }
+
+            if (name == WILDCARD) {
+                referringTo.setNameOp(ReferringTo.NOT_EQUALS);
+            }
+
+            searchExpr = add(searchExpr, referringTo);
         }
 
         searchExpr = add(searchExpr, new Version(VersionedContentId.LATEST_COMMITTED_VERSION));
@@ -118,11 +150,15 @@ public class SearchTool implements Tool<SearchToolParameters> {
 class SearchToolParameters implements Parameters {
     private static final String MAJOR = "major";
     private static final String COMPONENT = "component";
+    private static final String CONTENTREF = "contentref";
+    private static final String CONTENTREFVALUE = "refersto";
     private static final String COMPONENTVALUE = "componentvalue";
     private static final String INPUTTEMPLATE = "inputtemplate";
     private static final String BATCH_SIZE = "batchsize";
     private ContentId inputTemplate;
     private Component component;
+    private ContentReference contentRef;
+    private ContentId contentRefValue;
     private String componentValue;
     private Integer major;
     private int batchSize = SearchTool.DEFAULT_BATCH_SIZE;
@@ -167,6 +203,22 @@ class SearchToolParameters implements Parameters {
         this.batchSize = batchSize;
     }
 
+    public void setContentRef(ContentReference contentRef) {
+        this.contentRef = contentRef;
+    }
+
+    public ContentReference getContentRef() {
+        return contentRef;
+    }
+
+    public void setContentRefValue(ContentId contentRefValue) {
+        this.contentRefValue = contentRefValue;
+    }
+
+    public ContentId getContentRefValue() {
+        return contentRefValue;
+    }
+
     public void parseParameters(Arguments args, PolopolyContext context)
             throws ArgumentException {
         try {
@@ -177,6 +229,16 @@ class SearchToolParameters implements Parameters {
         try {
             setComponent(args.getOption(COMPONENT, new ComponentParser()));
             setComponentValue(args.getOptionString(COMPONENTVALUE));
+        } catch (NotProvidedException e) {
+        }
+
+        try {
+            setContentRefValue(args.getOption(CONTENTREFVALUE, new ContentIdParser()));
+        } catch (NotProvidedException e) {
+        }
+
+        try {
+            setContentRef(args.getOption(CONTENTREF, new ContentRefParser()));
         } catch (NotProvidedException e) {
         }
 
@@ -195,6 +257,8 @@ class SearchToolParameters implements Parameters {
         help.addOption(MAJOR, new IntegerParser(), "Restrict search to objects with this major.");
         help.addOption(COMPONENT, new IntegerParser(), "Restrict search to objects with this component set (specify component value for a specific value).");
         help.addOption(COMPONENTVALUE, null, "Restrict search to objects with [component] set to this value.");
+        help.addOption(CONTENTREF, new ContentRefParser(), "Restrict search to objects with this content reference set (use * as wildcard).");
+        help.addOption(CONTENTREFVALUE, new ContentIdParser(), "Restrict search to [contentref] pointing to this object.");
         help.addOption(INPUTTEMPLATE, new ContentIdParser(), "Restrict search to objects with this input template.");
         help.addOption(BATCH_SIZE, new IntegerParser(), "The number of content IDs to request in one batch while searching. Defaults to " + SearchTool.DEFAULT_BATCH_SIZE + ".");
     }

@@ -26,8 +26,6 @@ import com.polopoly.pcmd.tool.PolopolyContext;
 import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.pcmd.util.ToolRetriever;
 import com.polopoly.pcmd.util.ToolRetriever.NoSuchToolException;
-import com.polopoly.statistics.message.logging.UDPLogMsgClient;
-import com.polopoly.statistics.thinclient.StatisticsThinClient;
 import com.polopoly.user.server.Caller;
 import com.polopoly.user.server.UserId;
 
@@ -77,8 +75,6 @@ public class Main {
         CmClient cmClient = null;
         StandardApplication app = null;
         RmiSearchClient searchClient = null;
-        StatisticsThinClient statisticsThinClient = null;
-        UDPLogMsgClient logMsgClient = null;
 
         try {
             // Create connection properties from an URL.
@@ -103,12 +99,6 @@ public class Main {
 
             searchClient = new RmiSearchClient();
             app.addApplicationComponent(searchClient);
-
-            statisticsThinClient = new StatisticsThinClient();
-            app.addApplicationComponent(statisticsThinClient);
-
-            logMsgClient = new UDPLogMsgClient();
-            app.addApplicationComponent(logMsgClient);
 
             // Read connection properties.
             app.readConnectionProperties(connectionProperties);
