@@ -112,10 +112,17 @@ class GroupParameters implements Parameters, Iterable<Group> {
                 if (groups.length == 0) {
                     System.err.println("No groups found with name or ID \"" + groupName + "\".");
                 }
+
+                for (int j = 0; j < groups.length; j++) {
+                    addGroup(userServer.findGroup(groups[i]));
+                }
             } catch (RemoteException e) {
                 System.err.println(e.toString());
                 System.exit(1);
-           }
+            } catch (FinderException e) {
+               System.err.println(e.toString());
+               System.exit(1);
+            }
         }
     }
 
