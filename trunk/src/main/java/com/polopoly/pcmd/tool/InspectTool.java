@@ -36,7 +36,6 @@ public class InspectTool implements Tool<ContentIdListParameters> {
                             content.getContentId().getContentIdString());
                 }
 
-
                 String[] groups = content.getComponentGroupNames();
 
                 for (String group : groups) {
