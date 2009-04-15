@@ -17,32 +17,40 @@ then
     fi
 fi
 
-# if jbossall-client exists in the current directory, use it
-if [ -f $dir/jbossall-client.jar ] 
+# try to find a running jboss and use it's jbossall-client
+# External JBoss:
+jbossmain=`ps aux | grep org.jboss.Main | grep -o "[^ ]*/bin/run.jar" | grep -v ]`
+
+if [ "" != "$jbossmain" ]
 then
-        classpath=$dir/jbossall-client.jar
-else
-        # otherwise, try to find a running jboss and use it's jbossall-client
-        # External JBoss:
-        jbossmain=`ps -ef | grep org.jboss.Main | grep -o "[^ ]*/run.sh" | grep -v ]`
-
-        if [ "" = "$jbossmain" ]
-        then
-	    # Internal JBoss
-	    jbossmain=`ps -ef | grep -o "[^ ]*/bin/run.jar" | grep -v ]`
-
-            if [ "" = "$jbossmain" ]
-            then
-                echo "JBoss must either be running on the machine you are running pcmd from or the jbossall-client.jar must be placed in the same directory as the pcmd script.";
-                exit;
-	    fi
-        fi
-
-        jbossdir=`dirname $jbossmain`
-        classpath=$jbossdir/../client/jbossall-client.jar
+    jbossdir=`dirname $jbossmain`
+    jbossjar=$jbossdir/../client/jbossall-client.jar
 fi
 
-peardir=`ps -ef | grep -v grep | grep -m 1 -o '[^: =]*polopoly/pear/' | head -n 1`
+if [ ! -f "$jbossjar" ] 
+then
+    jbossjar=$dir/jbossall-client.jar
+fi
+
+if [ ! -f "$jbossjar" ] 
+then
+    jbossjar=~/.m2/repository/jboss/jbossall-client/4.0.5.GA/jbossall-client-4.0.5.GA.jar
+fi
+
+if [ ! -f "$jbossjar" ] 
+then 
+    mvn dependency:resolve
+fi
+
+if [ -f "$jbossjar" ] 
+then
+    classpath=$jbossjar
+else 
+    echo "Could not find jbossall-client.jar, neither in $dir, nor in $jbossjar and JBoss doesn't seem to be running locally."
+    exit;
+fi
+
+peardir=`ps aux | grep -v grep | grep -m 1 -o '[^: =]*polopoly/pear/' | head -n 1`
 
 if [ "" != "$peardir" ]
 then
@@ -54,7 +62,7 @@ then
         lucenejar=$peardir../install/lib/lucene-core-1.9.1.jar
     fi
 fi
- 
+
 if [ ! -f "$polopolyjar" ] 
 then
     polopolyjar=$dir/polopoly-$polopolyversion.jar
@@ -63,6 +71,11 @@ fi
 if [ ! -f "$polopolyjar" ] 
 then
     polopolyjar=~/.m2/repository/com/polopoly/polopoly/$polopolyversion/polopoly-$polopolyversion.jar 
+fi
+
+if [ ! -f "$polopolyjar" ] 
+then 
+    mvn dependency:resolve
 fi
 
 if [ -f "$polopolyjar" ]
@@ -93,6 +106,11 @@ then
     lucenejar=~/.m2/repository/org/apache/lucene/lucene-core/$luceneversion/lucene-core-$luceneversion.jar
 fi
 
+if [ ! -f "$lucenejar" ] 
+then 
+    mvn dependency:resolve
+fi
+
 if [ -f "$lucenejar" ]
 then
     classpath=$classpath:$lucenejar
@@ -108,6 +126,11 @@ then
     # check if we can use JAR from MVN repository rather than current dir
     jar=~/.m2/repository/com/polopoly/pcmd/$version/pcmd-$version.jar
 
+    if [ ! -f $jar ]
+    then
+        mvn dependency:resolve
+    fi
+    
     if [ ! -f $jar ]
     then
 	echo "The JAR for PCMD did not exist either in $dir, nor in Maven repository $jar.";
@@ -128,6 +151,11 @@ fi
 if [ "" != "$POLOPOLY_PASSWORD" ]
 then
         options="$options --password=$POLOPOLY_USER"
+fi
+
+if [ "$1" == "--verbose" ]
+then
+        echo "Using $jbossjar, $polopolyjar, $lucenejar and $jar."
 fi
 
 java -cp $classpath:$jar com.polopoly.pcmd.Main$options "$@"
