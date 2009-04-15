@@ -28,6 +28,7 @@ public class FieldListParser implements Parser<List<Field>> {
     private static final String CONTENT_LIST = "contentlist";
     private static final String CONTENT_LIST_SIZE = "contentlistsize";
     public static final String ID = "id";
+    public static final String WORKFLOW = "workflow";
     private static final String INPUT_TEMPLATE = "inputtemplate";
     public static final String NUMERICAL_ID = "numericalid";
     private static final String LOCKER = "locker";

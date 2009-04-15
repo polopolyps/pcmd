@@ -1,10 +1,13 @@
 package com.polopoly.pcmd.tool;
 
 import com.polopoly.cm.ExternalContentId;
+import com.polopoly.cm.VersionedContentId;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.ContentRead;
+import com.polopoly.cm.client.WorkflowAware;
 import com.polopoly.pcmd.argument.ContentIdListParameters;
+import com.polopoly.pcmd.field.AbstractContentIdField;
 import com.polopoly.pcmd.field.ContentRefField;
 import com.polopoly.pcmd.parser.FieldListParser;
 import com.polopoly.pcmd.util.ContentIdToContentIterator;
@@ -34,6 +37,15 @@ public class InspectTool implements Tool<ContentIdListParameters> {
                 else {
                     System.out.println(FieldListParser.ID + FieldListParser.PREFIX_FIELD_SEPARATOR +
                             content.getContentId().getContentIdString());
+                }
+
+                if (content instanceof WorkflowAware) {
+                    VersionedContentId workflowId = ((WorkflowAware) content).getWorkflowId();
+
+                    if (workflowId != null) {
+                        System.out.println(FieldListParser.WORKFLOW + FieldListParser.PREFIX_FIELD_SEPARATOR +
+                                AbstractContentIdField.get(workflowId, context));
+                    }
                 }
 
                 String[] groups = content.getComponentGroupNames();
