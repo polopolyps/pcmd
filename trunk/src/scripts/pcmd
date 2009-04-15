@@ -2,13 +2,13 @@
 
 dir=`dirname $0`
 
-version=9.10.0.1
-polopolyversion=9.10.0
-luceneversion=1.9.1
+version=9.10.2.0
+polopolyversion=9.10.2
+luceneversion=2.3.1
 
 # if the JAR doesn't exist in the current directory, this is probably
 # a symlink to the script
-if [ ! -f $dir/pcmd-9.10.0.0.jar ] 
+if [ ! -f $dir/pcmd-$version.jar ] 
 then
     realscript=`readlink $0`
     if [ "" != "$realscript" ]
