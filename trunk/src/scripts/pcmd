@@ -2,7 +2,7 @@
 
 dir=`dirname $0`
 
-version=9.12.0.0
+version=9.12.0.2
 polopolyversion=9.12.0
 luceneversion=2.3.1
 
@@ -26,7 +26,7 @@ then
   <artifactId>pcmd-client</artifactId>
   <packaging>pom</packaging>
   <name>Polopoly Command Tool</name>
-  <version>9.12.0.0</version>
+  <version>$version</version>
   <repositories>
     <repository>
       <id>solutions</id>
@@ -38,12 +38,12 @@ then
     <dependency>
       <groupId>com.polopoly</groupId>
       <artifactId>polopoly</artifactId>
-      <version>9.12.0</version>
+      <version>$polopolyversion</version>
     </dependency>
     <dependency>
       <groupId>com.polopoly</groupId>
       <artifactId>pcmd</artifactId>
-      <version>9.12.0.0</version>
+      <version>$version</version>
     </dependency>
     <dependency>
         <groupId>jboss</groupId>
@@ -64,6 +64,11 @@ then
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
       <version>1.9.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all</artifactId> 
+      <version>1.6.1</version>
     </dependency>
   </dependencies>
 </project>
@@ -104,16 +109,16 @@ else
     exit;
 fi
 
-peardir=`ps aux | grep -v grep | grep -m 1 -o '[^: =]*polopoly/pear/' | head -n 1`
+peardir=`ps aux | grep java | grep -v grep | grep -m 1 -o '[^: =]*/pear' | head -n 1`
 
 if [ "" != "$peardir" ]
 then
-    polopolyjar=$peardir../install/lib/polopoly.jar
-    lucenejar=$peardir../install/lib/lucene-core-2.3.1.jar
+    polopolyjar=$peardir/../install/lib/polopoly.jar
+    lucenejar=$peardir/../install/lib/lucene-core-2.3.1.jar
     
     if [ ! -f "$lucenejar" ]
     then
-        lucenejar=$peardir../install/lib/lucene-core-1.9.1.jar
+        lucenejar=$peardir/../install/lib/lucene-core-1.9.1.jar
     fi
 fi
 
@@ -137,7 +142,7 @@ if [ -f "$polopolyjar" ]
 then
     classpath=$classpath:$polopolyjar
 else
-    echo "Could not find Polopoly JAR, neither in $peardir../install, nor in $dir nor in $polopolyjar.";
+    echo "Could not find Polopoly JAR, neither in $peardir/../install, nor in $dir nor in $polopolyjar.";
     exit;
 fi
 
@@ -171,8 +176,32 @@ if [ -f "$lucenejar" ]
 then
     classpath=$classpath:$lucenejar
 else
-    echo "Could not find Lucene JAR, neither in $peardir../install, nor in $bin nor in $lucenejar.";
+    echo "Could not find Lucene JAR, neither in $peardir/../install, nor in $bin nor in $lucenejar.";
     exit;
+fi
+
+if [ "$1" == "groovy" ] 
+then 
+    groovyjar=$dir/groovy.jar
+
+    if [ ! -f "$groovyjar" ] 
+    then 
+        groovyjar=~/.m2/repository/org/codehaus/groovy/groovy-all/1.6.1/groovy-all-1.6.1.jar
+    fi
+
+    if [ ! -f "$groovyjar" ] 
+    then 
+        cd $dir
+        mvn dependency:resolve
+    fi
+
+    if [ ! -f "$groovyjar" ] 
+    then 
+        echo "Could not find Groovy JAR, neither in maven repository nor in $groovyjar."
+        exit;
+    fi
+    
+    classpath=$classpath:$groovyjar
 fi
 
 jar=$dir/pcmd-$version.jar
@@ -210,9 +239,31 @@ then
         options="$options --password=$POLOPOLY_USER"
 fi
 
-if [ "$1" == "--verbose" ]
+if [ -d $dir/client-lib ] 
 then
-        echo "Using $jbossjar, $polopolyjar, $lucenejar and $jar."
+    for file in $dir/client-lib/*.jar ; do
+        clientlibs=$clientlibs:$file
+    done
 fi
 
-java -cp $classpath:$jar com.polopoly.pcmd.Main$options "$@"
+if [ -d "$peardir/../custom/client-lib" ] 
+then
+    for file in $peardir/../custom/client-lib/*.jar ; do
+        clientlibs=$clientlibs:$file
+    done
+fi
+
+if [ -d "$peardir/jar-repository/policy-lib" ] 
+then
+    for file in $peardir/jar-repository/policy-lib/*.jar ; do
+        clientlibs=$clientlibs:$file
+    done
+fi
+
+if [ "$1" == "--verbose" ]
+then
+    echo "Using $jbossjar, $polopolyjar, $lucenejar and $jar"
+    echo "Clientlibs are $clientlibs"
+fi
+
+java -cp $classpath$clientlibs:$jar com.polopoly.pcmd.Main$options "$@"

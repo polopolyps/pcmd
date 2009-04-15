@@ -36,7 +36,27 @@ public class ContentIdParser implements Parser<ContentId> {
                     context.getPolicyCMServer().findContentIdByExternalId(new ExternalContentId(string));
 
                 if (result == null) {
-                    throw new ParseException(this, string, "Expected a numerical content ID or an existing external ID");
+                    // maybe a versioned external ID? Note that this may be ambiguous if the external ID itself contains a dot
+                    int i = string.lastIndexOf('.');
+
+                    if (i != -1) {
+                        String versionString = string.substring(i+1);
+                        String externalId = string.substring(0, i);
+
+                        try {
+                            int version = Integer.parseInt(versionString);
+
+                            result =
+                                context.getPolicyCMServer().translateSymbolicContentId(
+                                        new ExternalContentId(new ExternalContentId(externalId), version));
+                        } catch (NumberFormatException e2) {
+                            // no, not a versioned external ID
+                        }
+                    }
+
+                    if (result == null) {
+                        throw new ParseException(this, string, "Expected a numerical content ID or an existing external ID");
+                    }
                 }
 
                 return result;

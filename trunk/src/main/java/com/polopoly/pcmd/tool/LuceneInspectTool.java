@@ -26,7 +26,7 @@ public class LuceneInspectTool implements Tool<LuceneInspectParameters> {
         return new LuceneInspectParameters();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "deprecation" })
     public void execute(PolopolyContext context, LuceneInspectParameters parameters) {
         try {
             RemoteSearchService searchService =

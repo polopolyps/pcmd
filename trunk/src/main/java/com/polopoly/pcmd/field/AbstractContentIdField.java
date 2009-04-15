@@ -36,7 +36,7 @@ public abstract class AbstractContentIdField implements Field {
                 if (externalId != null) {
                     if (contentId instanceof VersionedContentId &&
                          ((VersionedContentId) contentId).getVersion() != VersionedContentId.UNDEFINED_VERSION) {
-                             return externalId.getExternalId() +
+                             return externalId.getExternalId() + '.' +
                                  Integer.toString(((VersionedContentId) contentId).getVersion());
                     }
                     else {

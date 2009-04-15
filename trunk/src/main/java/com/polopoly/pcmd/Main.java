@@ -30,6 +30,7 @@ import com.polopoly.pcmd.util.ToolRetriever.NoSuchToolException;
 import com.polopoly.statistics.client.StatisticsClient;
 import com.polopoly.statistics.message.logging.UDPLogMsgClient;
 import com.polopoly.user.server.Caller;
+import com.polopoly.user.server.User;
 import com.polopoly.user.server.UserId;
 
 public class Main {
@@ -37,6 +38,7 @@ public class Main {
     public static final String SERVER = "server";
     public static final String USER = "user";
     public static final String PASSWORD = "password";
+    private static final String VERBOSE = "verbose";
 
     public static void main(String[] args) {
         Logger.getLogger("").setLevel(Level.WARNING);
@@ -135,8 +137,25 @@ public class Main {
                 Caller caller = context.getUserServer().loginAndMerge(userName, password, server.getCurrentCaller());
 
                 server.setCurrentCaller(caller);
+
+                if (arguments.getFlag(VERBOSE, false)) {
+                    System.err.println("Logged in user \"" + userName + "\".");
+                }
             } catch (NotProvidedException e) {
-                server.setCurrentCaller(new Caller(new UserId(userName), null, null));
+                UserId userId;
+
+                try {
+                    User user = context.getUserServer().getUserByLoginName(userName);
+                    userId = user.getUserId();
+                    server.setCurrentCaller(new Caller(userId, null, null));
+
+                    if (arguments.getFlag(VERBOSE, false)) {
+                        System.err.println("No password provided. Set caller to user \"" + userName + "\" but did not log in.");
+                    }
+                } catch (FinderException e2) {
+                    System.err.println("The specified user " + userName + " could not be found.");
+                    System.exit(1);
+                }
             } catch (FinderException e) {
                 System.err.println("The specified user " + userName + " could not be found.");
                 System.exit(1);

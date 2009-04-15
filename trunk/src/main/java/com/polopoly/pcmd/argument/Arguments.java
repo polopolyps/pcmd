@@ -8,7 +8,7 @@ import com.polopoly.pcmd.parser.Parser;
 public interface Arguments {
     Iterator<ContentId> getStdInContentIds() throws ArgumentException;
 
-    Iterator<ContentId> getArgumentContentIds() throws ArgumentException;
+    Iterator<ContentId> getArgumentContentIds(int i) throws ArgumentException;
 
     <T> T getOption(String name, Parser<T> parser) throws ArgumentException;
 
@@ -20,5 +20,5 @@ public interface Arguments {
 
     int getArgumentCount();
 
-    String getArgument(int i);
+    String getArgument(int i) throws NotProvidedException;
 }

@@ -16,6 +16,7 @@ import com.polopoly.pcmd.field.NameField;
 import com.polopoly.pcmd.field.NumericalContentIdField;
 import com.polopoly.pcmd.field.PaddingField;
 import com.polopoly.pcmd.field.VersionField;
+import com.polopoly.pcmd.field.WorkflowField;
 
 public class FieldListParser implements Parser<List<Field>> {
 
@@ -36,8 +37,9 @@ public class FieldListParser implements Parser<List<Field>> {
     public String getHelp() {
         return ID + " / " + NUMERICAL_ID + " / " + NAME + " / " + COMPONENT + ":" + new ComponentParser().getHelp() + " / " + CONTENT_REF + ":" +
             new ContentRefParser().getHelp() + " / " + CONTENT_LIST + "[:<content list>] / " +
-            CONTENT_LIST_SIZE + " / " + LOCKER + " / " + INPUT_TEMPLATE + " / " + COMMITTED +
-            " [:<content list>] (append :<width> to any field to pad it)";
+            CONTENT_LIST_SIZE + "[:<content list>] / " + LOCKER + " / " + INPUT_TEMPLATE + " / " + COMMITTED +
+            " / " + WORKFLOW +
+            " (append :<width> to any field to pad it)";
     }
 
     public List<Field> parse(String value) throws ParseException {
@@ -94,6 +96,9 @@ public class FieldListParser implements Parser<List<Field>> {
         }
         else if (field.startsWith(CONTENT_REF + PREFIX_FIELD_SEPARATOR)) {
             return new ContentRefField(new ContentRefParser().parse(field.substring(CONTENT_REF.length() + 1)));
+        }
+        else if (field.equals(WORKFLOW)) {
+            return new WorkflowField();
         }
         else if (field.startsWith(CONTENT_LIST_SIZE)) {
             String contentListName = null;

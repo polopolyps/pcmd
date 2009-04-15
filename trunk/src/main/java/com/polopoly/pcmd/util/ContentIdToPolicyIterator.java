@@ -5,26 +5,26 @@ import java.util.Iterator;
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
-import com.polopoly.cm.client.ContentRead;
+import com.polopoly.cm.policy.Policy;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.pcmd.tool.PolopolyContext;
 
-public class ContentIdToContentIterator extends AbstractContentIdIterator<ContentRead> {
+public class ContentIdToPolicyIterator extends AbstractContentIdIterator<Policy> {
 
-    public ContentIdToContentIterator(PolopolyContext context, Iterator<ContentId> contentIds, boolean stopOnException) {
+    public ContentIdToPolicyIterator(PolopolyContext context, Iterator<ContentId> contentIds, boolean stopOnException) {
         super(context, contentIds, stopOnException);
     }
 
-    public ContentIdToContentIterator(PolicyCMServer server, Iterator<ContentId> contentIds) {
+    public ContentIdToPolicyIterator(PolicyCMServer server, Iterator<ContentId> contentIds) {
         super(server, contentIds);
     }
 
     @Override
-    protected ContentRead fetch() {
+    protected Policy fetch() {
         while (it.hasNext()) {
             ContentId contentId = it.next();
             try {
-                ContentRead result = server.getContent(contentId);
+                Policy result = server.getPolicy(contentId);
 
                 count++;
 

@@ -115,7 +115,7 @@ public class SearchTool implements Tool<SearchToolParameters> {
                 }
 
                 for (int i = 0; i < ids.length; i++) {
-                    System.out.println(AbstractContentIdField.get(ids[i], context));
+                    System.out.println(AbstractContentIdField.get(ids[i].getContentId(), context));
                 }
 
                 if (ids.length < batchSize && at > 0) {

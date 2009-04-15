@@ -34,6 +34,7 @@ public class TouchTool implements Tool<ContentIdListParameters> {
 
                 // first retrieve the old policy so we are sure we can actually load it (i.e. that we have the policy class on the class path).
                 context.getPolicyCMServer().getPolicy(versionedId);
+
                 Policy policy = context.getPolicyCMServer().createContentVersion(versionedId);
 
                 policy.getContent().commit();

@@ -32,13 +32,21 @@ public class ContentIdListParameters implements Parameters {
     public void parseParameters(Arguments args, PolopolyContext context)
             throws ArgumentException {
         try {
-            setContentIds(args.getArgumentContentIds());
+            setContentIds(args.getArgumentContentIds(getFirstContentIdIndex()));
         }
         catch (NotProvidedException npe) {
             setContentIds(args.getStdInContentIds());
         }
 
         setStopOnException(args.getFlag(STOPONEXCEPTION, true));
+    }
+
+    /**
+     * Which is the first argument that is a content ID?
+     * Return e.g. 2 if the first two arguments are something else.
+     */
+    protected int getFirstContentIdIndex() {
+        return 0;
     }
 
     public void getHelp(ParameterHelp help) {
