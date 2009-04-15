@@ -2,6 +2,7 @@ package com.polopoly.pcmd.field;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.ExternalContentId;
+import com.polopoly.cm.VersionedContentId;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.ContentRead;
 import com.polopoly.pcmd.tool.PolopolyContext;
@@ -33,7 +34,14 @@ public abstract class AbstractContentIdField implements Field {
                 ExternalContentId externalId = referred.getExternalId();
 
                 if (externalId != null) {
-                    return externalId.getExternalId();
+                    if (contentId instanceof VersionedContentId &&
+                         ((VersionedContentId) contentId).getVersion() != VersionedContentId.UNDEFINED_VERSION) {
+                             return externalId.getExternalId() +
+                                 Integer.toString(((VersionedContentId) contentId).getVersion());
+                    }
+                    else {
+                        return externalId.getExternalId();
+                    }
                 }
             }
             catch (CMException e) {
