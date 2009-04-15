@@ -39,6 +39,7 @@ fi
 
 if [ ! -f "$jbossjar" ] 
 then 
+    cd $dir
     mvn dependency:resolve
 fi
 
@@ -52,7 +53,7 @@ fi
 
 peardir=`ps aux | grep -v grep | grep -m 1 -o '[^: =]*polopoly/pear/' | head -n 1`
 
-if [ "" != "$peardir" ]
+if [ "" != "$peardir" ]
 then
     polopolyjar=$peardir../install/lib/polopoly.jar
     lucenejar=$peardir../install/lib/lucene-core-2.3.1.jar
@@ -75,6 +76,7 @@ fi
 
 if [ ! -f "$polopolyjar" ] 
 then 
+    cd $dir
     mvn dependency:resolve
 fi
 
@@ -108,6 +110,7 @@ fi
 
 if [ ! -f "$lucenejar" ] 
 then 
+    cd $dir
     mvn dependency:resolve
 fi
 
@@ -128,6 +131,7 @@ then
 
     if [ ! -f $jar ]
     then
+        cd $dir
         mvn dependency:resolve
     fi
     
