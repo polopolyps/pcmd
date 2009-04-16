@@ -17,7 +17,7 @@ import com.polopoly.pcmd.parser.ContentIdParser;
 import com.polopoly.pcmd.parser.ParseException;
 import com.polopoly.pcmd.parser.Parser;
 import com.polopoly.pcmd.tool.PolopolyContext;
-import com.polopoly.pcmd.util.FetchingIterator;
+import com.polopoly.util.collection.FetchingIterator;
 
 public class CommandLineArguments implements Arguments {
     private Map<String, String> options = new HashMap<String, String>();
@@ -111,7 +111,7 @@ public class CommandLineArguments implements Arguments {
         }
     }
 
-    public String getOptionString(String name) throws ArgumentException {
+    public String getOptionString(String name) throws NotProvidedException {
         String optionString = options.get(name);
 
         if (optionString == null) {
@@ -124,7 +124,7 @@ public class CommandLineArguments implements Arguments {
     public String getOptionString(String name, String defaultValue) {
         try {
             return getOptionString(name);
-        } catch (ArgumentException e) {
+        } catch (NotProvidedException e) {
             return defaultValue;
         }
     }
@@ -181,6 +181,10 @@ public class CommandLineArguments implements Arguments {
         } catch (IndexOutOfBoundsException e) {
             throw new NotProvidedException("Argument " + (i+1));
         }
+    }
+
+    public <T> T getArgument(int i, Parser<T> parser) throws ArgumentException {
+        return parser.parse(getArgument(i));
     }
 
     public int getArgumentCount() {

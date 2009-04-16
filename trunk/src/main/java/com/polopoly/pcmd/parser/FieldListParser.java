@@ -15,6 +15,7 @@ import com.polopoly.pcmd.field.LockerField;
 import com.polopoly.pcmd.field.NameField;
 import com.polopoly.pcmd.field.NumericalContentIdField;
 import com.polopoly.pcmd.field.PaddingField;
+import com.polopoly.pcmd.field.VersionCountField;
 import com.polopoly.pcmd.field.VersionField;
 import com.polopoly.pcmd.field.WorkflowField;
 
@@ -22,6 +23,7 @@ public class FieldListParser implements Parser<List<Field>> {
 
     public static final char PREFIX_FIELD_SEPARATOR = ':';
     private static final String VERSION = "version";
+    private static final String VERSION_COUNT = "versioncount";
     private static final String COMMITTED = "committed";
     private static final String NAME = "name";
     public static final String COMPONENT = "component";
@@ -38,7 +40,7 @@ public class FieldListParser implements Parser<List<Field>> {
         return ID + " / " + NUMERICAL_ID + " / " + NAME + " / " + COMPONENT + ":" + new ComponentParser().getHelp() + " / " + CONTENT_REF + ":" +
             new ContentRefParser().getHelp() + " / " + CONTENT_LIST + "[:<content list>] / " +
             CONTENT_LIST_SIZE + "[:<content list>] / " + LOCKER + " / " + INPUT_TEMPLATE + " / " + COMMITTED +
-            " / " + WORKFLOW +
+            " / " + VERSION + " / " + VERSION_COUNT + " / " + WORKFLOW +
             " (append :<width> to any field to pad it)";
     }
 
@@ -87,6 +89,9 @@ public class FieldListParser implements Parser<List<Field>> {
         }
         else if (field.equals(VERSION)) {
             return new VersionField();
+        }
+        else if (field.equals(VERSION_COUNT)) {
+            return new VersionCountField();
         }
         else if (field.equals(INPUT_TEMPLATE)) {
             return new InputTemplateField();

@@ -14,11 +14,13 @@ public interface Arguments {
 
     boolean getFlag(String option, boolean defaultValue) throws ArgumentException;
 
-    String getOptionString(String string) throws ArgumentException;
+    String getOptionString(String string) throws NotProvidedException;
 
     String getOptionString(String fields, String defaultValue);
 
     int getArgumentCount();
 
     String getArgument(int i) throws NotProvidedException;
+
+    <T> T getArgument(int i, Parser<T> parser) throws ArgumentException;
 }

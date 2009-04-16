@@ -6,8 +6,9 @@ import java.util.Iterator;
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.pcmd.tool.PolopolyContext;
+import com.polopoly.util.collection.FetchingIterator;
 
-abstract class AbstractContentIdIterator<T> extends FetchingIterator<T> {
+public abstract class AbstractContentIdIterator<T> extends FetchingIterator<T> {
     protected Iterator<ContentId> it;
     protected PolicyCMServer server;
     protected boolean stopOnException;

@@ -1,4 +1,4 @@
-package com.polopoly.pcmd.util;
+package com.polopoly.util.policy;
 
 import com.polopoly.cm.client.CMException;
 

@@ -1,4 +1,4 @@
-package com.polopoly.pcmd.util;
+package com.polopoly.util.collection;
 
 import java.util.Iterator;
 

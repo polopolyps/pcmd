@@ -29,6 +29,7 @@ public class ListParameters extends ContentIdListParameters {
         super.getHelp(help);
 
         help.addOption(FIELDS, new FieldListParser(), "The fields to print for each object.");
+        help.addOption(DELIMITER, null, "The delimiter to print between fields.");
     }
 
     public void setFieldList(List<Field> fieldList) {
