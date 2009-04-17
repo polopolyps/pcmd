@@ -8,7 +8,7 @@ import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.InputTemplate;
 import com.polopoly.cm.policy.Policy;
-import com.polopoly.pcmd.field.AbstractContentIdField;
+import com.polopoly.pcmd.field.content.AbstractContentIdField;
 import com.polopoly.pcmd.util.AbstractContentIdIterator;
 import com.polopoly.pcmd.util.ContentIdToPolicyIterator;
 import com.polopoly.util.policy.PolicyGetException;

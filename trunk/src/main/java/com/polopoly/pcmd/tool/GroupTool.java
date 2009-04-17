@@ -11,7 +11,7 @@ import com.polopoly.pcmd.argument.ArgumentException;
 import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.ParameterHelp;
 import com.polopoly.pcmd.argument.Parameters;
-import com.polopoly.pcmd.field.AbstractPrincipalIdField;
+import com.polopoly.pcmd.field.content.AbstractPrincipalIdField;
 import com.polopoly.user.server.Group;
 import com.polopoly.user.server.GroupId;
 import com.polopoly.user.server.PrincipalId;

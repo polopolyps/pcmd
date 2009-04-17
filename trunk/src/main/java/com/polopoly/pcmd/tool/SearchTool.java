@@ -16,7 +16,7 @@ import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.NotProvidedException;
 import com.polopoly.pcmd.argument.ParameterHelp;
 import com.polopoly.pcmd.argument.Parameters;
-import com.polopoly.pcmd.field.AbstractContentIdField;
+import com.polopoly.pcmd.field.content.AbstractContentIdField;
 import com.polopoly.pcmd.parser.ComponentParser;
 import com.polopoly.pcmd.parser.ContentIdParser;
 import com.polopoly.pcmd.parser.ContentRefParser;

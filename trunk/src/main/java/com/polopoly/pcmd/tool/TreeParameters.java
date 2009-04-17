@@ -9,12 +9,12 @@ import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.NotProvidedException;
 import com.polopoly.pcmd.argument.ParameterHelp;
 import com.polopoly.pcmd.argument.Parameters;
-import com.polopoly.pcmd.field.Field;
+import com.polopoly.pcmd.field.content.Field;
 import com.polopoly.pcmd.parser.ContentIdParser;
-import com.polopoly.pcmd.parser.FieldListParser;
+import com.polopoly.pcmd.parser.ContentFieldListParser;
 import com.polopoly.pcmd.parser.IntegerParser;
 
-public class HierarchyParameters implements Parameters {
+public class TreeParameters implements Parameters {
     private static final int DEFAULT_DEPTH = 4;
     private static final String DEFAULT_ROOT = "p.RootDepartment";
 
@@ -31,7 +31,7 @@ public class HierarchyParameters implements Parameters {
         help.setArguments(new ContentIdParser(), "(optional) The root of the hierarchy to print.");
         help.addOption(DEPTH, new IntegerParser(),
             "The depth to print to. Defaults to " + DEFAULT_DEPTH + ".");
-        help.addOption(FIELDS, new FieldListParser(), "The fields to print for each object.");
+        help.addOption(FIELDS, new ContentFieldListParser(), "The fields to print for each object.");
         help.addOption(DELIMITER, null, "The delimiter to print between fields.");
     }
 
@@ -47,7 +47,7 @@ public class HierarchyParameters implements Parameters {
         } catch (NotProvidedException e) {
         }
 
-        fieldList = new FieldListParser().parse(args.getOptionString(FIELDS, "id,name"));
+        fieldList = new ContentFieldListParser().parse(args.getOptionString(FIELDS, "id,name"));
         delimiter = args.getOptionString(DELIMITER, " ");
     }
 

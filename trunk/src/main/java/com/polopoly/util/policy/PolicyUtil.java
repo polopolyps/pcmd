@@ -1,5 +1,8 @@
 package com.polopoly.util.policy;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,9 +15,13 @@ import com.polopoly.cm.policy.Policy;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.pcmd.util.CheckedCast;
 import com.polopoly.pcmd.util.CheckedClassCastException;
+import com.polopoly.util.collection.FetchingIterator;
 
-public class PolicyUtil {
+public class PolicyUtil implements Iterable<Policy> {
     private Policy policy;
+
+    private static final Logger logger =
+        Logger.getLogger(PolicyUtil.class.getName());
 
     public PolicyUtil(Policy policy) {
         this.policy = policy;
@@ -156,16 +163,62 @@ public class PolicyUtil {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public Iterator<Policy> iterator() {
+        try {
+            return new FetchingIterator<Policy>() {
+                Iterator<String> names = policy.getChildPolicyNames().iterator();
+
+                @Override
+                public void remove() {
+                }
+
+                @Override
+                protected Policy fetch() {
+                    if (names.hasNext()) {
+                        String childPolicyName = names.next();
+
+                        try {
+                            return policy.getChildPolicy(childPolicyName);
+                        } catch (CMException e) {
+                            logger.log(Level.WARNING, "While getting child policy " + childPolicyName + " of " + this + ": " + e.getMessage(), e);
+
+                            return fetch();
+                        }
+                    }
+
+                    return null;
+                }};
+        } catch (CMException e) {
+            logger.log(Level.WARNING, "While getting child policy names of " + this + ": " + e.getMessage(), e);
+
+            List<Policy> emptyList = Collections.emptyList();
+            return emptyList.iterator();
+        }
+    }
+
     @Override
     public String toString() {
         String name;
+
         try {
-            name = policy.getContent().getName();
-        } catch (CMException e) {
-            name = e.toString();
+            name = policy.getPolicyName();
+        } catch (CMException e1) {
+            name = null;
         }
 
-        return name +
-        " (" + policy.getContentId().getContentId().getContentIdString() + ")";
+        if ("".equals(name) || name == null) {
+            try {
+                name = policy.getContent().getName();
+            } catch (CMException e) {
+                name = e.toString();
+            }
+
+            return name +
+                " (" + policy.getContentId().getContentId().getContentIdString() + ")";
+        }
+        else {
+            return name + " in " + policy.getContentId().getContentId().getContentIdString();
+        }
     }
 }

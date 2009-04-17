@@ -12,6 +12,7 @@ import com.polopoly.application.StandardApplication;
 import com.polopoly.cm.client.CmClient;
 import com.polopoly.cm.client.EjbCmClient;
 import com.polopoly.cm.search.index.RmiSearchClient;
+import com.polopoly.community.client.CommunityClient;
 import com.polopoly.management.ManagedBeanRegistry;
 import com.polopoly.management.jmx.JMXManagedBeanRegistry;
 import com.polopoly.pcmd.tool.PolopolyContext;
@@ -116,6 +117,13 @@ public class PolopolyClient {
 
             logMsgClient = new UDPLogMsgClient();
             app.addApplicationComponent(logMsgClient);
+
+            try {
+                CommunityClient communityClient = new CommunityClient(cmClient);
+                app.addApplicationComponent(communityClient);
+            } catch (Throwable t) {
+                // Community JAR not present in class path. Skip it.
+            }
 
             // Read connection properties.
             app.readConnectionProperties(connectionProperties);

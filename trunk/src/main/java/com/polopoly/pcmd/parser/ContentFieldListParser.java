@@ -3,23 +3,23 @@ package com.polopoly.pcmd.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.polopoly.pcmd.field.CommittedField;
-import com.polopoly.pcmd.field.ComponentField;
-import com.polopoly.pcmd.field.ContentIdField;
-import com.polopoly.pcmd.field.ContentListField;
-import com.polopoly.pcmd.field.ContentListSizeField;
-import com.polopoly.pcmd.field.ContentRefField;
-import com.polopoly.pcmd.field.Field;
-import com.polopoly.pcmd.field.InputTemplateField;
-import com.polopoly.pcmd.field.LockerField;
-import com.polopoly.pcmd.field.NameField;
-import com.polopoly.pcmd.field.NumericalContentIdField;
-import com.polopoly.pcmd.field.PaddingField;
-import com.polopoly.pcmd.field.VersionCountField;
-import com.polopoly.pcmd.field.VersionField;
-import com.polopoly.pcmd.field.WorkflowField;
+import com.polopoly.pcmd.field.content.CommittedField;
+import com.polopoly.pcmd.field.content.ComponentField;
+import com.polopoly.pcmd.field.content.ContentIdField;
+import com.polopoly.pcmd.field.content.ContentListField;
+import com.polopoly.pcmd.field.content.ContentListSizeField;
+import com.polopoly.pcmd.field.content.ContentRefField;
+import com.polopoly.pcmd.field.content.Field;
+import com.polopoly.pcmd.field.content.InputTemplateField;
+import com.polopoly.pcmd.field.content.LockerField;
+import com.polopoly.pcmd.field.content.NameField;
+import com.polopoly.pcmd.field.content.NumericalContentIdField;
+import com.polopoly.pcmd.field.content.PaddingField;
+import com.polopoly.pcmd.field.content.VersionCountField;
+import com.polopoly.pcmd.field.content.VersionField;
+import com.polopoly.pcmd.field.content.WorkflowField;
 
-public class FieldListParser implements Parser<List<Field>> {
+public class ContentFieldListParser implements Parser<List<Field>> {
 
     public static final char PREFIX_FIELD_SEPARATOR = ':';
     private static final String VERSION = "version";

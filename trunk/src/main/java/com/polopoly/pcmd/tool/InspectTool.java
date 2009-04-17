@@ -7,9 +7,9 @@ import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.ContentRead;
 import com.polopoly.cm.client.WorkflowAware;
 import com.polopoly.pcmd.argument.ContentIdListParameters;
-import com.polopoly.pcmd.field.AbstractContentIdField;
-import com.polopoly.pcmd.field.ContentRefField;
-import com.polopoly.pcmd.parser.FieldListParser;
+import com.polopoly.pcmd.field.content.AbstractContentIdField;
+import com.polopoly.pcmd.field.content.ContentRefField;
+import com.polopoly.pcmd.parser.ContentFieldListParser;
 import com.polopoly.pcmd.util.ContentIdToContentIterator;
 
 public class InspectTool implements Tool<ContentIdListParameters> {
@@ -29,13 +29,13 @@ public class InspectTool implements Tool<ContentIdListParameters> {
                 ExternalContentId externalId = content.getExternalId();
 
                 if (externalId != null) {
-                    System.out.println(FieldListParser.ID + FieldListParser.PREFIX_FIELD_SEPARATOR +
+                    System.out.println(ContentFieldListParser.ID + ContentFieldListParser.PREFIX_FIELD_SEPARATOR +
                             externalId.getExternalId());
-                    System.out.println(FieldListParser.NUMERICAL_ID + FieldListParser.PREFIX_FIELD_SEPARATOR +
+                    System.out.println(ContentFieldListParser.NUMERICAL_ID + ContentFieldListParser.PREFIX_FIELD_SEPARATOR +
                             content.getContentId().getContentIdString());
                 }
                 else {
-                    System.out.println(FieldListParser.ID + FieldListParser.PREFIX_FIELD_SEPARATOR +
+                    System.out.println(ContentFieldListParser.ID + ContentFieldListParser.PREFIX_FIELD_SEPARATOR +
                             content.getContentId().getContentIdString());
                 }
 
@@ -43,7 +43,7 @@ public class InspectTool implements Tool<ContentIdListParameters> {
                     VersionedContentId workflowId = ((WorkflowAware) content).getWorkflowId();
 
                     if (workflowId != null) {
-                        System.out.println(FieldListParser.WORKFLOW + FieldListParser.PREFIX_FIELD_SEPARATOR +
+                        System.out.println(ContentFieldListParser.WORKFLOW + ContentFieldListParser.PREFIX_FIELD_SEPARATOR +
                                 AbstractContentIdField.get(workflowId, context));
                     }
                 }
@@ -57,7 +57,7 @@ public class InspectTool implements Tool<ContentIdListParameters> {
                         String value = content.getComponent(group, name);
 
                         System.out.println(
-                                FieldListParser.COMPONENT + FieldListParser.PREFIX_FIELD_SEPARATOR +
+                                ContentFieldListParser.COMPONENT + ContentFieldListParser.PREFIX_FIELD_SEPARATOR +
                                 group + ':' + name + '=' + value);
                     }
 
@@ -70,7 +70,7 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 
                     for (String name : names) {
                         System.out.println(
-                                FieldListParser.CONTENT_REF + FieldListParser.PREFIX_FIELD_SEPARATOR +
+                                ContentFieldListParser.CONTENT_REF + ContentFieldListParser.PREFIX_FIELD_SEPARATOR +
                                 group + ':' + name + '=' + new ContentRefField(group, name).get(content, context));
                     }
 

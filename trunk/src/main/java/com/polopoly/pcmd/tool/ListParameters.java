@@ -6,8 +6,8 @@ import com.polopoly.pcmd.argument.ArgumentException;
 import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.ContentIdListParameters;
 import com.polopoly.pcmd.argument.ParameterHelp;
-import com.polopoly.pcmd.field.Field;
-import com.polopoly.pcmd.parser.FieldListParser;
+import com.polopoly.pcmd.field.content.Field;
+import com.polopoly.pcmd.parser.ContentFieldListParser;
 
 public class ListParameters extends ContentIdListParameters {
     private static final String FIELDS = "fields";
@@ -20,7 +20,7 @@ public class ListParameters extends ContentIdListParameters {
             throws ArgumentException {
         super.parseParameters(args, context);
 
-        fieldList = new FieldListParser().parse(args.getOptionString(FIELDS, "numericalid,name"));
+        fieldList = new ContentFieldListParser().parse(args.getOptionString(FIELDS, "numericalid,name"));
         delimiter = args.getOptionString(DELIMITER, " ");
     }
 
@@ -28,7 +28,7 @@ public class ListParameters extends ContentIdListParameters {
     public void getHelp(ParameterHelp help) {
         super.getHelp(help);
 
-        help.addOption(FIELDS, new FieldListParser(), "The fields to print for each object.");
+        help.addOption(FIELDS, new ContentFieldListParser(), "The fields to print for each object.");
         help.addOption(DELIMITER, null, "The delimiter to print between fields.");
     }
 

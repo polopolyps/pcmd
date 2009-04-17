@@ -1,4 +1,4 @@
-package com.polopoly.pcmd.field;
+package com.polopoly.pcmd.field.content;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.ExternalContentId;

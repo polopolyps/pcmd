@@ -1,14 +1,14 @@
-package com.polopoly.pcmd.field;
+package com.polopoly.pcmd.field.content;
 
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.ContentRead;
 import com.polopoly.cm.collections.ContentList;
 import com.polopoly.pcmd.tool.PolopolyContext;
 
-public class ContentListField implements Field {
+public class ContentListSizeField implements Field {
     private String contentListName;
 
-    public ContentListField(String contentList) {
+    public ContentListSizeField(String contentList) {
         this.contentListName = contentList;
     }
 
@@ -23,19 +23,7 @@ public class ContentListField implements Field {
                 contentList = content.getContentList(contentListName);
             }
 
-            int size = contentList.size();
-
-            StringBuffer result = new StringBuffer(100);
-
-            for (int i = 0; i < size; i++) {
-                if (i > 0) {
-                    result.append(",");
-                }
-
-                result.append(AbstractContentIdField.get(contentList.getEntry(i).getReferredContentId(), context));
-            }
-
-            return result.toString();
+            return Integer.toString(contentList.size());
         } catch (CMException e) {
             System.err.println(content.getContentId().getContentIdString() + ": " + e);
 

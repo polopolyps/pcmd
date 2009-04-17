@@ -6,19 +6,19 @@ import java.util.List;
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.ContentRead;
-import com.polopoly.pcmd.field.Field;
+import com.polopoly.pcmd.field.content.Field;
 import com.polopoly.pcmd.util.ContentListIterator;
 
-public class HierarchyTool implements Tool<HierarchyParameters>{
+public class TreeTool implements Tool<TreeParameters> {
     private static final int TAB_SIZE = 2;
     private List<Field> fieldList;
     private String delimiter;
 
-    public HierarchyParameters createParameters() {
-        return new HierarchyParameters();
+    public TreeParameters createParameters() {
+        return new TreeParameters();
     }
 
-    public void execute(PolopolyContext context, HierarchyParameters parameters) {
+    public void execute(PolopolyContext context, TreeParameters parameters) {
         fieldList = parameters.getFieldList();
         delimiter = parameters.getDelimiter();
 
