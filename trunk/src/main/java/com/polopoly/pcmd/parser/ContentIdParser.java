@@ -6,7 +6,7 @@ import com.polopoly.cm.ExternalContentId;
 import com.polopoly.cm.VersionedContentId;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
-import com.polopoly.pcmd.tool.PolopolyContext;
+import com.polopoly.util.client.PolopolyContext;
 
 public class ContentIdParser implements Parser<ContentId> {
     private PolopolyContext context;

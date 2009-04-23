@@ -15,7 +15,6 @@ import com.polopoly.cm.search.index.RmiSearchClient;
 import com.polopoly.community.client.CommunityClient;
 import com.polopoly.management.ManagedBeanRegistry;
 import com.polopoly.management.jmx.JMXManagedBeanRegistry;
-import com.polopoly.pcmd.tool.PolopolyContext;
 import com.polopoly.statistics.client.StatisticsClient;
 import com.polopoly.statistics.message.logging.UDPLogMsgClient;
 import com.polopoly.user.server.Caller;

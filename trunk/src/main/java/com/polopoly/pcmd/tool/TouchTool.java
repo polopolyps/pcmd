@@ -8,6 +8,7 @@ import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.policy.Policy;
 import com.polopoly.pcmd.argument.ContentIdListParameters;
+import com.polopoly.util.client.PolopolyContext;
 
 public class TouchTool implements Tool<ContentIdListParameters> {
 

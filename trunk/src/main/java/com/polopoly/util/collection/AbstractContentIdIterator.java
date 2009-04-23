@@ -1,12 +1,11 @@
-package com.polopoly.pcmd.util;
+package com.polopoly.util.collection;
 
 import java.io.PrintStream;
 import java.util.Iterator;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.policy.PolicyCMServer;
-import com.polopoly.pcmd.tool.PolopolyContext;
-import com.polopoly.util.collection.FetchingIterator;
+import com.polopoly.util.client.PolopolyContext;
 
 public abstract class AbstractContentIdIterator<T> extends FetchingIterator<T> {
     protected Iterator<ContentId> it;

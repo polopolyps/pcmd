@@ -16,6 +16,7 @@ import com.polopoly.user.server.Group;
 import com.polopoly.user.server.GroupId;
 import com.polopoly.user.server.PrincipalId;
 import com.polopoly.user.server.UserServer;
+import com.polopoly.util.client.PolopolyContext;
 
 public class GroupTool implements Tool<GroupParameters> {
     public GroupParameters createParameters() {

@@ -1,13 +1,13 @@
 package com.polopoly.pcmd.tool;
 
-import java.util.Iterator;
 import java.util.List;
 
-import com.polopoly.cm.ContentId;
-import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.ContentRead;
 import com.polopoly.pcmd.field.content.Field;
-import com.polopoly.pcmd.util.ContentListIterator;
+import com.polopoly.util.client.PolopolyContext;
+import com.polopoly.util.exception.ContentGetException;
+import com.polopoly.util.policy.ContentListUtil;
+import static com.polopoly.util.policy.Util.*;
 
 public class TreeTool implements Tool<TreeParameters> {
     private static final int TAB_SIZE = 2;
@@ -22,47 +22,46 @@ public class TreeTool implements Tool<TreeParameters> {
         fieldList = parameters.getFieldList();
         delimiter = parameters.getDelimiter();
 
-        printLevel(0, parameters.getRoot(), context);
+        try {
+            printLevel(0, parameters.getDepth(), context.getContent(parameters.getRoot()), context);
+        } catch (ContentGetException e) {
+            System.err.print(e.toString());
+        }
     }
 
     private StringBuffer line = new StringBuffer(100);
 
-    @SuppressWarnings("unchecked")
-    private void printLevel(int level, ContentId root, PolopolyContext context) {
+    private void printLevel(int level, int depth, ContentRead root, PolopolyContext context) {
         line.setLength(0);
 
-        try {
-            ContentRead content = context.getPolicyCMServer().getContent(root);
+        int tab = level * TAB_SIZE;
 
-            int tab = level * TAB_SIZE;
+        for (int j = 0; j < tab; j++) {
+            System.out.print(' ');
+        }
 
-            for (int j = 0; j < tab; j++) {
-                System.out.print(' ');
+        boolean first = true;
+
+        for (Field field : fieldList) {
+            if (!first) {
+                line.append(delimiter);
+            }
+            else {
+                first = false;
             }
 
-            boolean first = true;
+            line.append(field.get(root, context));
+        }
 
-            for (Field field : fieldList) {
-                if (!first) {
-                    line.append(delimiter);
-                }
-                else {
-                    first = false;
-                }
+        System.out.println(line);
 
-                line.append(field.get(content, context));
+        if (level < depth-1) {
+            ContentListUtil contentListUtil =
+                util(root, context).getContentList();
+
+            for (ContentRead child : contentListUtil.getContents()) {
+                printLevel(level+1, depth, child, context);
             }
-
-            System.out.println(line);
-
-            Iterator<ContentId> it =
-                new ContentListIterator(content.getContentList());
-
-            while (it.hasNext()) {
-                printLevel(level+1, it.next().getContentId(), context);
-            }
-        } catch (CMException e) {
-            System.err.print(e.toString());
         }
     }
 

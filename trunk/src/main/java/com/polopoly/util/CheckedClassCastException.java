@@ -1,4 +1,4 @@
-package com.polopoly.pcmd.util;
+package com.polopoly.util;
 
 import com.polopoly.cm.policy.Policy;
 

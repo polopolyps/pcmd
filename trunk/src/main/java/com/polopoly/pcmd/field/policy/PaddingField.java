@@ -1,7 +1,7 @@
 package com.polopoly.pcmd.field.policy;
 
 import com.polopoly.cm.policy.Policy;
-import com.polopoly.pcmd.tool.PolopolyContext;
+import com.polopoly.util.client.PolopolyContext;
 
 public class PaddingField implements PolicyField {
     private PolicyField field;

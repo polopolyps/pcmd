@@ -8,6 +8,7 @@ import com.polopoly.pcmd.argument.ContentIdListParameters;
 import com.polopoly.pcmd.argument.ParameterHelp;
 import com.polopoly.pcmd.field.content.Field;
 import com.polopoly.pcmd.parser.ContentFieldListParser;
+import com.polopoly.util.client.PolopolyContext;
 
 public class ListParameters extends ContentIdListParameters {
     private static final String FIELDS = "fields";

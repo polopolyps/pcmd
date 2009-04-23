@@ -5,7 +5,7 @@ import java.util.Iterator;
 import com.polopoly.cm.ContentId;
 import com.polopoly.pcmd.parser.BooleanParser;
 import com.polopoly.pcmd.parser.ContentIdParser;
-import com.polopoly.pcmd.tool.PolopolyContext;
+import com.polopoly.util.client.PolopolyContext;
 
 public class ContentIdListParameters implements Parameters {
     static final String STOPONEXCEPTION = "stoponexception";

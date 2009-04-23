@@ -1,4 +1,4 @@
-package com.polopoly.pcmd.util;
+package com.polopoly.util.collection;
 
 import java.util.Iterator;
 
@@ -7,7 +7,7 @@ import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.policy.Policy;
 import com.polopoly.cm.policy.PolicyCMServer;
-import com.polopoly.pcmd.tool.PolopolyContext;
+import com.polopoly.util.client.PolopolyContext;
 
 public class ContentIdToPolicyIterator extends AbstractContentIdIterator<Policy> {
 

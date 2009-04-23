@@ -1,4 +1,4 @@
-package com.polopoly.pcmd.util;
+package com.polopoly.util.collection;
 
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -6,8 +6,8 @@ import java.util.logging.Logger;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.client.CMException;
+import com.polopoly.cm.collections.ContentList;
 import com.polopoly.cm.collections.ContentListRead;
-import com.polopoly.util.collection.FetchingIterator;
 
 public class ContentListIterator extends FetchingIterator<ContentId> implements Iterable<ContentId> {
     private static final Logger logger =
@@ -40,6 +40,9 @@ public class ContentListIterator extends FetchingIterator<ContentId> implements 
 
     @Override
     public void remove() {
+        ((ContentList) contentList).remove(i-1);
+        i--;
+        size--;
     }
 
     public Iterator<ContentId> iterator() {

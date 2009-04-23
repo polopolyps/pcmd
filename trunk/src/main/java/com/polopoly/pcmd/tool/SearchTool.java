@@ -23,6 +23,7 @@ import com.polopoly.pcmd.parser.ContentRefParser;
 import com.polopoly.pcmd.parser.IntegerParser;
 import com.polopoly.pcmd.util.Component;
 import com.polopoly.pcmd.util.ContentReference;
+import com.polopoly.util.client.PolopolyContext;
 
 public class SearchTool implements Tool<SearchToolParameters> {
     static final int DEFAULT_BATCH_SIZE = 500;

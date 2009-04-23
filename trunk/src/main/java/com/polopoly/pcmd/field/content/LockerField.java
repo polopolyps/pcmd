@@ -6,9 +6,9 @@ import javax.ejb.CreateException;
 
 import com.polopoly.cm.LockInfo;
 import com.polopoly.cm.client.ContentRead;
-import com.polopoly.pcmd.tool.PolopolyContext;
 import com.polopoly.user.server.Caller;
 import com.polopoly.user.server.User;
+import com.polopoly.util.client.PolopolyContext;
 
 public class LockerField implements Field {
 

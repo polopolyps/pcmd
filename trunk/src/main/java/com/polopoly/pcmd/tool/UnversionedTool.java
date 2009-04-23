@@ -7,6 +7,7 @@ import com.polopoly.pcmd.argument.ArgumentException;
 import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.ContentIdListParameters;
 import com.polopoly.pcmd.argument.NotProvidedException;
+import com.polopoly.util.client.PolopolyContext;
 
 public class UnversionedTool implements Tool<ContentIdListParameters> {
 

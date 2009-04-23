@@ -4,6 +4,7 @@ import com.polopoly.pcmd.argument.ArgumentException;
 import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.ParameterHelp;
 import com.polopoly.pcmd.argument.Parameters;
+import com.polopoly.util.client.PolopolyContext;
 
 public class LuceneParametersBase implements Parameters {
     static final String DEFAULT_INDEX = "DefaultIndex";

@@ -4,6 +4,7 @@ import com.polopoly.pcmd.argument.ArgumentException;
 import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.ParameterHelp;
 import com.polopoly.pcmd.argument.Parameters;
+import com.polopoly.util.client.PolopolyContext;
 
 public class HelpParameters implements Parameters {
     private String tool;

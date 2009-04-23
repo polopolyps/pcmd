@@ -8,8 +8,8 @@ import com.polopoly.cm.collections.ContentList;
 import com.polopoly.cm.policy.ContentPolicy;
 import com.polopoly.cm.policy.Policy;
 import com.polopoly.pcmd.field.content.AbstractContentIdField;
-import com.polopoly.pcmd.tool.PolopolyContext;
-import com.polopoly.pcmd.util.ContentListIterator;
+import com.polopoly.util.client.PolopolyContext;
+import com.polopoly.util.collection.ContentListIterator;
 
 public class ValueField implements PolicyField {
     public String get(Policy policy, PolopolyContext context) {

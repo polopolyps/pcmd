@@ -1,6 +1,8 @@
 package com.polopoly.pcmd.util;
 
 import com.polopoly.pcmd.tool.Tool;
+import com.polopoly.util.CheckedCast;
+import com.polopoly.util.CheckedClassCastException;
 
 public class ToolRetriever {
     public static class NoSuchToolException extends Exception {

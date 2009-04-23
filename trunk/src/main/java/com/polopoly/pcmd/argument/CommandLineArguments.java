@@ -16,7 +16,7 @@ import com.polopoly.pcmd.parser.BooleanParser;
 import com.polopoly.pcmd.parser.ContentIdParser;
 import com.polopoly.pcmd.parser.ParseException;
 import com.polopoly.pcmd.parser.Parser;
-import com.polopoly.pcmd.tool.PolopolyContext;
+import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.FetchingIterator;
 
 public class CommandLineArguments implements Arguments {

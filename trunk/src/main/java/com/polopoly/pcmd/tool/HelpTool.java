@@ -6,6 +6,7 @@ import com.polopoly.pcmd.argument.ParameterHelp;
 import com.polopoly.pcmd.util.ToolRetriever;
 import com.polopoly.pcmd.util.ToolRetriever.NoSuchToolException;
 import com.polopoly.util.client.ClientFromArgumentsConfigurator;
+import com.polopoly.util.client.PolopolyContext;
 
 public class HelpTool implements Tool<HelpParameters> {
     public HelpParameters createParameters() {

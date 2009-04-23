@@ -10,7 +10,8 @@ import com.polopoly.pcmd.argument.ContentIdListParameters;
 import com.polopoly.pcmd.field.content.AbstractContentIdField;
 import com.polopoly.pcmd.field.content.ContentRefField;
 import com.polopoly.pcmd.parser.ContentFieldListParser;
-import com.polopoly.pcmd.util.ContentIdToContentIterator;
+import com.polopoly.util.client.PolopolyContext;
+import com.polopoly.util.collection.ContentIdToContentIterator;
 
 public class InspectTool implements Tool<ContentIdListParameters> {
     public ContentIdListParameters createParameters() {

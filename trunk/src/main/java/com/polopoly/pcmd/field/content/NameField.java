@@ -2,7 +2,7 @@ package com.polopoly.pcmd.field.content;
 
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.ContentRead;
-import com.polopoly.pcmd.tool.PolopolyContext;
+import com.polopoly.util.client.PolopolyContext;
 
 public class NameField implements Field {
 

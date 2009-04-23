@@ -8,11 +8,12 @@ import com.polopoly.cm.client.ContentRead;
 import com.polopoly.pcmd.argument.ContentIdListParameters;
 import com.polopoly.pcmd.field.content.AbstractContentIdField;
 import com.polopoly.pcmd.field.content.AbstractPrincipalIdField;
-import com.polopoly.pcmd.util.ContentIdToContentIterator;
 import com.polopoly.user.server.Acl;
 import com.polopoly.user.server.AclEntry;
 import com.polopoly.user.server.AclId;
 import com.polopoly.user.server.PrincipalId;
+import com.polopoly.util.client.PolopolyContext;
+import com.polopoly.util.collection.ContentIdToContentIterator;
 
 public class AclTool implements Tool<ContentIdListParameters> {
     public ContentIdListParameters createParameters() {

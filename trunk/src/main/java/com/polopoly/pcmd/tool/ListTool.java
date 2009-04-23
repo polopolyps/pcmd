@@ -2,7 +2,8 @@ package com.polopoly.pcmd.tool;
 
 import com.polopoly.cm.client.ContentRead;
 import com.polopoly.pcmd.field.content.Field;
-import com.polopoly.pcmd.util.ContentIdToContentIterator;
+import com.polopoly.util.client.PolopolyContext;
+import com.polopoly.util.collection.ContentIdToContentIterator;
 
 public class ListTool implements Tool<ListParameters> {
     public ListParameters createParameters() {

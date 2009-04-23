@@ -5,6 +5,7 @@ import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.ContentIdListParameters;
 import com.polopoly.pcmd.argument.ParameterHelp;
 import com.polopoly.pcmd.parser.BooleanParser;
+import com.polopoly.util.client.PolopolyContext;
 
 public class VersionsParameters extends ContentIdListParameters {
     private static final String PRINT_SYMBOLIC_VERSIONS = "symbolic";

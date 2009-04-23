@@ -5,13 +5,13 @@ import java.rmi.RemoteException;
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 
-import com.polopoly.pcmd.tool.PolopolyContext;
 import com.polopoly.user.server.Group;
 import com.polopoly.user.server.GroupId;
 import com.polopoly.user.server.PrincipalId;
 import com.polopoly.user.server.User;
 import com.polopoly.user.server.UserId;
 import com.polopoly.user.server.UserServer;
+import com.polopoly.util.client.PolopolyContext;
 
 public class AbstractPrincipalIdField {
     public static String get(PrincipalId principalId, PolopolyContext context) {

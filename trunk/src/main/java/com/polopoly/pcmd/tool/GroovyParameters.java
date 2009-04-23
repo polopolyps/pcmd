@@ -6,6 +6,7 @@ import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.ParameterHelp;
 import com.polopoly.pcmd.parser.ContentIdParser;
 import com.polopoly.pcmd.parser.IntegerParser;
+import com.polopoly.util.client.PolopolyContext;
 
 public class GroovyParameters extends ListParameters {
     private static final String MODIFY = "modify";

@@ -1,5 +1,6 @@
 package com.polopoly.pcmd.tool;
 
+import static com.polopoly.util.policy.Util.util;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 
@@ -9,12 +10,13 @@ import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.InputTemplate;
 import com.polopoly.cm.policy.Policy;
 import com.polopoly.pcmd.field.content.AbstractContentIdField;
-import com.polopoly.pcmd.util.AbstractContentIdIterator;
-import com.polopoly.pcmd.util.ContentIdToPolicyIterator;
-import com.polopoly.util.policy.PolicyGetException;
+import com.polopoly.util.client.PolopolyContext;
+import com.polopoly.util.collection.AbstractContentIdIterator;
+import com.polopoly.util.collection.ContentIdToPolicyIterator;
+import com.polopoly.util.exception.PolicyCreateException;
+import com.polopoly.util.exception.PolicyGetException;
+import com.polopoly.util.exception.PolicyModificationException;
 import com.polopoly.util.policy.PolicyModification;
-import com.polopoly.util.policy.PolicyModificationException;
-import com.polopoly.util.policy.PolicyUtil;
 
 public class GroovyTool implements Tool<GroovyParameters> {
     private boolean doBreak = false;
@@ -63,7 +65,7 @@ public class GroovyTool implements Tool<GroovyParameters> {
             InputTemplate inputTemplate = null;
 
             try {
-                inputTemplate = PolicyUtil.getPolicy(context.getPolicyCMServer(),
+                inputTemplate = context.getPolicy(
                         parameters.getInputTemplate(), InputTemplate.class);
             } catch (PolicyGetException e) {
                 System.err.println("Could not use specified input template \"" + parameters.getInputTemplate() + "\" of input template " + parameters.getInputTemplate().getContentIdString() + ": " + e);
@@ -89,9 +91,9 @@ public class GroovyTool implements Tool<GroovyParameters> {
                         left--;
 
                         try {
-                            return context.getPolicyCMServer().createContent(major, parameters.getInputTemplate());
-                        } catch (CMException e) {
-                            System.err.println("Could not create content with input template " + parameters.getInputTemplate() + ": " + e);
+                            return context.createPolicy(major, parameters.getInputTemplate());
+                        } catch (PolicyCreateException e) {
+                            System.err.println(e.getMessage());
                             System.exit(1);
 
                             return null;
@@ -115,7 +117,7 @@ public class GroovyTool implements Tool<GroovyParameters> {
 
             if (parameters.isModify() || isCreate) {
                 try {
-                    new PolicyUtil(policy).modify(new PolicyModification<Policy>() {
+                    util(policy).modify(new PolicyModification<Policy>() {
                         public void modify(Policy newVersion) throws CMException {
                             execute(newVersion, shell, binding, context, parameters);
                         }}, Policy.class, !isCreate);

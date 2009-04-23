@@ -13,6 +13,7 @@ import com.polopoly.pcmd.field.content.Field;
 import com.polopoly.pcmd.parser.ContentIdParser;
 import com.polopoly.pcmd.parser.ContentFieldListParser;
 import com.polopoly.pcmd.parser.IntegerParser;
+import com.polopoly.util.client.PolopolyContext;
 
 public class TreeParameters implements Parameters {
     private static final int DEFAULT_DEPTH = 4;

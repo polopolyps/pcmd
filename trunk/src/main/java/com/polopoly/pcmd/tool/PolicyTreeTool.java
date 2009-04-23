@@ -1,11 +1,13 @@
 package com.polopoly.pcmd.tool;
 
+import static com.polopoly.util.policy.Util.util;
+
 import java.util.List;
 
 import com.polopoly.cm.policy.Policy;
 import com.polopoly.pcmd.field.policy.PolicyField;
-import com.polopoly.pcmd.util.ContentIdToPolicyIterator;
-import com.polopoly.util.policy.PolicyUtil;
+import com.polopoly.util.client.PolopolyContext;
+import com.polopoly.util.collection.ContentIdToPolicyIterator;
 
 public class PolicyTreeTool implements Tool<PolicyTreeParameters> {
     private static final int TAB_SIZE = 2;
@@ -62,7 +64,7 @@ public class PolicyTreeTool implements Tool<PolicyTreeParameters> {
 
         System.out.println(line);
 
-        for (Policy childPolicy : new PolicyUtil(policy)) {
+        for (Policy childPolicy : util(policy)) {
             printLevel(level+1, childPolicy, context);
         }
     }

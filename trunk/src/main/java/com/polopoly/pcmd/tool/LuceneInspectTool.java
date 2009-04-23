@@ -19,7 +19,8 @@ import com.polopoly.cm.search.index.search.RemoteSearchService;
 import com.polopoly.cm.search.index.search.SearchHit;
 import com.polopoly.cm.search.index.search.SearchResult;
 import com.polopoly.management.ServiceNotAvailableException;
-import com.polopoly.pcmd.util.ContentIdToContentIterator;
+import com.polopoly.util.client.PolopolyContext;
+import com.polopoly.util.collection.ContentIdToContentIterator;
 
 public class LuceneInspectTool implements Tool<LuceneInspectParameters> {
     public LuceneInspectParameters createParameters() {

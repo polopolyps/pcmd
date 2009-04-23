@@ -2,7 +2,7 @@ package com.polopoly.pcmd.field.policy;
 
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.policy.Policy;
-import com.polopoly.pcmd.tool.PolopolyContext;
+import com.polopoly.util.client.PolopolyContext;
 
 public class InputTemplateField implements PolicyField {
     public String get(Policy policy, PolopolyContext context) {

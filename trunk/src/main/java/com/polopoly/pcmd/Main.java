@@ -11,12 +11,12 @@ import com.polopoly.pcmd.argument.NotProvidedException;
 import com.polopoly.pcmd.argument.Parameters;
 import com.polopoly.pcmd.tool.HelpParameters;
 import com.polopoly.pcmd.tool.HelpTool;
-import com.polopoly.pcmd.tool.PolopolyContext;
 import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.pcmd.util.ToolRetriever;
 import com.polopoly.pcmd.util.ToolRetriever.NoSuchToolException;
 import com.polopoly.util.client.ClientFromArgumentsConfigurator;
 import com.polopoly.util.client.PolopolyClient;
+import com.polopoly.util.client.PolopolyContext;
 
 public class Main {
     public static void main(String[] args) {

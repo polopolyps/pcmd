@@ -12,6 +12,7 @@ import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.NotProvidedException;
 import com.polopoly.pcmd.argument.ParameterHelp;
 import com.polopoly.pcmd.parser.IntegerParser;
+import com.polopoly.util.client.PolopolyContext;
 
 public class LuceneParameters extends LuceneParametersBase {
     private static final String BATCH_SIZE = "batchsize";
