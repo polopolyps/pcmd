@@ -161,21 +161,17 @@ public class PolicyUtil implements Iterable<Policy> {
         try {
             policyModification.modify(CheckedCast.cast(policy, klass));
         } catch (CMException e) {
-            try {
-                server.abortContent(policy);
-            } catch (CMException e1) {
-            }
+            abort(server, createNewVersion);
 
             throw new PolicyModificationException("While modifying " +
                     policy.getContentId().getContentId().getContentIdString() + ": " + e.getMessage(), e);
         } catch (RuntimeException e) {
-            try {
-                server.abortContent(policy);
-            } catch (CMException e1) {
-            }
+            abort(server, createNewVersion);
 
             throw e;
         } catch (CheckedClassCastException e) {
+            abort(server, createNewVersion);
+
             throw new PolicyModificationException("New version of " +
                     policy.getContentId().getContentId().getContentIdString() + ": " + e.getMessage(), e);
         }
@@ -183,13 +179,17 @@ public class PolicyUtil implements Iterable<Policy> {
         try {
             policy.getContent().commit();
         } catch (CMException e) {
-            try {
-                server.abortContent(policy);
-            } catch (CMException e1) {
-            }
+            abort(server, createNewVersion);
 
             throw new PolicyModificationException("While modifying " +
                     policy.getContentId().getContentId().getContentIdString() + ": " + e.getMessage(), e);
+        }
+    }
+
+    private void abort(PolicyCMServer server, boolean createNewVersion) {
+        try {
+            server.abortContent(policy, createNewVersion);
+        } catch (CMException e1) {
         }
     }
 
