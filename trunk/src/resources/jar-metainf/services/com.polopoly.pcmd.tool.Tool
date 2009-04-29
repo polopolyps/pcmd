@@ -13,3 +13,7 @@ com.polopoly.pcmd.tool.VersionsTool
 com.polopoly.pcmd.tool.UnlockTool
 com.polopoly.pcmd.tool.AclTool
 com.polopoly.pcmd.tool.GroupTool
+com.polopoly.pcmd.tool.GroovyTool
+com.polopoly.pcmd.tool.TreeTool
+com.polopoly.pcmd.tool.PolicyTreeTool
+com.polopoly.pcmd.tool.WorkflowActionsTool
