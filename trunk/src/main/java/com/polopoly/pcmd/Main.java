@@ -1,5 +1,6 @@
 package com.polopoly.pcmd;
 
+import java.net.ConnectException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,6 +51,7 @@ public class Main {
         }
 
         PolopolyClient client = new PolopolyClient();
+        client.setAttachStatisticsService(false);
 
         try {
             new ClientFromArgumentsConfigurator(client, arguments).configure();
@@ -74,7 +76,9 @@ public class Main {
             System.err.println("Call with \"help\" as argument to see a list of tools.");
         } catch (ArgumentException e) {
             System.err.println("Invalid parameters: " + e.getMessage());
-
+            System.exit(1);
+        } catch (ConnectException e) {
+            System.err.println(e.getMessage());
             System.exit(1);
         } catch (Exception e) {
             e.printStackTrace(System.err);

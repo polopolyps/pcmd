@@ -44,8 +44,10 @@ public class PolopolyContext {
     }
 
     public PolopolyContext(CmClient cmClient, RmiSearchClient searchClient) {
-        this.server = cmClient.getPolicyCMServer();
         this.client = cmClient;
+        if (cmClient != null) {
+            this.server = cmClient.getPolicyCMServer();
+        }
         this.searchClient = searchClient;
     }
 
@@ -67,7 +69,7 @@ public class PolopolyContext {
 
     public RmiSearchClient getSearchClient() {
         if (searchClient == null) {
-            throw new CMRuntimeException("No search client provided to context constructor.");
+            throw new CMRuntimeException("Search service is not attached.");
         }
 
         return searchClient;
