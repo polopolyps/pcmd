@@ -1,5 +1,7 @@
 package com.polopoly.pcmd.field.content;
 
+import static com.polopoly.cm.VersionedContentId.UNDEFINED_VERSION;
+
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.ExternalContentId;
 import com.polopoly.cm.VersionedContentId;
@@ -35,7 +37,7 @@ public abstract class AbstractContentIdField implements Field {
 
                 if (externalId != null) {
                     if (contentId instanceof VersionedContentId &&
-                         ((VersionedContentId) contentId).getVersion() != VersionedContentId.UNDEFINED_VERSION) {
+                         ((VersionedContentId) contentId).getVersion() != UNDEFINED_VERSION) {
                              return externalId.getExternalId() + '.' +
                                  Integer.toString(((VersionedContentId) contentId).getVersion());
                     }
@@ -46,6 +48,11 @@ public abstract class AbstractContentIdField implements Field {
             }
             catch (CMException e) {
                 System.err.println(contentId.getContentIdString() + ": " + e.toString());
+            }
+
+            if (contentId instanceof VersionedContentId &&
+                    ((VersionedContentId) contentId).getVersion() == UNDEFINED_VERSION) {
+                contentId = contentId.getContentId();
             }
 
             return contentId.getContentIdString();

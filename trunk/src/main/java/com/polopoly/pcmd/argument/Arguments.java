@@ -14,9 +14,9 @@ public interface Arguments {
 
     boolean getFlag(String option, boolean defaultValue) throws ArgumentException;
 
-    String getOptionString(String string) throws NotProvidedException;
+    String getOptionString(String option) throws NotProvidedException;
 
-    String getOptionString(String fields, String defaultValue);
+    String getOptionString(String option, String defaultValue);
 
     int getArgumentCount();
 

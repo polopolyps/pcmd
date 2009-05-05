@@ -52,8 +52,8 @@ public class ParameterHelp {
         options.add(new OptionHelp("--" + option, parser, help));
     }
 
-    public void setArguments(Parser<?> parser, String string) {
-        arguments.add(new OptionHelp("argument " + (arguments.size()+1), parser, string));
+    public void setArguments(Parser<?> parser, String help) {
+        arguments.add(new OptionHelp("argument " + (arguments.size()+1), parser, help));
     }
 
     public void print(PrintStream stream) {

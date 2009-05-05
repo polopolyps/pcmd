@@ -8,14 +8,13 @@ import com.polopoly.pcmd.argument.ArgumentException;
 import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.NotProvidedException;
 import com.polopoly.pcmd.argument.ParameterHelp;
-import com.polopoly.pcmd.argument.Parameters;
 import com.polopoly.pcmd.field.content.Field;
-import com.polopoly.pcmd.parser.ContentIdParser;
 import com.polopoly.pcmd.parser.ContentFieldListParser;
+import com.polopoly.pcmd.parser.ContentIdParser;
 import com.polopoly.pcmd.parser.IntegerParser;
 import com.polopoly.util.client.PolopolyContext;
 
-public class TreeParameters implements Parameters {
+public class TreeParameters implements FieldListParameters {
     private static final int DEFAULT_DEPTH = 4;
     private static final String DEFAULT_ROOT = "p.RootDepartment";
 

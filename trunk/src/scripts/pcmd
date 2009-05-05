@@ -115,6 +115,7 @@ if [ "" != "$peardir" ]
 then
     polopolyjar=$peardir/../install/lib/polopoly.jar
     lucenejar=$peardir/../install/lib/lucene-core-2.3.1.jar
+    classpath=$classpath:$peardir/../install/lib/metadata-extractor-2.3.1.jar
     
     if [ ! -f "$lucenejar" ]
     then

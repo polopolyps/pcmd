@@ -17,3 +17,4 @@ com.polopoly.pcmd.tool.GroovyTool
 com.polopoly.pcmd.tool.TreeTool
 com.polopoly.pcmd.tool.PolicyTreeTool
 com.polopoly.pcmd.tool.WorkflowActionsTool
+com.polopoly.pcmd.tool.ParentsTool

@@ -34,6 +34,126 @@ public class GroovyTool implements Tool<GroovyParameters> {
         binding.setVariable("context", context);
         binding.setVariable("binding", binding);
 
+        createUtilityMethods(shell);
+
+        AbstractContentIdIterator<Policy> it = null;
+
+        boolean isCreate = parameters.getCreate() > 0;
+
+        if (isCreate) {
+            it = getIteratorOfCreatedObjects(context, parameters);
+        }
+        else {
+            it = getIteratorOfSpecifiedObjects(context, parameters);
+        }
+
+        int count = 0;
+
+        while (it.hasNext()) {
+            binding.setVariable("count", count);
+
+            Policy policy = it.next();
+
+            if (parameters.isModify() || isCreate) {
+                try {
+                    util(policy).modify(new PolicyModification<Policy>() {
+                        public void modify(Policy newVersion) throws CMException {
+                            execute(newVersion, shell, binding, context, parameters);
+                        }}, Policy.class, !isCreate);
+                } catch (PolicyModificationException e) {
+                    handleModificationException(e, policy, parameters);
+                }
+            }
+            else {
+                execute(policy, shell, binding, context, parameters);
+            }
+
+            if (doBreak) {
+                break;
+            }
+
+            count++;
+        }
+
+        it.printInfo(System.err);
+    }
+
+    private void handleModificationException(PolicyModificationException e,
+            Policy policy, final GroovyParameters parameters) {
+        String errorString = "While running Groovy code for " + policy.getContentId().getContentId().getContentIdString() + ": " + e;
+
+        if (parameters.isStopOnException()) {
+            throw new CMRuntimeException(errorString, e);
+        }
+        else {
+            System.err.println(errorString);
+        }
+    }
+
+    private ContentIdToPolicyIterator getIteratorOfSpecifiedObjects(
+            final PolopolyContext context, final GroovyParameters parameters) {
+        return new ContentIdToPolicyIterator(context, parameters.getContentIds(), parameters.isStopOnException());
+    }
+
+    private AbstractContentIdIterator<Policy> getIteratorOfCreatedObjects(
+            final PolopolyContext context, final GroovyParameters parameters) {
+        final InputTemplate inputTemplate = getInputTemplate(context, parameters);
+
+        try {
+            return new AbstractContentIdIterator<Policy>(context, null, parameters.isStopOnException()) {
+                int major = getMajor(context, inputTemplate);
+                private int left = parameters.getCreate();
+
+                @Override
+                protected Policy fetch() {
+                    if (left == 0) {
+                        return null;
+                    }
+
+                    left--;
+
+                    try {
+                        return context.createPolicy(major, parameters.getInputTemplate());
+                    } catch (PolicyCreateException e) {
+                        System.err.println(e.getMessage());
+                        System.exit(1);
+
+                        return null;
+                    }
+                }};
+        } catch (CMException e) {
+            System.err.println("Could not fetch major of input template " + parameters.getInputTemplate().getContentIdString() + " was unknown.");
+            System.exit(1);
+
+            return null;
+        }
+    }
+
+    private int getMajor(final PolopolyContext context,
+            InputTemplate inputTemplate) throws CMException {
+        String majorString = inputTemplate.getComponent("polopoly.Client", "major");
+
+        final int major;
+
+        major = context.getPolicyCMServer().getMajorByName(majorString);
+        return major;
+    }
+
+    private InputTemplate getInputTemplate(final PolopolyContext context,
+            final GroovyParameters parameters) {
+        InputTemplate inputTemplate = null;
+
+        try {
+            inputTemplate = context.getPolicy(
+                    parameters.getInputTemplate(), InputTemplate.class);
+        } catch (PolicyGetException e) {
+            System.err.println("Could not use specified input template \"" + parameters.getInputTemplate() + "\" of input template " + parameters.getInputTemplate().getContentIdString() + ": " + e);
+            System.exit(1);
+        }
+        return inputTemplate;
+    }
+
+    private void createUtilityMethods(final GroovyShell shell) {
         shell.evaluate("com.polopoly.cm.policy.Policy.metaClass.propertyMissing = { String field -> " +
                     "childPolicy = delegate.getChildPolicy(field); " +
         		"if (childPolicy instanceof com.polopoly.cm.app.policy.SingleValued) {" +
@@ -56,94 +176,7 @@ public class GroovyTool implements Tool<GroovyParameters> {
                 "}");
 
         shell.evaluate("com.polopoly.cm.collections.ContentListRead.metaClass.iterator = { -> " +
-                "return new com.polopoly.pcmd.util.ContentListIterator(delegate) }");
-
-        AbstractContentIdIterator<Policy> it = null;
-
-        boolean isCreate = parameters.getCreate() > 0;
-        if (isCreate) {
-            InputTemplate inputTemplate = null;
-
-            try {
-                inputTemplate = context.getPolicy(
-                        parameters.getInputTemplate(), InputTemplate.class);
-            } catch (PolicyGetException e) {
-                System.err.println("Could not use specified input template \"" + parameters.getInputTemplate() + "\" of input template " + parameters.getInputTemplate().getContentIdString() + ": " + e);
-                System.exit(1);
-            }
-
-            try {
-                String majorString = inputTemplate.getComponent("polopoly.Client", "major");
-
-                final int major;
-
-                major = context.getPolicyCMServer().getMajorByName(majorString);
-
-                it = new AbstractContentIdIterator<Policy>(context, null, parameters.isStopOnException()) {
-                    private int left = parameters.getCreate();
-
-                    @Override
-                    protected Policy fetch() {
-                        if (left == 0) {
-                            return null;
-                        }
-
-                        left--;
-
-                        try {
-                            return context.createPolicy(major, parameters.getInputTemplate());
-                        } catch (PolicyCreateException e) {
-                            System.err.println(e.getMessage());
-                            System.exit(1);
-
-                            return null;
-                        }
-                    }};
-            } catch (CMException e) {
-                System.err.println("Could not fetch major of input template " + parameters.getInputTemplate().getContentIdString() + " was unknown.");
-                System.exit(1);
-            }
-        }
-        else {
-            it = new ContentIdToPolicyIterator(context, parameters.getContentIds(), parameters.isStopOnException());
-        }
-
-        int count = 0;
-
-        while (it.hasNext()) {
-            binding.setVariable("count", count);
-
-            Policy policy = it.next();
-
-            if (parameters.isModify() || isCreate) {
-                try {
-                    util(policy).modify(new PolicyModification<Policy>() {
-                        public void modify(Policy newVersion) throws CMException {
-                            execute(newVersion, shell, binding, context, parameters);
-                        }}, Policy.class, !isCreate);
-                } catch (PolicyModificationException e) {
-                    String errorString = "While running Groovy code for " + policy.getContentId().getContentId().getContentIdString() + ": " + e;
-
-                    if (parameters.isStopOnException()) {
-                        throw new CMRuntimeException(errorString, e);
-                    }
-                    else {
-                        System.err.println(errorString);
-                    }
-                }
-            }
-            else {
-                execute(policy, shell, binding, context, parameters);
-            }
-
-            if (doBreak) {
-                break;
-            }
-
-            count++;
-        }
-
-        it.printInfo(System.err);
+                "return new com.polopoly.util.collection.ContentListIterator(delegate) }");
     }
 
     private void execute(Policy policy, GroovyShell shell, Binding binding,

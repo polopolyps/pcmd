@@ -3,12 +3,13 @@ package com.polopoly.pcmd.tool;
 import com.polopoly.cm.ContentId;
 import com.polopoly.pcmd.argument.ArgumentException;
 import com.polopoly.pcmd.argument.Arguments;
+import com.polopoly.pcmd.argument.ContentIdListParameters;
 import com.polopoly.pcmd.argument.ParameterHelp;
 import com.polopoly.pcmd.parser.ContentIdParser;
 import com.polopoly.pcmd.parser.IntegerParser;
 import com.polopoly.util.client.PolopolyContext;
 
-public class GroovyParameters extends ListParameters {
+public class GroovyParameters extends ContentIdListParameters {
     private static final String MODIFY = "modify";
     private static final String QUIET = "quiet";
     private static final String CREATE = "create";

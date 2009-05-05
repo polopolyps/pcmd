@@ -1,29 +1,27 @@
 package com.polopoly.pcmd.tool;
 
-import java.util.List;
+import static com.polopoly.util.policy.Util.util;
 
 import com.polopoly.cm.client.ContentRead;
-import com.polopoly.pcmd.field.content.Field;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.exception.ContentGetException;
 import com.polopoly.util.policy.ContentListUtil;
-import static com.polopoly.util.policy.Util.*;
 
-public class TreeTool implements Tool<TreeParameters> {
+public class TreeTool extends AbstractFieldListTool<TreeParameters>  {
     private static final int TAB_SIZE = 2;
-    private List<Field> fieldList;
-    private String delimiter;
+    private int depth;
+    private PolopolyContext context;
 
     public TreeParameters createParameters() {
         return new TreeParameters();
     }
 
     public void execute(PolopolyContext context, TreeParameters parameters) {
-        fieldList = parameters.getFieldList();
-        delimiter = parameters.getDelimiter();
+        this.depth = parameters.getDepth();
+        this.context = context;
 
         try {
-            printLevel(0, parameters.getDepth(), context.getContent(parameters.getRoot()), context);
+            printLevel(0, context.getContent(parameters.getRoot()), parameters);
         } catch (ContentGetException e) {
             System.err.print(e.toString());
         }
@@ -31,37 +29,28 @@ public class TreeTool implements Tool<TreeParameters> {
 
     private StringBuffer line = new StringBuffer(100);
 
-    private void printLevel(int level, int depth, ContentRead root, PolopolyContext context) {
+    private void printLevel(int level, ContentRead contentAtLevel, TreeParameters parameters) {
         line.setLength(0);
 
+        printIndent(level);
+
+        System.out.println(getFieldValues(context, contentAtLevel, parameters));
+
+        if (level < depth-1) {
+            ContentListUtil contentListUtil =
+                util(contentAtLevel, context).getContentList();
+
+            for (ContentRead child : contentListUtil.getContents()) {
+                printLevel(level+1, child, parameters);
+            }
+        }
+    }
+
+    private void printIndent(int level) {
         int tab = level * TAB_SIZE;
 
         for (int j = 0; j < tab; j++) {
             System.out.print(' ');
-        }
-
-        boolean first = true;
-
-        for (Field field : fieldList) {
-            if (!first) {
-                line.append(delimiter);
-            }
-            else {
-                first = false;
-            }
-
-            line.append(field.get(root, context));
-        }
-
-        System.out.println(line);
-
-        if (level < depth-1) {
-            ContentListUtil contentListUtil =
-                util(root, context).getContentList();
-
-            for (ContentRead child : contentListUtil.getContents()) {
-                printLevel(level+1, depth, child, context);
-            }
         }
     }
 

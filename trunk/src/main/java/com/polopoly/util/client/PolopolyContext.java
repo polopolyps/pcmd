@@ -15,6 +15,7 @@ import com.polopoly.cm.client.ContentRead;
 import com.polopoly.cm.client.EjbCmClient;
 import com.polopoly.cm.client.InputTemplate;
 import com.polopoly.cm.client.UserData;
+import com.polopoly.cm.client.impl.exceptions.EJBFinderException;
 import com.polopoly.cm.policy.Policy;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.cm.search.index.RmiSearchClient;
@@ -99,17 +100,21 @@ public class PolopolyContext {
         return createPolicy(major, inputTemplate, null, Policy.class);
     }
 
-    public <T> T createPolicy(int major, String inputTemplate, ContentId securityParent, Class<T> klass, PolicyModification<T> modification) throws PolicyCreateException {
+    public <T> T createPolicy(int major, String inputTemplateName, ContentId securityParent, Class<T> klass, PolicyModification<T> modification) throws PolicyCreateException {
+        InputTemplate inputTemplate;
+
         try {
-            return createPolicy(major, getPolicy(inputTemplate, InputTemplate.class).getContentId().getContentId(), securityParent, klass);
+            inputTemplate = getPolicy(inputTemplateName, InputTemplate.class);
         } catch (PolicyGetException e) {
-            throw new PolicyCreateException("The input template \"" + inputTemplate + "\" could not be used: " + e.getMessage(), e);
+            throw new PolicyCreateException("The input template \"" + inputTemplateName + "\" could not be used: " + e.getMessage(), e);
         }
+
+        return createPolicy(major, inputTemplate.getContentId().getContentId(), securityParent, klass);
     }
 
     public <T> T createPolicy(int major, ContentId inputTemplate, ContentId securityParent, Class<T> klass, PolicyModification<T> modification) throws PolicyCreateException {
         try {
-            T result = CheckedCast.cast(server.createContent(major, inputTemplate, securityParent), klass);
+            T result = CheckedCast.cast(server.createContent(major, securityParent, inputTemplate), klass);
 
             if (modification != null) {
                 util((Policy) result).modify(modification, klass, false);
@@ -117,11 +122,11 @@ public class PolopolyContext {
 
             return result;
         } catch (PolicyModificationException e) {
-            throw new PolicyCreateException("New object with template " + inputTemplate.getContentIdString() + ": " + e.getMessage());
+            throw new PolicyCreateException("New object with template " + toString(inputTemplate) + ": " + e.getMessage());
         } catch (CMException e) {
-            throw new PolicyCreateException("Could not create content with template " + inputTemplate.getContentIdString() + ": " + e.getMessage(), e);
+            throw new PolicyCreateException("Could not create content with template " + toString(inputTemplate) + ": " + e.getMessage(), e);
         } catch (CheckedClassCastException e) {
-            throw new PolicyCreateException("The template " + inputTemplate.getContentIdString() + " had an unexpected policy type: " + e.getMessage(), e);
+            throw new PolicyCreateException("The template " + toString(inputTemplate) + " had an unexpected policy type: " + e.getMessage(), e);
         }
     }
 
@@ -138,10 +143,15 @@ public class PolopolyContext {
     }
 
     public <T> T getPolicy(ContentId contentId, Class<T> klass) throws PolicyGetException {
-        try {
-            return getPolicy(getPolicyCMServer(), contentId, klass);
-        } catch (CMException e) {
-            throw new PolicyGetException("While fetching policy " + contentId.getContentIdString() + ": " + e.getMessage(), e);
+        return getPolicy(getPolicyCMServer(), contentId, klass);
+    }
+
+    private static String toString(ContentId contentId) {
+        if (contentId instanceof ExternalContentId) {
+            return ((ExternalContentId) contentId).getExternalId();
+        }
+        else {
+            return contentId.getContentIdString();
         }
     }
 
@@ -152,10 +162,12 @@ public class PolopolyContext {
 
         try {
             return CheckedCast.cast(server.getPolicy(contentId), klass);
+        } catch (EJBFinderException e) {
+            throw new PolicyGetException("The policy " + toString(contentId) + " could not be found.", e);
         } catch (CMException e) {
-            throw new PolicyGetException("While fetching policy " + contentId.getContentIdString() + ": " + e.getMessage(), e);
+            throw new PolicyGetException("While fetching policy " + toString(contentId) + ": " + e.getMessage(), e);
         } catch (CheckedClassCastException e) {
-            throw new PolicyGetException("While fetching policy " + contentId.getContentIdString() + ": " + e.getMessage(), e);
+            throw new PolicyGetException("While fetching policy " + toString(contentId) + ": " + e.getMessage(), e);
         }
     }
 
@@ -163,7 +175,7 @@ public class PolopolyContext {
         try {
             return getPolicyCMServer().getContent(contentId);
         } catch (CMException e) {
-            throw new ContentGetException("While fetching content " + contentId.getContentIdString() + ": " + e.getMessage(), e);
+            throw new ContentGetException("While fetching content " + toString(contentId) + ": " + e.getMessage(), e);
         }
     }
 

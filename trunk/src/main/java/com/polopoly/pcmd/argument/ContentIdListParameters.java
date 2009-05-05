@@ -18,6 +18,10 @@ public class ContentIdListParameters implements Parameters {
     }
 
     public Iterator<ContentId> getContentIds() {
+        if (contentIds == null) {
+            throw new RuntimeException("parseParameters was never called.");
+        }
+
         return contentIds;
     }
 
