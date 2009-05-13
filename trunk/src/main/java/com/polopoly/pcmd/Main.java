@@ -12,6 +12,7 @@ import com.polopoly.pcmd.argument.NotProvidedException;
 import com.polopoly.pcmd.argument.Parameters;
 import com.polopoly.pcmd.tool.HelpParameters;
 import com.polopoly.pcmd.tool.HelpTool;
+import com.polopoly.pcmd.tool.RequiresIndexServer;
 import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.pcmd.util.ToolRetriever;
 import com.polopoly.pcmd.util.ToolRetriever.NoSuchToolException;
@@ -50,15 +51,18 @@ public class Main {
             System.exit(1);
         }
 
-        PolopolyClient client = new PolopolyClient();
-        client.setAttachStatisticsService(false);
+        PolopolyContext context = null;
 
         try {
-            new ClientFromArgumentsConfigurator(client, arguments).configure();
-            PolopolyContext context = client.connect();
-            arguments.setContext(context);
-
             Tool<?> tool = ToolRetriever.getTool(toolName);
+
+            PolopolyClient client = new PolopolyClient();
+            client.setAttachStatisticsService(false);
+            client.setAttachSearchService(tool instanceof RequiresIndexServer);
+
+            new ClientFromArgumentsConfigurator(client, arguments).configure();
+            context = client.connect();
+            arguments.setContext(context);
 
             try {
                 execute(tool, context, arguments);
@@ -76,6 +80,12 @@ public class Main {
             System.err.println("Call with \"help\" as argument to see a list of tools.");
         } catch (ArgumentException e) {
             System.err.println("Invalid parameters: " + e.getMessage());
+
+            if (toolName != null) {
+                HelpParameters helpParameters = new HelpParameters();
+                helpParameters.setTool(toolName);
+                new HelpTool().execute(context, helpParameters);
+            }
             System.exit(1);
         } catch (ConnectException e) {
             System.err.println(e.getMessage());

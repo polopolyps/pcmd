@@ -22,7 +22,7 @@ import com.polopoly.management.ServiceNotAvailableException;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.ContentIdToContentIterator;
 
-public class LuceneInspectTool implements Tool<LuceneInspectParameters> {
+public class LuceneInspectTool implements Tool<LuceneInspectParameters>, RequiresIndexServer {
     public LuceneInspectParameters createParameters() {
         return new LuceneInspectParameters();
     }

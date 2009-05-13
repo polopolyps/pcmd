@@ -4,8 +4,8 @@ import static com.polopoly.util.policy.Util.util;
 
 import com.polopoly.cm.client.ContentRead;
 import com.polopoly.util.client.PolopolyContext;
+import com.polopoly.util.contentlist.ContentListUtil;
 import com.polopoly.util.exception.ContentGetException;
-import com.polopoly.util.policy.ContentListUtil;
 
 public class TreeTool extends AbstractFieldListTool<TreeParameters>  {
     private static final int TAB_SIZE = 2;
@@ -40,7 +40,7 @@ public class TreeTool extends AbstractFieldListTool<TreeParameters>  {
             ContentListUtil contentListUtil =
                 util(contentAtLevel, context).getContentList();
 
-            for (ContentRead child : contentListUtil.getContents()) {
+            for (ContentRead child : contentListUtil.contents()) {
                 printLevel(level+1, child, parameters);
             }
         }

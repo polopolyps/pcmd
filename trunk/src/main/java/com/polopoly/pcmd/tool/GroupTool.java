@@ -99,6 +99,7 @@ class GroupParameters implements Parameters, Iterable<Group> {
             try {
                 GroupId groupId = new GroupId(Integer.parseInt(groupName));
                 addGroup(userServer.findGroup(groupId));
+                continue;
             } catch (NumberFormatException e) {
             } catch (IllegalArgumentException e) {
             } catch (RemoteException e) {
@@ -115,7 +116,7 @@ class GroupParameters implements Parameters, Iterable<Group> {
                 }
 
                 for (int j = 0; j < groups.length; j++) {
-                    addGroup(userServer.findGroup(groups[i]));
+                    addGroup(userServer.findGroup(groups[j]));
                 }
             } catch (RemoteException e) {
                 System.err.println(e.toString());

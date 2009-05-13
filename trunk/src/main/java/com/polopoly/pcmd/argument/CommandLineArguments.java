@@ -76,7 +76,7 @@ public class CommandLineArguments implements Arguments {
         return new BooleanParser().parse(optionValue);
     }
 
-    public Iterator<ContentId> getArgumentContentIds(int firstContentIdIdx) throws ArgumentException {
+    public Iterator<ContentId> getArgumentContentIds(int firstContentIdIdx, boolean stopOnException) throws ArgumentException {
         if (arguments.size() <= firstContentIdIdx) {
             throw new NotProvidedException("Expected a list of content IDs as arguments.");
         }
@@ -93,7 +93,17 @@ public class CommandLineArguments implements Arguments {
         }
 
         for (int i = firstContentIdIdx; i < arguments.size(); i++) {
-            contentIds.add(parser.parse(arguments.get(i)));
+            try {
+                contentIds.add(parser.parse(arguments.get(i)));
+            }
+            catch (ArgumentException e) {
+                if (stopOnException) {
+                    throw e;
+                }
+                else {
+                    System.err.println(e.getMessage());
+                }
+            }
         }
 
         return contentIds.iterator();

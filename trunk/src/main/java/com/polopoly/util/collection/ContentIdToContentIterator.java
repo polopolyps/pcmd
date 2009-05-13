@@ -1,6 +1,8 @@
 package com.polopoly.util.collection;
 
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.client.CMException;
@@ -10,6 +12,8 @@ import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.util.client.PolopolyContext;
 
 public class ContentIdToContentIterator extends AbstractContentIdIterator<ContentRead> {
+    private static final Logger logger =
+        Logger.getLogger(ContentIdToContentIterator.class.getName());
 
     public ContentIdToContentIterator(PolopolyContext context, Iterator<ContentId> contentIds, boolean stopOnException) {
         super(context, contentIds, stopOnException);
@@ -34,7 +38,8 @@ public class ContentIdToContentIterator extends AbstractContentIdIterator<Conten
                     throw new CMRuntimeException(e);
                 }
                 else {
-                    System.err.println("While fetching " + contentId.getContentIdString() + " in " + it + ": " + e.toString());
+                    logger.log(Level.WARNING, "While fetching " +
+                        contentId.getContentIdString() + " in " + it + ": " + e.toString());
                 }
             }
         }

@@ -14,6 +14,10 @@ public abstract class AbstractContentIdIterator<T> extends FetchingIterator<T> {
     protected long startTime;
     protected int count;
 
+    protected AbstractContentIdIterator(PolopolyContext context, Iterator<ContentId> contentIds) {
+        this(context, contentIds, false);
+    }
+
     protected AbstractContentIdIterator(PolopolyContext context, Iterator<ContentId> contentIds, boolean stopOnException) {
         this(context.getPolicyCMServer(), contentIds);
 

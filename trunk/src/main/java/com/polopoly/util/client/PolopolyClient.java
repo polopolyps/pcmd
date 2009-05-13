@@ -149,7 +149,11 @@ public class PolopolyClient {
     private void loginUserWithoutPassword(PolopolyContext context) throws Exception{
         User user = context.getUserServer().getUserByLoginName(userName);
         UserId userId = user.getUserId();
-        context.getPolicyCMServer().setCurrentCaller(new Caller(userId, null, null));
+        context.getPolicyCMServer().setCurrentCaller(new Caller(userId, null, null) {
+            @Override
+            public String getLoginName() {
+                return userName;
+            }});
 
         logger.info("No password provided. Set caller to user \"" + userName + "\" but did not log in.");
     }

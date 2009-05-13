@@ -24,12 +24,14 @@ import com.polopoly.user.server.UserId;
 import com.polopoly.user.server.UserServer;
 import com.polopoly.util.CheckedCast;
 import com.polopoly.util.CheckedClassCastException;
+import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.exception.ContentGetException;
 import com.polopoly.util.exception.PolicyCreateException;
 import com.polopoly.util.exception.PolicyGetException;
 import com.polopoly.util.exception.PolicyModificationException;
 import com.polopoly.util.exception.UserNotLoggedInException;
 import com.polopoly.util.policy.PolicyModification;
+import com.polopoly.util.policy.PolicyUtil;
 
 public class PolopolyContext {
     private static final Logger logger =
@@ -134,8 +136,16 @@ public class PolopolyContext {
         return getPolicy(externalId, Policy.class);
     }
 
+    public PolicyUtil getPolicyUtil(String externalId) throws PolicyGetException {
+        return util(getPolicy(externalId, Policy.class));
+    }
+
     public <T> T getPolicy(String externalId, Class<T> klass) throws PolicyGetException {
         return getPolicy(new ExternalContentId(externalId), klass);
+    }
+
+    public PolicyUtil getPolicyUtil(ContentId contentId) throws PolicyGetException {
+        return util(getPolicy(contentId, Policy.class));
     }
 
     public Policy getPolicy(ContentId contentId) throws PolicyGetException {
@@ -177,6 +187,10 @@ public class PolopolyContext {
         } catch (CMException e) {
             throw new ContentGetException("While fetching content " + toString(contentId) + ": " + e.getMessage(), e);
         }
+    }
+
+    public ContentUtil getContentUtil(ContentId contentId) throws ContentGetException {
+        return util(getContent(contentId), getPolicyCMServer());
     }
 
     public UserData getCurrentUser() throws UserNotLoggedInException {

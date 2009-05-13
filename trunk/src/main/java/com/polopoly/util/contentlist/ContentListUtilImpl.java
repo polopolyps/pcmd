@@ -1,4 +1,4 @@
-package com.polopoly.util.policy;
+package com.polopoly.util.contentlist;
 
 import java.util.Iterator;
 import java.util.List;
@@ -8,26 +8,28 @@ import com.polopoly.cm.ContentReference;
 import com.polopoly.cm.VersionedContentId;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
-import com.polopoly.cm.client.ContentRead;
 import com.polopoly.cm.collections.ContentList;
 import com.polopoly.cm.collections.ContentListRead;
 import com.polopoly.cm.policy.Policy;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.CheckedContentIdToPolicyIterator;
-import com.polopoly.util.collection.ContentIdToContentIterator;
+import com.polopoly.util.collection.ContentIdToContentUtilIterator;
 import com.polopoly.util.collection.ContentIdToPolicyIterator;
 import com.polopoly.util.collection.ContentListIterator;
 import com.polopoly.util.collection.ContentListListAdapter;
+import com.polopoly.util.content.ContentUtil;
+import com.polopoly.util.contentid.ContentIdUtil;
 import com.polopoly.util.exception.CMModificationException;
+import com.polopoly.util.policy.Util;
 
-public class ContentListUtil implements Iterable<Policy> {
+public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper implements ContentListUtil {
     public class ContentListContentIds implements Iterable<ContentId> {
         public Iterator<ContentId> iterator() {
             return new ContentListIterator(contentList) {
                 @Override
                 public String toString() {
-                    return ContentListUtil.this.toString();
+                    return ContentListUtilImpl.this.toString();
                 }
             };
         }
@@ -66,12 +68,19 @@ public class ContentListUtil implements Iterable<Policy> {
             return new ContentListListAdapter(contentList, toString);
         }
 
-        public ContentId get(int i) {
+        public ContentIdUtil get(int i) {
             try {
-                return contentList.getEntry(i).getReferredContentId();
+                ContentId result = contentList.getEntry(i).getReferredContentId();
+
+                if (result != null) {
+                    return Util.util(result, context);
+                }
+                else {
+                    return null;
+                }
             } catch (CMException e) {
                 throw new CMRuntimeException(
-                    "While getting entry " + i + " in " + ContentListUtil.this.toString() +
+                    "While getting entry " + i + " in " + ContentListUtilImpl.this.toString() +
                         ": " + e.getMessage(), e);
             }
         }
@@ -85,47 +94,48 @@ public class ContentListUtil implements Iterable<Policy> {
     /**
      * Use {@link Util#util(ContentListRead, PolicyCMServer)} to get an instance.
      */
-    ContentListUtil(ContentListRead contentList, Object toString, PolopolyContext context) {
+    public ContentListUtilImpl(ContentListRead contentList, Object toString, PolopolyContext context) {
         this(contentList, toString, context.getPolicyCMServer());
     }
 
     /**
      * Use {@link Util#util(ContentListRead, PolicyCMServer)} to get an instance.
      */
-    ContentListUtil(ContentListRead contentList, Object toString, PolicyCMServer server) {
+    public ContentListUtilImpl(ContentListRead contentList, Object toString, PolicyCMServer server) {
+        super(contentList);
+
         this.contentList = (ContentList) contentList;
         this.server = server;
         this.toString = toString;
     }
 
     public Iterator<Policy> iterator() {
-        return new ContentIdToPolicyIterator(server, getContentIds().iterator());
+        return new ContentIdToPolicyIterator(server, contentIds().iterator());
     }
 
     public <T extends Policy> Iterable<T> policies(final Class<T> policyClass) {
         return new Iterable<T>() {
             public Iterator<T> iterator() {
                 return new CheckedContentIdToPolicyIterator<T>(
-                        server, getContentIds().iterator(), policyClass);
+                        server, contentIds().iterator(), policyClass);
             }
         };
     }
 
-    public ContentListContentIds getContentIds() {
+    public ContentListContentIds contentIds() {
         return new ContentListContentIds();
     }
 
-    public Iterable<ContentRead> getContents() {
-        return new Iterable<ContentRead>() {
-            public Iterator<ContentRead> iterator() {
-                return new ContentIdToContentIterator(
-                        server, getContentIds().iterator());
+    public Iterable<ContentUtil> contents() {
+        return new Iterable<ContentUtil>() {
+            public Iterator<ContentUtil> iterator() {
+                return new ContentIdToContentUtilIterator(server, contentIds().iterator());
             }
         };
     }
 
     public void add(int index, Policy policy) throws CMModificationException {
-        getContentIds().add(index, policy.getContentId().getContentId());
+        contentIds().add(index, policy.getContentId().getContentId());
     }
 
     public void add(Policy policy) throws CMModificationException {
@@ -133,27 +143,19 @@ public class ContentListUtil implements Iterable<Policy> {
     }
 
     public void remove(Policy policy) throws CMModificationException {
-        getContentIds().remove(policy.getContentId());
+        contentIds().remove(policy.getContentId());
     }
 
-    public void remove(int index) throws CMModificationException {
-        contentList.remove(index);
-    }
-
-    public int size() {
-        return contentList.size();
-    }
-
-    public Policy get(int i) {
-        return get(i, Policy.class);
+    public ContentIdUtil get(int i) {
+        return contentIds().get(i);
     }
 
     public <T extends Policy> T get(int i, Class<T> klass) {
         try {
-            return getContext().getPolicy(getContentIds().get(i), klass);
+            return getContext().getPolicy(contentIds().get(i), klass);
         } catch (CMException e) {
             throw new CMRuntimeException(
-                "While getting entry " + i + " in " + ContentListUtil.this.toString() +
+                "While getting entry " + i + " in " + ContentListUtilImpl.this.toString() +
                     ": " + e.getMessage(), e);
         }
     }
@@ -169,7 +171,7 @@ public class ContentListUtil implements Iterable<Policy> {
     public boolean contains(Policy policy) {
         VersionedContentId policyId = policy.getContentId();
 
-        for (ContentId childId : getContentIds()) {
+        for (ContentId childId : contentIds()) {
             if (childId.equalsIgnoreVersion(policyId)) {
                 return true;
             }
@@ -178,13 +180,17 @@ public class ContentListUtil implements Iterable<Policy> {
         return false;
     }
 
+    public PolicyCMServer getPolicyCMServer() {
+        return server;
+    }
+
     @Override
     public String toString() {
         if (toString == null) {
             return "content list";
         }
         else {
-            return toString.toString();
+            return "content list in " + toString.toString();
         }
     }
 }

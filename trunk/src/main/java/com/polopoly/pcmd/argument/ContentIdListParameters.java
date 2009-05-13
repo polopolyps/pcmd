@@ -35,14 +35,14 @@ public class ContentIdListParameters implements Parameters {
 
     public void parseParameters(Arguments args, PolopolyContext context)
             throws ArgumentException {
+        setStopOnException(args.getFlag(STOPONEXCEPTION, true));
+
         try {
-            setContentIds(args.getArgumentContentIds(getFirstContentIdIndex()));
+            setContentIds(args.getArgumentContentIds(getFirstContentIdIndex(), isStopOnException()));
         }
         catch (NotProvidedException npe) {
             setContentIds(args.getStdInContentIds());
         }
-
-        setStopOnException(args.getFlag(STOPONEXCEPTION, true));
     }
 
     /**

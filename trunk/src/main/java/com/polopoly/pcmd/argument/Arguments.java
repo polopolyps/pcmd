@@ -8,7 +8,7 @@ import com.polopoly.pcmd.parser.Parser;
 public interface Arguments {
     Iterator<ContentId> getStdInContentIds() throws ArgumentException;
 
-    Iterator<ContentId> getArgumentContentIds(int i) throws ArgumentException;
+    Iterator<ContentId> getArgumentContentIds(int i, boolean stopOnException) throws ArgumentException;
 
     <T> T getOption(String name, Parser<T> parser) throws ArgumentException;
 

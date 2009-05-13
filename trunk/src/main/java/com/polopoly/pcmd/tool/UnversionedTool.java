@@ -28,7 +28,7 @@ public class UnversionedTool implements Tool<ContentIdListParameters> {
             ContentIdListParameters parameters, PolopolyContext context)
             throws ArgumentException {
         try {
-            parameters.setContentIds(args.getArgumentContentIds(0));
+            parameters.setContentIds(args.getArgumentContentIds(0, parameters.isStopOnException()));
         }
         catch (NotProvidedException npe) {
             parameters.setContentIds(args.getStdInContentIds());
