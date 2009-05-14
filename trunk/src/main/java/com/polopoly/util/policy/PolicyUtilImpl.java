@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.LockInfo;
+import com.polopoly.cm.app.policy.CheckboxPolicy;
 import com.polopoly.cm.app.policy.SingleReference;
 import com.polopoly.cm.app.policy.SingleValued;
 import com.polopoly.cm.client.CMException;
@@ -25,6 +26,7 @@ import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.contentid.ContentIdUtil;
 import com.polopoly.util.contentlist.ContentListUtil;
 import com.polopoly.util.contentlist.ContentListUtilImpl;
+import com.polopoly.util.exception.NoSuchChildPolicyException;
 import com.polopoly.util.exception.PolicyGetException;
 import com.polopoly.util.exception.PolicyModificationException;
 
@@ -63,7 +65,7 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         return getContent().getName();
     }
 
-    public void setSingleValued(String field, String value) {
+    public void setSingleValued(String field, String value) throws NoSuchChildPolicyException {
         try {
             getChildPolicy(field, SingleValued.class).setValue(value);
         } catch (CMException e) {
@@ -72,7 +74,7 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         }
     }
 
-    public String getSingleValued(String field, String defaultValue) {
+    public String getSingleValued(String field, String defaultValue) throws NoSuchChildPolicyException {
         String result = null;
 
         try {
@@ -88,7 +90,7 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         return result;
     }
 
-    public String getSingleValued(String field) {
+    public String getSingleValued(String field) throws NoSuchChildPolicyException {
         try {
             return getChildPolicy(field, SingleValued.class).getValue();
         } catch (CMException e) {
@@ -97,7 +99,21 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         }
     }
 
-    public <T> T getSingleReference(String field, Class<T> policyClass) throws PolicyGetException {
+    public boolean getChecked(String field) throws NoSuchChildPolicyException {
+        try {
+            return getChildPolicy(field, CheckboxPolicy.class).getChecked();
+        } catch (CMException e) {
+            throw new CMRuntimeException(
+                    "Could not get field " + field + " in " + this + ": " + e.getMessage(), e);
+        }
+    }
+
+    public void setChecked(String field, boolean checked) throws NoSuchChildPolicyException, CMException {
+        getChildPolicy(field, CheckboxPolicy.class).setChecked(checked);
+    }
+
+    public <T> T getSingleReference(String field, Class<T> policyClass)
+            throws PolicyGetException, NoSuchChildPolicyException {
         try {
             return PolopolyContext.getPolicy(getCMServer(), getSingleReference(field), policyClass);
         } catch (PolicyGetException e) {
@@ -106,7 +122,8 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         }
     }
 
-    public ContentIdUtil getSingleReference(String field) throws PolicyGetException {
+    public ContentIdUtil getSingleReference(String field)
+            throws PolicyGetException, NoSuchChildPolicyException {
         try {
             ContentId result = getChildPolicy(field, SingleReference.class).getReference();
 
@@ -122,7 +139,8 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         }
     }
 
-    public ContentListUtil getContentListAware(String field) {
+    public ContentListUtil getContentListAware(String field)
+            throws NoSuchChildPolicyException {
         try {
             return new ContentListUtilImpl(getChildPolicy(field, ContentListAware.class).getContentList(), this, getContext());
         } catch (CMException e) {
@@ -139,26 +157,25 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         return policy;
     }
 
-    public <T> T getChildPolicy(String field, Class<T> klass) {
+    public <T> T getChildPolicy(String field, Class<T> klass)
+            throws NoSuchChildPolicyException {
         try {
             return CheckedCast.cast(policy.getChildPolicy(field), klass);
         } catch (Exception e) {
-            String inputTemplate;
-            try {
-                inputTemplate = policy.getInputTemplate().getExternalId().getExternalId();
-            } catch (CMException e2) {
-                inputTemplate = e2.toString();
-            }
+            String inputTemplate = getInputTemplate().getExternalIdString();
 
-            throw new CMRuntimeException("Could not get field " + field + " in " + this + " (a " + inputTemplate + ") : " + e.getMessage());
+            throw new NoSuchChildPolicyException("Could not get field " + field +
+                    " in " + this + " (a " + inputTemplate + ") : " + e.getMessage());
         }
     }
 
-    public <T> void modify(PolicyModification<T> policyModification, Class<T> klass) throws PolicyModificationException {
+    public <T> void modify(PolicyModification<T> policyModification, Class<T> klass)
+            throws PolicyModificationException {
         modify(policyModification, klass);
     }
 
-    public <T> void modify(PolicyModification<T> policyModification, Class<T> klass, boolean createNewVersion) throws PolicyModificationException {
+    public <T> void modify(PolicyModification<T> policyModification, Class<T> klass, boolean createNewVersion)
+            throws PolicyModificationException {
         LockInfo lockInfo = policy.getContent().getLockInfo();
 
         PolicyCMServer server = getCMServer();
@@ -166,7 +183,7 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         if (createNewVersion) {
             if (lockInfo != null) {
                 throw new PolicyModificationException(
-                        "Content " + policy.getContentId().getContentId().getContentIdString() + " was locked.");
+                    "Content " + policy.getContentId().getContentId().getContentIdString() + " was locked.");
             }
 
             try {
@@ -257,6 +274,11 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
             List<Policy> emptyList = Collections.emptyList();
             return emptyList.iterator();
         }
+    }
+
+    @Override
+    public InputTemplateUtil getInputTemplate() {
+        return Util.util(super.getInputTemplate(), getContext());
     }
 
     @Override

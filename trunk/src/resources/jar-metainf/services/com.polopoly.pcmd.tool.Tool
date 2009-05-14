@@ -20,3 +20,4 @@ com.polopoly.pcmd.tool.WorkflowActionsTool
 com.polopoly.pcmd.tool.ParentsTool
 com.polopoly.pcmd.tool.CheckPermissionTool
 com.polopoly.pcmd.tool.SetPermissionTool
+com.polopoly.pcmd.tool.TemplateInspectTool

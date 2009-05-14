@@ -25,15 +25,15 @@ import com.polopoly.pcmd.util.Component;
 import com.polopoly.pcmd.util.ContentReference;
 import com.polopoly.util.client.PolopolyContext;
 
-public class SearchTool implements Tool<SearchToolParameters> {
+public class SearchTool implements Tool<SearchParameters> {
     static final int DEFAULT_BATCH_SIZE = 500;
     private static final String WILDCARD = "weirdUnlikelyString";
 
-    public SearchToolParameters createParameters() {
-        return new SearchToolParameters();
+    public SearchParameters createParameters() {
+        return new SearchParameters();
     }
 
-    public void execute(PolopolyContext context, SearchToolParameters parameters) {
+    public void execute(PolopolyContext context, SearchParameters parameters) {
         SearchExpression searchExpr = null;
 
         ContentId inputTemplate = parameters.getInputTemplate();
@@ -63,26 +63,33 @@ public class SearchTool implements Tool<SearchToolParameters> {
         ContentId contentrefValue = parameters.getContentRefValue();
 
         if (contentref != null || contentrefValue != null) {
-            String group = contentref.getGroup();
+            String group = (contentref == null ? null : contentref.getGroup());
 
             if (group == null || group.equals("*")) {
                 group = WILDCARD;
             }
 
-            String name = contentref.getReference();
+            String name = (contentref == null ? null : contentref.getReference());
 
             if (name == null || name.equals("*")) {
                 name = WILDCARD;
             }
 
-            ReferringTo referringTo = new ReferringTo(group, name, contentrefValue);
+            ReferringTo referringTo;
 
-            if (group == WILDCARD) {
-                referringTo.setGroupOp(ReferringTo.NOT_EQUALS);
+            if (group == WILDCARD && name == WILDCARD) {
+                referringTo = new ReferringTo(contentrefValue);
             }
+            else {
+                referringTo = new ReferringTo(group, name, contentrefValue);
 
-            if (name == WILDCARD) {
-                referringTo.setNameOp(ReferringTo.NOT_EQUALS);
+                if (group == WILDCARD) {
+                    referringTo.setGroupOp(ReferringTo.NOT_EQUALS);
+                }
+
+                if (name == WILDCARD) {
+                    referringTo.setNameOp(ReferringTo.NOT_EQUALS);
+                }
             }
 
             searchExpr = add(searchExpr, referringTo);
@@ -148,7 +155,7 @@ public class SearchTool implements Tool<SearchToolParameters> {
     }
 }
 
-class SearchToolParameters implements Parameters {
+class SearchParameters implements Parameters {
     private static final String MAJOR = "major";
     private static final String COMPONENT = "component";
     private static final String CONTENTREF = "contentref";
@@ -234,7 +241,7 @@ class SearchToolParameters implements Parameters {
         }
 
         try {
-            setContentRefValue(args.getOption(CONTENTREFVALUE, new ContentIdParser()));
+            setContentRefValue(args.getOption(CONTENTREFVALUE, new ContentIdParser(context)));
         } catch (NotProvidedException e) {
         }
 

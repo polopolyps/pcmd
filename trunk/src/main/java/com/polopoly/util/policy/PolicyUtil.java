@@ -22,4 +22,5 @@ public interface PolicyUtil extends Iterable<Policy>, RuntimeExceptionPolicy {
     <T> void modify(PolicyModification<T> policyModification, Class<T> klass, boolean createNewVersion) throws PolicyModificationException;
     <T> void modify(PolicyModification<T> policyModification, Class<T> klass) throws PolicyModificationException;
     Policy asPolicy();
+    InputTemplateUtil getInputTemplate();
 }

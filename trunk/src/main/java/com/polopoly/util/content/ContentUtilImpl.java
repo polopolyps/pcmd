@@ -3,6 +3,7 @@ package com.polopoly.util.content;
 import java.util.Iterator;
 
 import com.polopoly.cm.ContentId;
+import com.polopoly.cm.ExternalContentId;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.Content;
@@ -100,6 +101,17 @@ public class ContentUtilImpl extends RuntimeExceptionContentWrapper implements C
 
     public PolicyCMServer getPolicyCMServer() {
         return context.getPolicyCMServer();
+    }
+
+    public String getExternalIdString() {
+        ExternalContentId externalId = getExternalId();
+
+        if (externalId != null) {
+            return externalId.getExternalId();
+        }
+        else {
+            return null;
+        }
     }
 
     public ContentIterable getSecurityParentChain() {

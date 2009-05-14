@@ -1,6 +1,7 @@
 package com.polopoly.util.contentlist;
 
 import com.polopoly.cm.policy.Policy;
+import com.polopoly.pcmd.tool.ContentReferenceUtil;
 import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.contentid.ContentIdUtil;
 import com.polopoly.util.contentlist.ContentListUtilImpl.ContentListContentIds;
@@ -16,4 +17,5 @@ public interface ContentListUtil extends RuntimeExceptionContentList, Iterable<P
     ContentIdUtil get(int i);
     <T extends Policy> T get(int i, Class<T> klass);
     boolean contains(Policy policy);
+    Iterable<ContentReferenceUtil> references();
 }

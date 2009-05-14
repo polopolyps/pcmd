@@ -12,6 +12,7 @@ import com.polopoly.cm.collections.ContentList;
 import com.polopoly.cm.collections.ContentListRead;
 import com.polopoly.cm.policy.Policy;
 import com.polopoly.cm.policy.PolicyCMServer;
+import com.polopoly.pcmd.tool.ContentReferenceUtil;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.CheckedContentIdToPolicyIterator;
 import com.polopoly.util.collection.ContentIdToContentUtilIterator;
@@ -96,6 +97,8 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
      */
     public ContentListUtilImpl(ContentListRead contentList, Object toString, PolopolyContext context) {
         this(contentList, toString, context.getPolicyCMServer());
+
+        this.context = context;
     }
 
     /**
@@ -192,5 +195,12 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
         else {
             return "content list in " + toString.toString();
         }
+    }
+
+    public Iterable<ContentReferenceUtil> references() {
+        return new Iterable<ContentReferenceUtil>() {
+            public Iterator<ContentReferenceUtil> iterator() {
+                return new ContentReferenceIterator(ContentListUtilImpl.this, getContext());
+            }};
     }
 }
