@@ -49,30 +49,35 @@ public class GroovyTool implements Tool<GroovyParameters> {
 
         int count = 0;
 
-        while (it.hasNext()) {
-            binding.setVariable("count", count);
+        if (!it.hasNext()) {
+            execute(null, shell, binding, context, parameters);
+        }
+        else {
+            while (it.hasNext()) {
+                binding.setVariable("count", count);
 
-            Policy policy = it.next();
+                Policy policy = it.next();
 
-            if (parameters.isModify() || isCreate) {
-                try {
-                    util(policy).modify(new PolicyModification<Policy>() {
-                        public void modify(Policy newVersion) throws CMException {
-                            execute(newVersion, shell, binding, context, parameters);
-                        }}, Policy.class, !isCreate);
-                } catch (PolicyModificationException e) {
-                    handleModificationException(e, policy, parameters);
+                if (parameters.isModify() || isCreate) {
+                    try {
+                        util(policy).modify(new PolicyModification<Policy>() {
+                            public void modify(Policy newVersion) throws CMException {
+                                execute(newVersion, shell, binding, context, parameters);
+                            }}, Policy.class, !isCreate);
+                    } catch (PolicyModificationException e) {
+                        handleModificationException(e, policy, parameters);
+                    }
                 }
-            }
-            else {
-                execute(policy, shell, binding, context, parameters);
-            }
+                else {
+                    execute(policy, shell, binding, context, parameters);
+                }
 
-            if (doBreak) {
-                break;
-            }
+                if (doBreak) {
+                    break;
+                }
 
-            count++;
+                count++;
+            }
         }
 
         it.printInfo(System.err);
@@ -190,7 +195,11 @@ public class GroovyTool implements Tool<GroovyParameters> {
         }
 
         if (!parameters.isQuiet()) {
-            System.out.println(AbstractContentIdField.get(policy.getContentId(), context) + ": " + value);
+            if (policy != null) {
+                System.out.print(AbstractContentIdField.get(policy.getContentId(), context) + ": ");
+            }
+
+            System.out.println(value);
         }
 
         if (value instanceof Boolean && !((Boolean) value).booleanValue()) {

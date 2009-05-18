@@ -20,6 +20,12 @@ public class GroovyParameters extends ContentIdListParameters {
     private int create = 0;
     private ContentId inputTemplate;
 
+    public GroovyParameters() {
+        super();
+
+        setIdsFromStandardInIfNotArgument(false);
+    }
+
     @Override
     public void parseParameters(Arguments args, PolopolyContext context) throws ArgumentException {
         super.parseParameters(args, context);

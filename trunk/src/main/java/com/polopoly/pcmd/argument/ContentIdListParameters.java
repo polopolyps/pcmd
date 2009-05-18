@@ -1,6 +1,8 @@
 package com.polopoly.pcmd.argument;
 
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.pcmd.parser.BooleanParser;
@@ -12,6 +14,16 @@ public class ContentIdListParameters implements Parameters {
 
     private Iterator<ContentId> contentIds;
     private boolean stopOnException = false;
+    private boolean idsFromStandardInIfNotArgument = true;
+
+    public boolean isIdsFromStandardInIfNotArgument() {
+        return idsFromStandardInIfNotArgument;
+    }
+
+    public void setIdsFromStandardInIfNotArgument(
+            boolean idsFromStandardInIfNotArgument) {
+        this.idsFromStandardInIfNotArgument = idsFromStandardInIfNotArgument;
+    }
 
     public void setContentIds(Iterator<ContentId> contentIds) {
         this.contentIds = contentIds;
@@ -33,6 +45,7 @@ public class ContentIdListParameters implements Parameters {
         return stopOnException;
     }
 
+
     public void parseParameters(Arguments args, PolopolyContext context)
             throws ArgumentException {
         setStopOnException(args.getFlag(STOPONEXCEPTION, true));
@@ -41,7 +54,13 @@ public class ContentIdListParameters implements Parameters {
             setContentIds(args.getArgumentContentIds(getFirstContentIdIndex(), isStopOnException()));
         }
         catch (NotProvidedException npe) {
-            setContentIds(args.getStdInContentIds());
+            if (isIdsFromStandardInIfNotArgument()) {
+                setContentIds(args.getStdInContentIds());
+            }
+            else {
+                List<ContentId> emptyList = Collections.emptyList();
+                setContentIds(emptyList.iterator());
+            }
         }
     }
 
