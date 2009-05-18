@@ -1,11 +1,18 @@
 package com.polopoly.pcmd.parser;
 
+import java.rmi.RemoteException;
+
+import javax.ejb.FinderException;
+
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.ContentIdFactory;
 import com.polopoly.cm.ExternalContentId;
 import com.polopoly.cm.VersionedContentId;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
+import com.polopoly.pcmd.argument.ArgumentException;
+import com.polopoly.user.server.PrincipalId;
+import com.polopoly.user.server.User;
 import com.polopoly.util.client.PolopolyContext;
 
 public class ContentIdParser implements Parser<ContentId> {
@@ -53,10 +60,21 @@ public class ContentIdParser implements Parser<ContentId> {
                             // no, not a versioned external ID
                         }
                     }
+                }
 
-                    if (result == null) {
-                        throw new ParseException(this, string, "Expected a numerical content ID or an existing external ID");
+                if (result == null) {
+                    // maybe a user?
+                    try {
+                        PrincipalId userId = getUser(context, string);
+
+                        result = context.getPolicyCMServer().findContentIdByExternalId(new ExternalContentId(userId.getPrincipalIdString()));
+                    } catch (ArgumentException ae) {
+                        // nope, not a user.
                     }
+                }
+
+                if (result == null) {
+                    throw new ParseException(this, string, "Expected a numerical content ID, a user name or an existing external ID");
                 }
 
                 return result;
@@ -66,4 +84,15 @@ public class ContentIdParser implements Parser<ContentId> {
         }
     }
 
+    public static PrincipalId getUser(PolopolyContext context, String userName) throws ArgumentException {
+        try {
+            User userObject = context.getUserServer().getUserByLoginName(userName);
+
+            return userObject.getUserId();
+        } catch (RemoteException e) {
+            throw new ArgumentException("While fetching user \"" + userName + "\": " + e.getMessage());
+        } catch (FinderException e) {
+            throw new ArgumentException("Found no user with name \"" + userName + "\".");
+        }
+    }
 }

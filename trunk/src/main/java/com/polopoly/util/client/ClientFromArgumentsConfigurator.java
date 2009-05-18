@@ -9,8 +9,8 @@ public class ClientFromArgumentsConfigurator {
     private Arguments arguments;
 
     public static final String SERVER = "server";
-    public static final String USER = "user";
-    public static final String PASSWORD = "password";
+    public static final String USER = "loginuser";
+    public static final String PASSWORD = "loginpassword";
     private static final String VERBOSE = "verbose";
 
     public ClientFromArgumentsConfigurator(PolopolyClient client, Arguments arguments) {

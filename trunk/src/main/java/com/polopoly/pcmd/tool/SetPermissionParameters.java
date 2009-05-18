@@ -1,18 +1,14 @@
 package com.polopoly.pcmd.tool;
 
-import java.rmi.RemoteException;
-
-import javax.ejb.FinderException;
-
 import com.polopoly.pcmd.argument.ArgumentException;
 import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.ContentIdListParameters;
 import com.polopoly.pcmd.argument.NotProvidedException;
 import com.polopoly.pcmd.argument.ParameterHelp;
+import com.polopoly.pcmd.parser.ContentIdParser;
 import com.polopoly.user.server.Group;
 import com.polopoly.user.server.GroupId;
 import com.polopoly.user.server.PrincipalId;
-import com.polopoly.user.server.User;
 import com.polopoly.util.client.PolopolyContext;
 
 public class SetPermissionParameters extends ContentIdListParameters {
@@ -47,21 +43,14 @@ public class SetPermissionParameters extends ContentIdListParameters {
             } catch (Exception e) {
                 throw new ArgumentException("While fetching group \"" + group + "\": " + e.getMessage());
             }
-        }
-        else if (user != null) {
-            try {
-                User userObject;
-                userObject = context.getUserServer().getUserByLoginName(user);
-
-                return userObject.getUserId();
-            } catch (RemoteException e) {
-                throw new ArgumentException("While fetching user \"" + user + "\": " + e.getMessage());
-            } catch (FinderException e) {
-                throw new ArgumentException("Found no user with name \"" + user + "\".");
+        } else {
+            String userName = user;
+            if (userName != null) {
+                return ContentIdParser.getUser(context, userName);
             }
-        }
-        else {
-            throw new ArgumentException("Neither " + USER_PARAMETER + " nor " + GROUP_PARAMETER + " specified.");
+            else {
+                throw new ArgumentException("Neither " + USER_PARAMETER + " nor " + GROUP_PARAMETER + " specified.");
+            }
         }
     }
 
@@ -83,7 +72,8 @@ public class SetPermissionParameters extends ContentIdListParameters {
         group = args.getOptionString(GROUP_PARAMETER, null);
 
         if (user == null && group == null) {
-            throw new NotProvidedException("Either the " + USER_PARAMETER + " or the " + GROUP_PARAMETER + " parameter must be specified.");
+            throw new NotProvidedException("Either the " + USER_PARAMETER +
+                    " or the " + GROUP_PARAMETER + " parameter must be specified.");
         }
 
         permission = args.getOptionString(PERMISSION_PARAMETER);

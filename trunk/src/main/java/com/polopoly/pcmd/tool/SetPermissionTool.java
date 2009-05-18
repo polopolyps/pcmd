@@ -5,7 +5,10 @@ import com.polopoly.pcmd.field.content.AbstractContentIdField;
 import com.polopoly.user.server.Acl;
 import com.polopoly.user.server.AclEntry;
 import com.polopoly.user.server.AclId;
+import com.polopoly.user.server.Caller;
 import com.polopoly.user.server.PrincipalId;
+import com.polopoly.util.client.ClientFromArgumentsConfigurator;
+import com.polopoly.util.client.NonLoggedInCaller;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.ContentIdToContentIterator;
 
@@ -17,6 +20,14 @@ public class SetPermissionTool implements Tool<SetPermissionParameters> {
 
     public void execute(PolopolyContext context,
             SetPermissionParameters parameters) {
+        Caller currentCaller = context.getPolicyCMServer().getCurrentCaller();
+
+        if (currentCaller instanceof NonLoggedInCaller) {
+            System.err.println("You must log a user to be able to set an ACL. Specify the " +
+                    ClientFromArgumentsConfigurator.PASSWORD + " parameter to log in.");
+            System.exit(1);
+        }
+
         ContentIdToContentIterator it =
             new ContentIdToContentIterator(context, parameters.getContentIds(), parameters.isStopOnException());
 
@@ -48,9 +59,10 @@ public class SetPermissionTool implements Tool<SetPermissionParameters> {
                 }
 
                 entry.addPermission(parameters.getPermission());
-                acl.addEntry(entry, context.getPolicyCMServer().getCurrentCaller());
+                acl.addEntry(entry, currentCaller);
             } catch (Exception e) {
                 System.err.println(e.toString());
+                e.printStackTrace();
             }
         }
     }
