@@ -27,6 +27,7 @@ import com.polopoly.util.contentid.ContentIdUtil;
 import com.polopoly.util.contentlist.ContentListUtil;
 import com.polopoly.util.contentlist.ContentListUtilImpl;
 import com.polopoly.util.exception.NoSuchChildPolicyException;
+import com.polopoly.util.exception.PolicyDeleteException;
 import com.polopoly.util.exception.PolicyGetException;
 import com.polopoly.util.exception.PolicyModificationException;
 
@@ -171,7 +172,7 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
 
     public <T> void modify(PolicyModification<T> policyModification, Class<T> klass)
             throws PolicyModificationException {
-        modify(policyModification, klass);
+        modify(policyModification, klass, true);
     }
 
     public <T> void modify(PolicyModification<T> policyModification, Class<T> klass, boolean createNewVersion)
@@ -232,6 +233,10 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
 
             throw new PolicyModificationException("While modifying " +
                     policy.getContentId().getContentId().getContentIdString() + ": " + e.getMessage(), e);
+        }
+
+        if (logger.isLoggable(Level.INFO)) {
+            logger.log(Level.INFO, "Committed " + this + " after modification.");
         }
     }
 
@@ -306,5 +311,30 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         }
 
         return name + " in " + policy.getContentId().getContentId().getContentIdString();
+    }
+
+    public void delete() throws PolicyDeleteException {
+        try {
+            getCMServer().removeContent(getContentId().unversioned());
+
+            if (logger.isLoggable(Level.INFO)) {
+                logger.log(Level.INFO, "Deleted " + this + ".");
+            }
+        } catch (CMException e) {
+            throw new PolicyDeleteException("While deleting " + this + ": " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public ContentIdUtil getContentId() {
+        return Util.util(super.getContentId(), context);
+    }
+
+    public <T> void modifyUtil(final PolicyModification<PolicyUtil> policyModification)
+            throws PolicyModificationException {
+         modify(new PolicyModification<Policy>() {
+            public void modify(Policy newVersion) throws CMException {
+                policyModification.modify(Util.util(newVersion));
+            }}, Policy.class);
     }
 }

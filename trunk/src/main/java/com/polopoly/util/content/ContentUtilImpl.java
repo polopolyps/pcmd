@@ -8,6 +8,7 @@ import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.Content;
 import com.polopoly.cm.client.ContentRead;
+import com.polopoly.cm.client.InputTemplate;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.FetchingIterator;
@@ -16,6 +17,8 @@ import com.polopoly.util.contentid.ContentIterable;
 import com.polopoly.util.contentlist.ContentListUtil;
 import com.polopoly.util.contentlist.ContentListUtilImpl;
 import com.polopoly.util.exception.ContentGetException;
+import com.polopoly.util.exception.PolicyGetException;
+import com.polopoly.util.policy.InputTemplateUtil;
 import com.polopoly.util.policy.Util;
 
 public class ContentUtilImpl extends RuntimeExceptionContentWrapper implements ContentUtil {
@@ -52,7 +55,20 @@ public class ContentUtilImpl extends RuntimeExceptionContentWrapper implements C
 
     @Override
     public String toString() {
-        return getName() + " (" + content.getContentId().getContentId().getContentIdString() + ")";
+        try {
+            String contentIdString;
+
+            contentIdString = getExternalIdString();
+
+            if (contentIdString == null) {
+                contentIdString = getContentId().unversioned().getContentIdString();
+            }
+
+            return getName() + " (" + contentIdString + ")";
+        }
+        catch (Exception e) {
+            return content.getContentId() + " (" + e.toString() + ")";
+        }
     }
 
     @Override
@@ -149,5 +165,18 @@ public class ContentUtilImpl extends RuntimeExceptionContentWrapper implements C
                 }};
 
         return new ContentIterable(getContext(), securityParentIdIterable);
+    }
+
+    public InputTemplateUtil getInputTemplate() {
+        try {
+            return Util.util(context.getPolicy(getInputTemplateId(), InputTemplate.class), context);
+        } catch (PolicyGetException e) {
+            throw new CMRuntimeException("While getting input template of " + this + ": " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public ContentIdUtil getContentId() {
+        return Util.util(super.getContentId(), context);
     }
 }

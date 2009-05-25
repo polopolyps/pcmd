@@ -9,7 +9,7 @@ import com.polopoly.pcmd.parser.BooleanParser;
 import com.polopoly.pcmd.parser.ContentIdParser;
 import com.polopoly.util.client.PolopolyContext;
 
-public class ContentIdListParameters implements Parameters {
+public class ContentIdListParameters implements Parameters, Iterable<ContentId> {
     static final String STOPONEXCEPTION = "stoponexception";
 
     private Iterator<ContentId> contentIds;
@@ -76,5 +76,9 @@ public class ContentIdListParameters implements Parameters {
         help.addOption(STOPONEXCEPTION, new BooleanParser(),
                 "Whether to interrupt the operation when an exception occurs or just ignore it and continue.");
         help.setArguments(new ContentIdParser(), "A series of content IDs.");
+    }
+
+    public Iterator<ContentId> iterator() {
+        return getContentIds();
     }
 }

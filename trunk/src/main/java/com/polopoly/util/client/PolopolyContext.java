@@ -8,10 +8,10 @@ import java.util.logging.Logger;
 import com.polopoly.application.Application;
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.ExternalContentId;
+import com.polopoly.cm.VersionedContentId;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.CmClient;
-import com.polopoly.cm.client.ContentRead;
 import com.polopoly.cm.client.EjbCmClient;
 import com.polopoly.cm.client.InputTemplate;
 import com.polopoly.cm.client.UserData;
@@ -24,8 +24,10 @@ import com.polopoly.user.server.UserId;
 import com.polopoly.user.server.UserServer;
 import com.polopoly.util.CheckedCast;
 import com.polopoly.util.CheckedClassCastException;
+import com.polopoly.util.content.ContentReadUtil;
 import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.exception.ContentGetException;
+import com.polopoly.util.exception.NoSuchExternalIdException;
 import com.polopoly.util.exception.PolicyCreateException;
 import com.polopoly.util.exception.PolicyGetException;
 import com.polopoly.util.exception.PolicyModificationException;
@@ -95,11 +97,11 @@ public class PolopolyContext {
     }
 
     public Policy createPolicy(int major, String inputTemplate, PolicyModification<Policy> modification) throws PolicyCreateException {
-        return createPolicy(major, inputTemplate, null, Policy.class);
+        return createPolicy(major, inputTemplate, null, Policy.class, modification);
     }
 
     public Policy createPolicy(int major, ContentId inputTemplate, PolicyModification<Policy> modification) throws PolicyCreateException {
-        return createPolicy(major, inputTemplate, null, Policy.class);
+        return createPolicy(major, inputTemplate, null, Policy.class, modification);
     }
 
     public <T> T createPolicy(int major, String inputTemplateName, ContentId securityParent, Class<T> klass, PolicyModification<T> modification) throws PolicyCreateException {
@@ -111,7 +113,7 @@ public class PolopolyContext {
             throw new PolicyCreateException("The input template \"" + inputTemplateName + "\" could not be used: " + e.getMessage(), e);
         }
 
-        return createPolicy(major, inputTemplate.getContentId().getContentId(), securityParent, klass);
+        return createPolicy(major, inputTemplate.getContentId().getContentId(), securityParent, klass, modification);
     }
 
     public <T> T createPolicy(int major, ContentId inputTemplate, ContentId securityParent, Class<T> klass, PolicyModification<T> modification) throws PolicyCreateException {
@@ -122,9 +124,13 @@ public class PolopolyContext {
                 util((Policy) result).modify(modification, klass, false);
             }
 
+            if (logger.isLoggable(Level.INFO)) {
+                logger.log(Level.INFO, "Created " + util((Policy) result) + ".");
+            }
+
             return result;
         } catch (PolicyModificationException e) {
-            throw new PolicyCreateException("New object with template " + toString(inputTemplate) + ": " + e.getMessage());
+            throw new PolicyCreateException("New object with template " + toString(inputTemplate) + ": " + e.getMessage(), e.getCause());
         } catch (CMException e) {
             throw new PolicyCreateException("Could not create content with template " + toString(inputTemplate) + ": " + e.getMessage(), e);
         } catch (CheckedClassCastException e) {
@@ -181,16 +187,16 @@ public class PolopolyContext {
         }
     }
 
-    public ContentRead getContent(ContentId contentId) throws ContentGetException {
+    public ContentUtil getContent(ContentId contentId) throws ContentGetException {
         try {
-            return getPolicyCMServer().getContent(contentId);
+            return util(getPolicyCMServer().getContent(contentId), this);
         } catch (CMException e) {
             throw new ContentGetException("While fetching content " + toString(contentId) + ": " + e.getMessage(), e);
         }
     }
 
-    public ContentUtil getContentUtil(ContentId contentId) throws ContentGetException {
-        return util(getContent(contentId), getPolicyCMServer());
+    public ContentReadUtil getContent(String externalId) throws ContentGetException {
+        return getContent(new ExternalContentId(externalId));
     }
 
     public UserData getCurrentUser() throws UserNotLoggedInException {
@@ -227,4 +233,27 @@ public class PolopolyContext {
             throw new UserNotLoggedInException();
         }
     }
+
+    public VersionedContentId resolveExternalId(String externalId) throws NoSuchExternalIdException {
+        if (externalId == null) {
+            throw new NoSuchExternalIdException(externalId);
+        }
+
+        VersionedContentId contentId;
+
+        try {
+            contentId = getPolicyCMServer().findContentIdByExternalId(new ExternalContentId(externalId));
+        } catch (CMException e) {
+            logger.log(Level.WARNING, "While resolving external ID \"" + externalId + "\": " + e.getMessage(), e);
+
+            throw new NoSuchExternalIdException(externalId, e);
+        }
+
+        if (contentId == null) {
+            throw new NoSuchExternalIdException(externalId);
+        }
+
+        return contentId;
+    }
+
 }

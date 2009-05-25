@@ -8,7 +8,6 @@ import com.polopoly.cm.client.ContentRead;
  * exceptions that are least likely to occur in practice.
  */
 public interface RuntimeExceptionContent extends ContentRead {
-
     String getName();
     String[] getComponentGroupNames();
     String[] getComponentNames(String groupName);

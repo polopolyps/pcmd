@@ -36,7 +36,7 @@ public class ContentIdUtil extends VersionedContentId {
     }
 
     public ContentUtil asContent() throws ContentGetException {
-        return context.getContentUtil(this);
+        return context.getContent(this);
     }
 
     @Override
@@ -44,15 +44,24 @@ public class ContentIdUtil extends VersionedContentId {
         return util(super.getOtherVersionId(version), context);
     }
 
-    public final ContentIdUtil getDefaultStageVersion() {
+    public ContentIdUtil getDefaultStageVersion() {
         return getOtherVersionId(VersionedContentId.DEFAULT_STAGE_VERSION);
     }
 
-    public final ContentIdUtil getLatestCommittedVersion() {
+    public ContentIdUtil getLatestCommittedVersion() {
         return getOtherVersionId(VersionedContentId.LATEST_COMMITTED_VERSION);
     }
 
-    public final ContentIdUtil getLatestVersion() {
+    public ContentIdUtil getLatestVersion() {
         return getOtherVersionId(VersionedContentId.LATEST_VERSION);
+    }
+
+    public ContentId unversioned() {
+        return getContentId();
+    }
+
+    @Override
+    public String toString() {
+        return getContentIdString();
     }
 }

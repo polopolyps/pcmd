@@ -101,9 +101,11 @@ then
     mvn dependency:resolve
 fi
 
+classpath=$CLASSPATH
+
 if [ -f "$jbossjar" ] 
 then
-    classpath=$jbossjar
+    classpath=$classpath:$jbossjar
 else 
     echo "Could not find jbossall-client.jar, neither in $dir, nor in $jbossjar and JBoss doesn't seem to be running locally."
     exit;
@@ -205,6 +207,30 @@ then
     classpath=$classpath:$groovyjar
 fi
 
+if [ "$1" == "hotdeploy" ] 
+then 
+    jaxenjar=$dir/jaxen-core.jar
+
+    if [ ! -f "$jaxenjar" ] 
+    then 
+        jaxenjar=~/.m2/repository/jaxen/jaxen/1.1/jaxen-1.1.jar
+    fi
+
+    if [ ! -f "$jaxenjar" ] 
+    then 
+        cd $dir
+        mvn dependency:resolve
+    fi
+
+    if [ ! -f "$jaxenjar" ] 
+    then 
+        echo "Could not find Jaxen JAR, neither in maven repository nor in $jaxenjar."
+        exit;
+    fi
+    
+    classpath=$classpath:$jaxenjar
+fi
+
 jar=$dir/pcmd-$version.jar
 
 if [ ! -f "$jar" ]
@@ -265,6 +291,7 @@ if [ "$1" == "--verbose" ]
 then
     echo "Using $jbossjar, $polopolyjar, $lucenejar and $jar"
     echo "Clientlibs are $clientlibs"
+    echo "Adding system classpath $CLASSPATH"
 fi
 
-java -cp $classpath$clientlibs:$jar com.polopoly.pcmd.Main$options "$@"
+java $JAVA_OPTS -cp $classpath$clientlibs:$jar com.polopoly.pcmd.Main$options "$@"

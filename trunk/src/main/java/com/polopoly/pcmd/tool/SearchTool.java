@@ -11,16 +11,7 @@ import com.polopoly.cm.search.db.ReferringTo;
 import com.polopoly.cm.search.db.SearchExpression;
 import com.polopoly.cm.search.db.Version;
 import com.polopoly.cm.server.ServerNames;
-import com.polopoly.pcmd.argument.ArgumentException;
-import com.polopoly.pcmd.argument.Arguments;
-import com.polopoly.pcmd.argument.NotProvidedException;
-import com.polopoly.pcmd.argument.ParameterHelp;
-import com.polopoly.pcmd.argument.Parameters;
 import com.polopoly.pcmd.field.content.AbstractContentIdField;
-import com.polopoly.pcmd.parser.ComponentParser;
-import com.polopoly.pcmd.parser.ContentIdParser;
-import com.polopoly.pcmd.parser.ContentRefParser;
-import com.polopoly.pcmd.parser.IntegerParser;
 import com.polopoly.pcmd.util.Component;
 import com.polopoly.pcmd.util.ContentReference;
 import com.polopoly.util.client.PolopolyContext;
@@ -103,6 +94,18 @@ public class SearchTool implements Tool<SearchParameters> {
             searchExpr = add(searchExpr, new Major(major));
         }
 
+        Integer sinceVersion = parameters.getSinceVersion();
+
+        if (sinceVersion != null) {
+            searchExpr = add(searchExpr, new Version(sinceVersion, Version.GREATER_THAN_OR_EQ));
+        }
+
+        Integer untilVersion = parameters.getUntilVersion();
+
+        if (untilVersion != null) {
+            searchExpr = add(searchExpr, new Version(untilVersion, Version.LESS_THAN_OR_EQ));
+        }
+
         searchExpr = OrderByContentId.descending(searchExpr);
 
         System.err.println("Starting search using search expression...");
@@ -155,119 +158,3 @@ public class SearchTool implements Tool<SearchParameters> {
     }
 }
 
-class SearchParameters implements Parameters {
-    private static final String MAJOR = "major";
-    private static final String COMPONENT = "component";
-    private static final String CONTENTREF = "contentref";
-    private static final String CONTENTREFVALUE = "refersto";
-    private static final String COMPONENTVALUE = "componentvalue";
-    private static final String INPUTTEMPLATE = "inputtemplate";
-    private static final String BATCH_SIZE = "batchsize";
-    private ContentId inputTemplate;
-    private Component component;
-    private ContentReference contentRef;
-    private ContentId contentRefValue;
-    private String componentValue;
-    private Integer major;
-    private int batchSize = SearchTool.DEFAULT_BATCH_SIZE;
-
-    public void setInputTemplate(ContentId inputTemplate) {
-        this.inputTemplate = inputTemplate;
-    }
-
-    public ContentId getInputTemplate() {
-        return inputTemplate;
-    }
-
-    public void setComponent(Component component) {
-        this.component = component;
-    }
-
-    public Component getComponent() {
-        return component;
-    }
-
-    public void setComponentValue(String componentValue) {
-        this.componentValue = componentValue;
-    }
-
-    public String getComponentValue() {
-        return componentValue;
-    }
-
-    public void setMajor(Integer major) {
-        this.major = major;
-    }
-
-    public Integer getMajor() {
-        return major;
-    }
-
-    public int getBatchSize() {
-        return batchSize;
-    }
-
-    public void setBatchSize(int batchSize) {
-        this.batchSize = batchSize;
-    }
-
-    public void setContentRef(ContentReference contentRef) {
-        this.contentRef = contentRef;
-    }
-
-    public ContentReference getContentRef() {
-        return contentRef;
-    }
-
-    public void setContentRefValue(ContentId contentRefValue) {
-        this.contentRefValue = contentRefValue;
-    }
-
-    public ContentId getContentRefValue() {
-        return contentRefValue;
-    }
-
-    public void parseParameters(Arguments args, PolopolyContext context)
-            throws ArgumentException {
-        try {
-            setInputTemplate(args.getOption(INPUTTEMPLATE, new ContentIdParser(context)));
-        } catch (NotProvidedException e) {
-        }
-
-        try {
-            setComponent(args.getOption(COMPONENT, new ComponentParser()));
-            setComponentValue(args.getOptionString(COMPONENTVALUE));
-        } catch (NotProvidedException e) {
-        }
-
-        try {
-            setContentRefValue(args.getOption(CONTENTREFVALUE, new ContentIdParser(context)));
-        } catch (NotProvidedException e) {
-        }
-
-        try {
-            setContentRef(args.getOption(CONTENTREF, new ContentRefParser()));
-        } catch (NotProvidedException e) {
-        }
-
-        try {
-            setMajor(args.getOption(MAJOR, new IntegerParser()));
-        } catch (NotProvidedException e) {
-        }
-
-        try {
-            setBatchSize(args.getOption(BATCH_SIZE, new IntegerParser()));
-        } catch (NotProvidedException e) {
-        }
-    }
-
-    public void getHelp(ParameterHelp help) {
-        help.addOption(MAJOR, new IntegerParser(), "Restrict search to objects with this major.");
-        help.addOption(COMPONENT, new IntegerParser(), "Restrict search to objects with this component set (specify component value for a specific value).");
-        help.addOption(COMPONENTVALUE, null, "Restrict search to objects with [component] set to this value.");
-        help.addOption(CONTENTREF, new ContentRefParser(), "Restrict search to objects with this content reference set (use * as wildcard).");
-        help.addOption(CONTENTREFVALUE, new ContentIdParser(), "Restrict search to [contentref] pointing to this object.");
-        help.addOption(INPUTTEMPLATE, new ContentIdParser(), "Restrict search to objects with this input template.");
-        help.addOption(BATCH_SIZE, new IntegerParser(), "The number of content IDs to request in one batch while searching. Defaults to " + SearchTool.DEFAULT_BATCH_SIZE + ".");
-    }
-}
