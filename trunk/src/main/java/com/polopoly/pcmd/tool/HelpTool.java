@@ -20,12 +20,17 @@ public class HelpTool implements Tool<HelpParameters> {
                 Tool<?> tool = ToolRetriever.getTool(parameters.getTool());
 
                 ParameterHelp help = new ParameterHelp();
-                help.addOption(ClientFromArgumentsConfigurator.SERVER, null, "The server name or the connection URL to use to connect to Polopoly. Defaults to localhost.");
-                help.addOption(ClientFromArgumentsConfigurator.USER, null, "The Polopoly user to log in. Defaults to \"sysadmin\".");
-                help.addOption(ClientFromArgumentsConfigurator.PASSWORD, null, "The password of the Polopoly user to log in. " +
-                		"If not specified, no user will be logged in (which is fine for most operations).");
+                help.addOption(ClientFromArgumentsConfigurator.SERVER, null,
+                        "The server name or the connection URL to use to connect to Polopoly. Defaults to localhost.");
+                help.addOption(ClientFromArgumentsConfigurator.USER, null,
+                        "The Polopoly user to log in. Defaults to \"sysadmin\".");
+                help.addOption(ClientFromArgumentsConfigurator.PASSWORD, null,
+                        "The password of the Polopoly user to log in. " +
+            		"If not specified, no user will be logged in (which is fine for most operations).");
 
                 tool.createParameters().getHelp(help);
+
+                System.err.println(parameters.getTool() + ": " + tool.getHelp());
                 help.print(System.err);
             } catch (NoSuchToolException e) {
                 System.err.println(e.getMessage());
