@@ -6,9 +6,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.client.CMRuntimeException;
@@ -21,6 +23,7 @@ import com.polopoly.util.collection.FetchingIterator;
 
 public class CommandLineArguments implements Arguments {
     private Map<String, String> options = new HashMap<String, String>();
+    private Set<String> unusedParameters = new HashSet<String>();
     private List<String> arguments = new ArrayList<String>();
     private PolopolyContext context;
     private String toolName;
@@ -60,6 +63,16 @@ public class CommandLineArguments implements Arguments {
                 }
             }
         }
+
+        unusedParameters.addAll(options.keySet());
+
+        for (int i = 0; i < arguments.size(); i++) {
+            unusedParameters.add(getUnusedArgumentString(i));
+        }
+    }
+
+    private String getUnusedArgumentString(int i) {
+        return "argument " + (i+1);
     }
 
     public void setContext(PolopolyContext context) {
@@ -72,6 +85,8 @@ public class CommandLineArguments implements Arguments {
         if (optionValue == null) {
             return defaultValue;
         }
+
+        usedOption(option);
 
         return new BooleanParser().parse(optionValue);
     }
@@ -94,6 +109,7 @@ public class CommandLineArguments implements Arguments {
 
         for (int i = firstContentIdIdx; i < arguments.size(); i++) {
             try {
+                usedArgument(i);
                 contentIds.add(parser.parse(arguments.get(i)));
             }
             catch (ArgumentException e) {
@@ -127,6 +143,8 @@ public class CommandLineArguments implements Arguments {
         if (optionString == null) {
             throw new NotProvidedException(name);
         }
+
+        usedOption(name);
 
         return optionString;
     }
@@ -187,6 +205,8 @@ public class CommandLineArguments implements Arguments {
 
     public String getArgument(int i) throws NotProvidedException {
         try {
+            usedArgument(i);
+
             return arguments.get(i);
         } catch (IndexOutOfBoundsException e) {
             throw new NotProvidedException("Argument " + (i+1));
@@ -194,7 +214,17 @@ public class CommandLineArguments implements Arguments {
     }
 
     public <T> T getArgument(int i, Parser<T> parser) throws ArgumentException {
+        usedArgument(i);
+
         return parser.parse(getArgument(i));
+    }
+
+    private void usedArgument(int i) {
+        unusedParameters.remove(getUnusedArgumentString(i));
+    }
+
+    private void usedOption(String name) {
+        unusedParameters.remove(name);
     }
 
     public int getArgumentCount() {
@@ -207,5 +237,9 @@ public class CommandLineArguments implements Arguments {
         }
 
         return toolName;
+    }
+
+    public Set<String> getUnusedParameters() {
+        return unusedParameters;
     }
 }

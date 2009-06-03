@@ -1,6 +1,7 @@
 package com.polopoly.pcmd.argument;
 
 import java.util.Iterator;
+import java.util.Set;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.pcmd.parser.Parser;
@@ -23,4 +24,6 @@ public interface Arguments {
     String getArgument(int i) throws NotProvidedException;
 
     <T> T getArgument(int i, Parser<T> parser) throws ArgumentException;
+
+    Set<String> getUnusedParameters();
 }

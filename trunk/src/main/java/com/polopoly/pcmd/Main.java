@@ -1,6 +1,7 @@
 package com.polopoly.pcmd;
 
 import java.net.ConnectException;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,18 +38,7 @@ public class Main {
         try {
             toolName = arguments.getToolName();
         } catch (NotProvidedException e1) {
-            HelpTool tool = new HelpTool();
-            HelpParameters parameters = tool.createParameters();
-
-            try {
-                parameters.parseParameters(arguments, null);
-            } catch (ArgumentException e) {
-                e.printStackTrace(System.err);
-            }
-
-            tool.execute(null, new HelpParameters());
-
-            System.exit(1);
+            printToolList(arguments);
         }
 
         PolopolyContext context = null;
@@ -98,10 +88,31 @@ public class Main {
         System.exit(0);
     }
 
+    private static void printToolList(Arguments arguments) {
+        HelpTool tool = new HelpTool();
+        HelpParameters parameters = tool.createParameters();
+
+        try {
+            parameters.parseParameters(arguments, null);
+        } catch (ArgumentException e) {
+            e.printStackTrace(System.err);
+        }
+
+        tool.execute(null, new HelpParameters());
+
+        System.exit(1);
+    }
+
     private static <T extends Parameters> void execute(Tool<T> tool, PolopolyContext context, Arguments arguments) throws ArgumentException {
         T parameters = tool.createParameters();
 
         parameters.parseParameters(arguments, context);
+
+        Set<String> unusedParameters = arguments.getUnusedParameters();
+
+        if (!unusedParameters.isEmpty()) {
+            throw new ArgumentException("The following specified parameters were not recognized: " + unusedParameters);
+        }
 
         tool.execute(context, parameters);
     }
