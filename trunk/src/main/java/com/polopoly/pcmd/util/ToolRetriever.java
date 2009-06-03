@@ -72,7 +72,9 @@ public class ToolRetriever {
             char ch = name.charAt(i);
 
             if (Character.isUpperCase(ch)) {
-                result.append('-');
+                if (result.length() > 0) {
+                    result.append('-');
+                }
                 result.append(Character.toLowerCase(ch));
             }
             else {
