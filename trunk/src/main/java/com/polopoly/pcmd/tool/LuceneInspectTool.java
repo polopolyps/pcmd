@@ -94,6 +94,6 @@ public class LuceneInspectTool implements Tool<LuceneInspectParameters>, Require
     }
 
     public String getHelp() {
-        return "Displays the fields in the Lucene document for the specified content objects.";
+        return "Displays the fields in the Lucene documents for the specified content objects.";
     }
 }

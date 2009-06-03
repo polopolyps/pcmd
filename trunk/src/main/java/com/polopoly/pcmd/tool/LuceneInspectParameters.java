@@ -14,6 +14,7 @@ public class LuceneInspectParameters extends ContentIdListParameters {
 
     @Override
     public void getHelp(ParameterHelp help) {
+        super.getHelp(help);
         help.addOption(INDEX, null, "The index to search in. Defaults to " + DEFAULT_INDEX + ".");
     }
 
