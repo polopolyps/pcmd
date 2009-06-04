@@ -3,6 +3,7 @@ com.polopoly.pcmd.tool.DeleteVersionTool
 com.polopoly.pcmd.tool.HelpTool
 com.polopoly.pcmd.tool.InspectTool
 com.polopoly.pcmd.tool.ListTool
+com.polopoly.pcmd.tool.LockTool
 com.polopoly.pcmd.tool.LuceneTool
 com.polopoly.pcmd.tool.LuceneInspectTool
 com.polopoly.pcmd.tool.ResolveTool
