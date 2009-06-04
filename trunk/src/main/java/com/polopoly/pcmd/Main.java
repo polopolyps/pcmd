@@ -1,6 +1,5 @@
 package com.polopoly.pcmd;
 
-import java.net.ConnectException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +17,7 @@ import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.pcmd.util.ToolRetriever;
 import com.polopoly.pcmd.util.ToolRetriever.NoSuchToolException;
 import com.polopoly.util.client.ClientFromArgumentsConfigurator;
+import com.polopoly.util.client.ConnectException;
 import com.polopoly.util.client.PolopolyClient;
 import com.polopoly.util.client.PolopolyContext;
 

@@ -17,6 +17,7 @@ import com.polopoly.management.ManagedBeanRegistry;
 import com.polopoly.management.jmx.JMXManagedBeanRegistry;
 import com.polopoly.statistics.client.StatisticsClient;
 import com.polopoly.statistics.message.logging.UDPLogMsgClient;
+import com.polopoly.user.server.AuthenticationFailureException;
 import com.polopoly.user.server.Caller;
 import com.polopoly.user.server.User;
 import com.polopoly.user.server.UserId;
@@ -174,6 +175,8 @@ public class PolopolyClient {
             }
         } catch (FinderException e) {
             throw new ConnectException("The user " + userName + " to log in could not be found.");
+        } catch (AuthenticationFailureException e) {
+            throw new ConnectException("The password supplied for user " + userName + " was incorrect.");
         } catch (Exception e) {
             throw new ConnectException("An error occurred while trying to log in user " + userName + ": " + e.getMessage(), e);
         }
