@@ -183,7 +183,7 @@ else
     exit;
 fi
 
-if [ "$1" == "groovy" ] 
+if [[ "$1"="groovy" ]]
 then 
     groovyjar=$dir/groovy.jar
 
@@ -207,7 +207,7 @@ then
     classpath=$classpath:$groovyjar
 fi
 
-if [ "$1" == "hotdeploy" ] 
+if [[ "$1" = "hotdeploy" ]]
 then 
     jaxenjar=$dir/jaxen-core.jar
 
@@ -287,7 +287,7 @@ then
     done
 fi
 
-if [ "$1" == "--verbose" ]
+if [ "$1" = "--verbose" ]
 then
     echo "Using $jbossjar, $polopolyjar, $lucenejar and $jar"
     echo "Clientlibs are $clientlibs"
