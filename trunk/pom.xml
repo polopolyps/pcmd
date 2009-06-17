@@ -80,7 +80,7 @@
       <groupId>jboss</groupId>
       <artifactId>jbossall-client</artifactId>
       <version>4.0.5.GA</version>
-      <scope>runtime</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -96,7 +96,7 @@
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-all</artifactId> 
       <version>1.6.1</version>
-      <scope>runtime</scope>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
