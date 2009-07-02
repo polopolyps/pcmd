@@ -1,10 +1,10 @@
 package com.polopoly.pcmd.tool;
 
 import com.polopoly.cm.client.ContentRead;
-import com.polopoly.pcmd.field.Field;
-import com.polopoly.pcmd.util.ContentIdToContentIterator;
+import com.polopoly.util.client.PolopolyContext;
+import com.polopoly.util.collection.ContentIdToContentIterator;
 
-public class ListTool implements Tool<ListParameters> {
+public class ListTool extends AbstractFieldListTool<ListParameters> {
     public ListParameters createParameters() {
         return new ListParameters();
     }
@@ -13,27 +13,10 @@ public class ListTool implements Tool<ListParameters> {
         ContentIdToContentIterator it =
             new ContentIdToContentIterator(context, parameters.getContentIds(), parameters.isStopOnException());
 
-        StringBuffer line = new StringBuffer(100);
-
         while (it.hasNext()) {
-            line.setLength(0);
-
             ContentRead content = it.next();
 
-            boolean first = true;
-
-            for (Field field : parameters.getFieldList()) {
-                if (!first) {
-                    line.append(parameters.getDelimiter());
-                }
-                else {
-                    first = false;
-                }
-
-                line.append(field.get(content, context));
-            }
-
-            System.out.println(line);
+            System.out.println(getFieldValues(context, content, parameters));
         }
 
         it.printInfo(System.err);

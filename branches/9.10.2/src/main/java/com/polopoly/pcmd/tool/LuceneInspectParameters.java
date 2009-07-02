@@ -7,12 +7,14 @@ import com.polopoly.pcmd.argument.ArgumentException;
 import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.ContentIdListParameters;
 import com.polopoly.pcmd.argument.ParameterHelp;
+import com.polopoly.util.client.PolopolyContext;
 
 public class LuceneInspectParameters extends ContentIdListParameters {
     private String index = DEFAULT_INDEX;
 
     @Override
     public void getHelp(ParameterHelp help) {
+        super.getHelp(help);
         help.addOption(INDEX, null, "The index to search in. Defaults to " + DEFAULT_INDEX + ".");
     }
 

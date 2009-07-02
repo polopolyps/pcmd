@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.pcmd.argument.ContentIdListParameters;
+import com.polopoly.util.client.PolopolyContext;
 
 public class ResolveTool implements Tool<ContentIdListParameters> {
 

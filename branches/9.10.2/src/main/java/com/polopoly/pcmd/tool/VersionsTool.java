@@ -3,10 +3,14 @@ package com.polopoly.pcmd.tool;
 import java.util.Iterator;
 
 import com.polopoly.cm.ContentId;
+import com.polopoly.cm.VersionInfo;
 import com.polopoly.cm.VersionedContentId;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.ContentRead;
+import com.polopoly.cm.client.impl.exceptions.EJBFinderException;
+import com.polopoly.pcmd.field.content.AbstractContentIdField;
+import com.polopoly.util.client.PolopolyContext;
 
 public class VersionsTool implements Tool<VersionsParameters> {
 
@@ -37,21 +41,26 @@ public class VersionsTool implements Tool<VersionsParameters> {
                             new VersionedContentId(contentId, VersionedContentId.DEFAULT_STAGE_VERSION));
                 }
 
-                printVersion(content, latest, latestCommitted, defaultStage);
+                VersionInfo[] versions = context.getPolicyCMServer().getContentHistory(contentId).getVersionInfos();
 
-                int version;
+                for (int i = versions.length-1; i >= 0; i--) {
+                    VersionInfo versionInfo = versions[i];
+                    VersionedContentId versionedId = new VersionedContentId(contentId, versionInfo.getVersion());
 
-                while ((version = content.getVersionInfo().getPreviousVersion()) > 0) {
-                    content = context.getPolicyCMServer().getContent(new VersionedContentId(contentId, version));
+                    try {
+                        content = context.getPolicyCMServer().getContent(versionedId);
 
-                    printVersion(content, latest, latestCommitted, defaultStage);
+                        printVersion(content, latest, latestCommitted, defaultStage);
+                    } catch (EJBFinderException e) {
+                        System.err.println("The version " + versionInfo.getVersion() + " did not exist.");
+                    }
                 }
             } catch (CMException e) {
                 if (parameters.isStopOnException()) {
                     throw new CMRuntimeException(contentId.getContentIdString(), e);
                 }
                 else {
-                    System.err.println(contentId.getContentIdString() + ": " + e);
+                    System.err.println(AbstractContentIdField.get(contentId, context) + ": " + e);
                 }
             }
         }

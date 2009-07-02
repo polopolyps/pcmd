@@ -6,6 +6,7 @@ import com.polopoly.cm.ContentId;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.pcmd.argument.ContentIdListParameters;
+import com.polopoly.util.client.PolopolyContext;
 
 public class DeleteTool implements Tool<ContentIdListParameters> {
     public ContentIdListParameters createParameters() {

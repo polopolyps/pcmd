@@ -19,14 +19,15 @@ import com.polopoly.cm.search.index.search.RemoteSearchService;
 import com.polopoly.cm.search.index.search.SearchHit;
 import com.polopoly.cm.search.index.search.SearchResult;
 import com.polopoly.management.ServiceNotAvailableException;
-import com.polopoly.pcmd.util.ContentIdToContentIterator;
+import com.polopoly.util.client.PolopolyContext;
+import com.polopoly.util.collection.ContentIdToContentIterator;
 
-public class LuceneInspectTool implements Tool<LuceneInspectParameters> {
+public class LuceneInspectTool implements Tool<LuceneInspectParameters>, RequiresIndexServer {
     public LuceneInspectParameters createParameters() {
         return new LuceneInspectParameters();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "deprecation" })
     public void execute(PolopolyContext context, LuceneInspectParameters parameters) {
         try {
             RemoteSearchService searchService =
@@ -93,6 +94,6 @@ public class LuceneInspectTool implements Tool<LuceneInspectParameters> {
     }
 
     public String getHelp() {
-        return "Displays the fields in the Lucene document for the specified content objects.";
+        return "Displays the fields in the Lucene documents for the specified content objects.";
     }
 }

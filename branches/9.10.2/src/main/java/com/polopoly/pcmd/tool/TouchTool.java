@@ -8,6 +8,8 @@ import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.policy.Policy;
 import com.polopoly.pcmd.argument.ContentIdListParameters;
+import com.polopoly.pcmd.field.content.AbstractContentIdField;
+import com.polopoly.util.client.PolopolyContext;
 
 public class TouchTool implements Tool<ContentIdListParameters> {
 
@@ -34,9 +36,12 @@ public class TouchTool implements Tool<ContentIdListParameters> {
 
                 // first retrieve the old policy so we are sure we can actually load it (i.e. that we have the policy class on the class path).
                 context.getPolicyCMServer().getPolicy(versionedId);
+
                 Policy policy = context.getPolicyCMServer().createContentVersion(versionedId);
 
                 policy.getContent().commit();
+
+                System.out.println(AbstractContentIdField.get(policy.getContentId(), context));
             } catch (CMException e) {
                 String errorString = "While touching " + contentId.getContentIdString() + ": " + e;
 

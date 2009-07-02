@@ -2,10 +2,11 @@ package com.polopoly.pcmd.tool;
 
 import java.util.ServiceLoader;
 
-import com.polopoly.pcmd.Main;
 import com.polopoly.pcmd.argument.ParameterHelp;
 import com.polopoly.pcmd.util.ToolRetriever;
 import com.polopoly.pcmd.util.ToolRetriever.NoSuchToolException;
+import com.polopoly.util.client.ClientFromArgumentsConfigurator;
+import com.polopoly.util.client.PolopolyContext;
 
 public class HelpTool implements Tool<HelpParameters> {
     public HelpParameters createParameters() {
@@ -19,12 +20,17 @@ public class HelpTool implements Tool<HelpParameters> {
                 Tool<?> tool = ToolRetriever.getTool(parameters.getTool());
 
                 ParameterHelp help = new ParameterHelp();
-                help.addOption(Main.SERVER, null, "The server name or the connection URL to use to connect to Polopoly. Defaults to localhost.");
-                help.addOption(Main.USER, null, "The Polopoly user to log in. Defaults to \"sysadmin\".");
-                help.addOption(Main.PASSWORD, null, "The password of the Polopoly user to log in. " +
-                		"If not specified, no user will be logged in (which is fine for most operations).");
+                help.addOption(ClientFromArgumentsConfigurator.SERVER, null,
+                        "The server name or the connection URL to use to connect to Polopoly. Defaults to localhost.");
+                help.addOption(ClientFromArgumentsConfigurator.USER, null,
+                        "The Polopoly user to log in. Defaults to \"sysadmin\".");
+                help.addOption(ClientFromArgumentsConfigurator.PASSWORD, null,
+                        "The password of the Polopoly user to log in. " +
+            		"If not specified, no user will be logged in (which is fine for most operations).");
 
                 tool.createParameters().getHelp(help);
+
+                System.err.println(parameters.getTool() + ": " + tool.getHelp());
                 help.print(System.err);
             } catch (NoSuchToolException e) {
                 System.err.println(e.getMessage());

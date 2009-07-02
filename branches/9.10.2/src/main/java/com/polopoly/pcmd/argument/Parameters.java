@@ -1,6 +1,6 @@
 package com.polopoly.pcmd.argument;
 
-import com.polopoly.pcmd.tool.PolopolyContext;
+import com.polopoly.util.client.PolopolyContext;
 
 /**
  * Each tool is associated with a class implementing this interface. It has get and set methods for the

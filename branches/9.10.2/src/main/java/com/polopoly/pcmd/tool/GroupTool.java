@@ -11,11 +11,12 @@ import com.polopoly.pcmd.argument.ArgumentException;
 import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.ParameterHelp;
 import com.polopoly.pcmd.argument.Parameters;
-import com.polopoly.pcmd.field.AbstractPrincipalIdField;
+import com.polopoly.pcmd.field.content.AbstractPrincipalIdField;
 import com.polopoly.user.server.Group;
 import com.polopoly.user.server.GroupId;
 import com.polopoly.user.server.PrincipalId;
 import com.polopoly.user.server.UserServer;
+import com.polopoly.util.client.PolopolyContext;
 
 public class GroupTool implements Tool<GroupParameters> {
     public GroupParameters createParameters() {
@@ -98,6 +99,7 @@ class GroupParameters implements Parameters, Iterable<Group> {
             try {
                 GroupId groupId = new GroupId(Integer.parseInt(groupName));
                 addGroup(userServer.findGroup(groupId));
+                continue;
             } catch (NumberFormatException e) {
             } catch (IllegalArgumentException e) {
             } catch (RemoteException e) {
@@ -111,10 +113,11 @@ class GroupParameters implements Parameters, Iterable<Group> {
 
                 if (groups.length == 0) {
                     System.err.println("No groups found with name or ID \"" + groupName + "\".");
+                    System.exit(1);
                 }
 
                 for (int j = 0; j < groups.length; j++) {
-                    addGroup(userServer.findGroup(groups[i]));
+                    addGroup(userServer.findGroup(groups[j]));
                 }
             } catch (RemoteException e) {
                 System.err.println(e.toString());

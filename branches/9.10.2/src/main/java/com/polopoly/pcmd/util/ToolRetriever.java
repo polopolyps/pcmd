@@ -1,6 +1,8 @@
 package com.polopoly.pcmd.util;
 
 import com.polopoly.pcmd.tool.Tool;
+import com.polopoly.util.CheckedCast;
+import com.polopoly.util.CheckedClassCastException;
 
 public class ToolRetriever {
     public static class NoSuchToolException extends Exception {
@@ -70,7 +72,9 @@ public class ToolRetriever {
             char ch = name.charAt(i);
 
             if (Character.isUpperCase(ch)) {
-                result.append('-');
+                if (result.length() > 0) {
+                    result.append('-');
+                }
                 result.append(Character.toLowerCase(ch));
             }
             else {

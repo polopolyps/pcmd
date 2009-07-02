@@ -6,9 +6,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.client.CMRuntimeException;
@@ -16,11 +18,12 @@ import com.polopoly.pcmd.parser.BooleanParser;
 import com.polopoly.pcmd.parser.ContentIdParser;
 import com.polopoly.pcmd.parser.ParseException;
 import com.polopoly.pcmd.parser.Parser;
-import com.polopoly.pcmd.tool.PolopolyContext;
-import com.polopoly.pcmd.util.FetchingIterator;
+import com.polopoly.util.client.PolopolyContext;
+import com.polopoly.util.collection.FetchingIterator;
 
 public class CommandLineArguments implements Arguments {
-    private Map<String, String> options = new HashMap<String, String>();
+    private Map<String, List<String>> options = new HashMap<String, List<String>>();
+    private Set<String> unusedParameters = new HashSet<String>();
     private List<String> arguments = new ArrayList<String>();
     private PolopolyContext context;
     private String toolName;
@@ -43,13 +46,26 @@ public class CommandLineArguments implements Arguments {
                }
 
                int j = option.indexOf("=");
+               String optionValue;
+               String optionName;
 
                if (j == -1) {
-                   options.put(option, "true");
+                   optionName = option;
+                   optionValue = "true";
                }
                else {
-                   options.put(option.substring(0, j), option.substring(j+1));
+                   optionName = option.substring(0, j);
+                   optionValue = option.substring(j+1);
                }
+
+               List<String> existingValues = options.get(optionName);
+
+               if (existingValues == null) {
+                   existingValues = new ArrayList<String>();
+                   options.put(optionName, existingValues);
+               }
+
+               existingValues.add(optionValue);
             }
             else {
                 if (arguments.size() == 0 && toolName == null) {
@@ -60,6 +76,16 @@ public class CommandLineArguments implements Arguments {
                 }
             }
         }
+
+        unusedParameters.addAll(options.keySet());
+
+        for (int i = 0; i < arguments.size(); i++) {
+            unusedParameters.add(getUnusedArgumentString(i));
+        }
+    }
+
+    private String getUnusedArgumentString(int i) {
+        return "argument " + (i+1);
     }
 
     public void setContext(PolopolyContext context) {
@@ -67,17 +93,24 @@ public class CommandLineArguments implements Arguments {
     }
 
     public boolean getFlag(String option, boolean defaultValue) throws ParseException {
-        String optionValue = options.get(option);
+        List<String> optionValues = options.get(option);
 
-        if (optionValue == null) {
+        if (optionValues == null) {
             return defaultValue;
         }
 
-        return new BooleanParser().parse(optionValue);
+        usedOption(option);
+
+        if (optionValues.size() > 1) {
+            System.out.println("Only one value for option \"" + option + "\" was expected. " +
+                "Only the value \"" + optionValues.get(0) + "\" will be used.");
+        }
+
+        return new BooleanParser().parse(optionValues.get(0));
     }
 
-    public Iterator<ContentId> getArgumentContentIds() throws ArgumentException {
-        if (arguments.size() == 0) {
+    public Iterator<ContentId> getArgumentContentIds(int firstContentIdIdx, boolean stopOnException) throws ArgumentException {
+        if (arguments.size() <= firstContentIdIdx) {
             throw new NotProvidedException("Expected a list of content IDs as arguments.");
         }
 
@@ -92,8 +125,19 @@ public class CommandLineArguments implements Arguments {
             parser = new ContentIdParser();
         }
 
-        for (String argument : arguments) {
-            contentIds.add(parser.parse(argument));
+        for (int i = firstContentIdIdx; i < arguments.size(); i++) {
+            try {
+                usedArgument(i);
+                contentIds.add(parser.parse(arguments.get(i)));
+            }
+            catch (ArgumentException e) {
+                if (stopOnException) {
+                    throw e;
+                }
+                else {
+                    System.err.println(e.getMessage());
+                }
+            }
         }
 
         return contentIds.iterator();
@@ -111,20 +155,53 @@ public class CommandLineArguments implements Arguments {
         }
     }
 
-    public String getOptionString(String name) throws ArgumentException {
-        String optionString = options.get(name);
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getOptions(String name, Parser<T> parser) throws ArgumentException {
+        try {
+            List<String> optionStrings = getOptionStrings(name);
 
-        if (optionString == null) {
+            List<T> result = new ArrayList();
+
+            for (String optionString : optionStrings) {
+                result.add(parser.parse(optionString));
+            }
+
+            return result;
+        }
+        catch (ParseException e) {
+            e.setField(name);
+
+            throw e;
+        }
+    }
+
+    public List<String> getOptionStrings(String name) throws NotProvidedException {
+        List<String> optionValues = options.get(name);
+
+        if (optionValues == null) {
             throw new NotProvidedException(name);
         }
 
-        return optionString;
+        usedOption(name);
+
+        return optionValues;
+    }
+
+    public String getOptionString(String name) throws NotProvidedException {
+        List<String> optionStrings = getOptionStrings(name);
+
+        if (optionStrings.size() > 1) {
+            System.out.println("Only one value for option \"" + name + "\" was expected. " +
+		"Only the value \"" + optionStrings.get(0) + "\" will be used.");
+        }
+
+        return optionStrings.get(0);
     }
 
     public String getOptionString(String name, String defaultValue) {
         try {
             return getOptionString(name);
-        } catch (ArgumentException e) {
+        } catch (NotProvidedException e) {
             return defaultValue;
         }
     }
@@ -175,8 +252,28 @@ public class CommandLineArguments implements Arguments {
         return stdInContentIdIterator;
     }
 
-    public String getArgument(int i) {
-        return arguments.get(i);
+    public String getArgument(int i) throws NotProvidedException {
+        try {
+            usedArgument(i);
+
+            return arguments.get(i);
+        } catch (IndexOutOfBoundsException e) {
+            throw new NotProvidedException("Argument " + (i+1));
+        }
+    }
+
+    public <T> T getArgument(int i, Parser<T> parser) throws ArgumentException {
+        usedArgument(i);
+
+        return parser.parse(getArgument(i));
+    }
+
+    private void usedArgument(int i) {
+        unusedParameters.remove(getUnusedArgumentString(i));
+    }
+
+    private void usedOption(String name) {
+        unusedParameters.remove(name);
     }
 
     public int getArgumentCount() {
@@ -189,5 +286,9 @@ public class CommandLineArguments implements Arguments {
         }
 
         return toolName;
+    }
+
+    public Set<String> getUnusedParameters() {
+        return unusedParameters;
     }
 }

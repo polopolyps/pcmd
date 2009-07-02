@@ -11,9 +11,10 @@ import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.search.index.search.RemoteSearchService;
 import com.polopoly.cm.search.index.search.SearchResult;
 import com.polopoly.management.ServiceNotAvailableException;
-import com.polopoly.pcmd.field.AbstractContentIdField;
+import com.polopoly.pcmd.field.content.AbstractContentIdField;
+import com.polopoly.util.client.PolopolyContext;
 
-public class LuceneTool implements Tool<LuceneParameters> {
+public class LuceneTool implements Tool<LuceneParameters>, RequiresIndexServer {
     public static final int DEFAULT_BATCH_SIZE = 100;
 
     public LuceneParameters createParameters() {
