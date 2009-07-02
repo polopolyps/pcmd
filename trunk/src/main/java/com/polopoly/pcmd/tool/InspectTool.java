@@ -62,6 +62,8 @@ public class InspectTool implements Tool<ContentIdListParameters> {
                         UserId userId = userData.getUserId();
                         UserServer userServer = context.getUserServer();
 
+                        System.out.println("loginname" + PREFIX_FIELD_SEPARATOR + userData.getLoginName());
+
                         for (GroupId groupId : userServer.getAllGroups()) {
                             try {
                                 Group group = userServer.findGroup(groupId);

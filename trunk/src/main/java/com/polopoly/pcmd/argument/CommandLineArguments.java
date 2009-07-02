@@ -22,7 +22,7 @@ import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.FetchingIterator;
 
 public class CommandLineArguments implements Arguments {
-    private Map<String, String> options = new HashMap<String, String>();
+    private Map<String, List<String>> options = new HashMap<String, List<String>>();
     private Set<String> unusedParameters = new HashSet<String>();
     private List<String> arguments = new ArrayList<String>();
     private PolopolyContext context;
@@ -46,13 +46,26 @@ public class CommandLineArguments implements Arguments {
                }
 
                int j = option.indexOf("=");
+               String optionValue;
+               String optionName;
 
                if (j == -1) {
-                   options.put(option, "true");
+                   optionName = option;
+                   optionValue = "true";
                }
                else {
-                   options.put(option.substring(0, j), option.substring(j+1));
+                   optionName = option.substring(0, j);
+                   optionValue = option.substring(j+1);
                }
+
+               List<String> existingValues = options.get(optionName);
+
+               if (existingValues == null) {
+                   existingValues = new ArrayList<String>();
+                   options.put(optionName, existingValues);
+               }
+
+               existingValues.add(optionValue);
             }
             else {
                 if (arguments.size() == 0 && toolName == null) {
@@ -80,15 +93,20 @@ public class CommandLineArguments implements Arguments {
     }
 
     public boolean getFlag(String option, boolean defaultValue) throws ParseException {
-        String optionValue = options.get(option);
+        List<String> optionValues = options.get(option);
 
-        if (optionValue == null) {
+        if (optionValues == null) {
             return defaultValue;
         }
 
         usedOption(option);
 
-        return new BooleanParser().parse(optionValue);
+        if (optionValues.size() > 1) {
+            System.out.println("Only one value for option \"" + option + "\" was expected. " +
+                "Only the value \"" + optionValues.get(0) + "\" will be used.");
+        }
+
+        return new BooleanParser().parse(optionValues.get(0));
     }
 
     public Iterator<ContentId> getArgumentContentIds(int firstContentIdIdx, boolean stopOnException) throws ArgumentException {
@@ -137,16 +155,47 @@ public class CommandLineArguments implements Arguments {
         }
     }
 
-    public String getOptionString(String name) throws NotProvidedException {
-        String optionString = options.get(name);
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getOptions(String name, Parser<T> parser) throws ArgumentException {
+        try {
+            List<String> optionStrings = getOptionStrings(name);
 
-        if (optionString == null) {
+            List<T> result = new ArrayList();
+
+            for (String optionString : optionStrings) {
+                result.add(parser.parse(optionString));
+            }
+
+            return result;
+        }
+        catch (ParseException e) {
+            e.setField(name);
+
+            throw e;
+        }
+    }
+
+    public List<String> getOptionStrings(String name) throws NotProvidedException {
+        List<String> optionValues = options.get(name);
+
+        if (optionValues == null) {
             throw new NotProvidedException(name);
         }
 
         usedOption(name);
 
-        return optionString;
+        return optionValues;
+    }
+
+    public String getOptionString(String name) throws NotProvidedException {
+        List<String> optionStrings = getOptionStrings(name);
+
+        if (optionStrings.size() > 1) {
+            System.out.println("Only one value for option \"" + name + "\" was expected. " +
+		"Only the value \"" + optionStrings.get(0) + "\" will be used.");
+        }
+
+        return optionStrings.get(0);
     }
 
     public String getOptionString(String name, String defaultValue) {
