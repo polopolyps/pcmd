@@ -4,7 +4,7 @@
   <artifactId>pcmd</artifactId>
   <packaging>jar</packaging>
   <name>Polopoly Command Tool</name>
-  <version>9.12.0.2</version>
+  <version>9.13.0-DP4.0</version>
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <plugins>
@@ -74,7 +74,7 @@
     <dependency>
       <groupId>com.polopoly</groupId>
       <artifactId>polopoly</artifactId>
-      <version>9.12.0</version>
+      <version>9.13.0-DP4</version>
     </dependency>
     <dependency>
       <groupId>jboss</groupId>
