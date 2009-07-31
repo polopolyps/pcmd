@@ -1,20 +1,24 @@
 package com.polopoly.pcmd.argument;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import com.polopoly.cm.ContentId;
+import com.polopoly.pcmd.parser.ParseException;
 import com.polopoly.pcmd.parser.Parser;
 
 public interface Arguments {
-    Iterator<ContentId> getStdInContentIds() throws ArgumentException;
+    Iterator<ContentId> getStdInContentIds();
 
-    Iterator<ContentId> getArgumentContentIds(int i, boolean stopOnException) throws ArgumentException;
+    Collection<ContentId> getArgumentContentIds(int i, boolean stopOnException) throws ArgumentException;
 
     <T> T getOption(String name, Parser<T> parser) throws ArgumentException;
 
     <T> List<T> getOptions(String name, Parser<T> parser) throws ArgumentException;
+
+    <T> T getOption(String option, Parser<T> parser, String defaultString) throws ParseException;
 
     boolean getFlag(String option, boolean defaultValue) throws ArgumentException;
 

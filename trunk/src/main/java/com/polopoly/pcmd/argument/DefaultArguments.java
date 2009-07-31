@@ -21,61 +21,18 @@ import com.polopoly.pcmd.parser.Parser;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.FetchingIterator;
 
-public class CommandLineArguments implements Arguments {
+public class DefaultArguments implements Arguments {
     private Map<String, List<String>> options = new HashMap<String, List<String>>();
     private Set<String> unusedParameters = new HashSet<String>();
     private List<String> arguments = new ArrayList<String>();
     private PolopolyContext context;
     private String toolName;
 
-    public CommandLineArguments(String[] args, PolopolyContext context) throws ArgumentException {
-        this(args);
-
-        setContext(context);
-    }
-
-    public CommandLineArguments(String[] args) throws ArgumentException {
-        for (int i = 0; i < args.length; i++) {
-            String arg = args[i];
-
-            if (arg.startsWith("--")) {
-               String option = arg.substring(2);
-
-               if (option.equals("")) {
-                   throw new ArgumentException("Expected option name after \"--\".");
-               }
-
-               int j = option.indexOf("=");
-               String optionValue;
-               String optionName;
-
-               if (j == -1) {
-                   optionName = option;
-                   optionValue = "true";
-               }
-               else {
-                   optionName = option.substring(0, j);
-                   optionValue = option.substring(j+1);
-               }
-
-               List<String> existingValues = options.get(optionName);
-
-               if (existingValues == null) {
-                   existingValues = new ArrayList<String>();
-                   options.put(optionName, existingValues);
-               }
-
-               existingValues.add(optionValue);
-            }
-            else {
-                if (arguments.size() == 0 && toolName == null) {
-                    toolName = arg;
-                }
-                else {
-                    arguments.add(arg);
-                }
-            }
-        }
+    public DefaultArguments(String toolName, Map<String, List<String>> options,
+            List<String> arguments) throws ArgumentException {
+        this.toolName = toolName;
+        this.options = options;
+        this.arguments = arguments;
 
         unusedParameters.addAll(options.keySet());
 
@@ -109,7 +66,7 @@ public class CommandLineArguments implements Arguments {
         return new BooleanParser().parse(optionValues.get(0));
     }
 
-    public Iterator<ContentId> getArgumentContentIds(int firstContentIdIdx, boolean stopOnException) throws ArgumentException {
+    public Collection<ContentId> getArgumentContentIds(int firstContentIdIdx, boolean stopOnException) throws ArgumentException {
         if (arguments.size() <= firstContentIdIdx) {
             throw new NotProvidedException("Expected a list of content IDs as arguments.");
         }
@@ -140,7 +97,25 @@ public class CommandLineArguments implements Arguments {
             }
         }
 
-        return contentIds.iterator();
+        return contentIds;
+    }
+
+    public <T> T getOption(String name, Parser<T> parser, String defaultString) throws ParseException {
+        try {
+            String optionString;
+            try {
+                optionString = getOptionString(name);
+            } catch (NotProvidedException e) {
+                optionString = defaultString;
+            }
+
+            return parser.parse(optionString);
+        }
+        catch (ParseException e) {
+            e.setField(name);
+
+            throw e;
+        }
     }
 
     public <T> T getOption(String name, Parser<T> parser)
@@ -248,7 +223,7 @@ public class CommandLineArguments implements Arguments {
         }
     };
 
-    public Iterator<ContentId> getStdInContentIds() throws ArgumentException {
+    public Iterator<ContentId> getStdInContentIds() {
         return stdInContentIdIterator;
     }
 

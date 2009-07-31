@@ -12,7 +12,7 @@ import com.polopoly.util.client.PolopolyContext;
 public class ContentIdListParameters implements Parameters, Iterable<ContentId> {
     static final String STOPONEXCEPTION = "stoponexception";
 
-    private Iterator<ContentId> contentIds;
+    private Iterable<ContentId> contentIds;
     private boolean stopOnException = false;
     private boolean idsFromStandardInIfNotArgument = true;
 
@@ -25,7 +25,7 @@ public class ContentIdListParameters implements Parameters, Iterable<ContentId> 
         this.idsFromStandardInIfNotArgument = idsFromStandardInIfNotArgument;
     }
 
-    public void setContentIds(Iterator<ContentId> contentIds) {
+    public void setContentIds(Iterable<ContentId> contentIds) {
         this.contentIds = contentIds;
     }
 
@@ -34,7 +34,7 @@ public class ContentIdListParameters implements Parameters, Iterable<ContentId> 
             throw new RuntimeException("parseParameters was never called.");
         }
 
-        return contentIds;
+        return contentIds.iterator();
     }
 
     public void setStopOnException(boolean stopOnException) {
@@ -46,21 +46,30 @@ public class ContentIdListParameters implements Parameters, Iterable<ContentId> 
     }
 
 
-    public void parseParameters(Arguments args, PolopolyContext context)
-            throws ArgumentException {
+    public void parseParameters(final Arguments args, PolopolyContext context) throws ArgumentException {
         setStopOnException(args.getFlag(STOPONEXCEPTION, true));
 
         try {
             setContentIds(args.getArgumentContentIds(getFirstContentIdIndex(), isStopOnException()));
         }
         catch (NotProvidedException npe) {
-            if (isIdsFromStandardInIfNotArgument()) {
-                setContentIds(args.getStdInContentIds());
-            }
-            else {
+            Iterable<ContentId> contentIdIterable = new Iterable<ContentId>() {
                 List<ContentId> emptyList = Collections.emptyList();
-                setContentIds(emptyList.iterator());
-            }
+
+                Iterable<ContentId> stdInIterable =
+                    new RestartableIterator<ContentId>(args.getStdInContentIds());
+
+                public Iterator<ContentId> iterator() {
+                    if (isIdsFromStandardInIfNotArgument()) {
+                        return stdInIterable.iterator();
+                    }
+                    else {
+                        return emptyList.iterator();
+                    }
+                }
+            };
+
+            setContentIds(contentIdIterable);
         }
     }
 

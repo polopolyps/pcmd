@@ -7,7 +7,8 @@ import java.util.logging.Logger;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.pcmd.argument.ArgumentException;
 import com.polopoly.pcmd.argument.Arguments;
-import com.polopoly.pcmd.argument.CommandLineArguments;
+import com.polopoly.pcmd.argument.CommandLineArgumentParser;
+import com.polopoly.pcmd.argument.DefaultArguments;
 import com.polopoly.pcmd.argument.NotProvidedException;
 import com.polopoly.pcmd.argument.Parameters;
 import com.polopoly.pcmd.tool.HelpParameters;
@@ -25,9 +26,9 @@ public class Main {
     public static void main(String[] args) {
         Logger.getLogger("").setLevel(Level.WARNING);
 
-        CommandLineArguments arguments = null;
+        DefaultArguments arguments = null;
         try {
-            arguments = new CommandLineArguments(args);
+            arguments = new CommandLineArgumentParser().parse(args);
         } catch (ArgumentException e) {
             System.err.println("Invalid parameters: " + e);
             System.exit(1);
@@ -56,6 +57,10 @@ public class Main {
 
             try {
                 execute(tool, context, arguments);
+            }
+            catch (FatalToolException e) {
+                System.err.println(e.getMessage());
+                System.exit(1);
             }
             catch (CMRuntimeException e) {
                 if (e.getCause() instanceof Exception) {
@@ -103,7 +108,8 @@ public class Main {
         System.exit(1);
     }
 
-    private static <T extends Parameters> void execute(Tool<T> tool, PolopolyContext context, Arguments arguments) throws ArgumentException {
+    public static <T extends Parameters> void execute(Tool<T> tool, PolopolyContext context, Arguments arguments)
+            throws ArgumentException, FatalToolException {
         T parameters = tool.createParameters();
 
         parameters.parseParameters(arguments, context);

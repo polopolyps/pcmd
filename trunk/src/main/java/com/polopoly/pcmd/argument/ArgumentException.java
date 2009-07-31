@@ -6,4 +6,7 @@ public class ArgumentException extends Exception {
         super(message);
     }
 
+    public ArgumentException(String message, Throwable t) {
+        super(message, t);
+    }
 }

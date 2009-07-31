@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.ejb.FinderException;
 
+import com.polopoly.pcmd.FatalToolException;
 import com.polopoly.pcmd.argument.ArgumentException;
 import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.ParameterHelp;
@@ -40,13 +41,11 @@ public class GroupTool implements Tool<GroupParameters> {
 
                             System.out.println(group.getName());
                         } catch (FinderException e) {
-                            System.err.println(e.toString());
-                            System.exit(1);
+                            throw new FatalToolException("While fetching group: " + e.getMessage(), e);
                         }
                     }
                 } catch (RemoteException e) {
-                    System.err.println(e.toString());
-                    System.exit(1);
+                    throw new FatalToolException(e);
                 }
             }
             else {
@@ -72,8 +71,7 @@ public class GroupTool implements Tool<GroupParameters> {
                 }
             }
         } catch (RemoteException e) {
-            System.err.println(e.toString());
-            System.exit(1);
+            throw new FatalToolException(e);
         }
     }
 
@@ -103,8 +101,7 @@ class GroupParameters implements Parameters, Iterable<Group> {
             } catch (NumberFormatException e) {
             } catch (IllegalArgumentException e) {
             } catch (RemoteException e) {
-                System.err.println(e.toString());
-                System.exit(1);
+                throw new FatalToolException(e);
             } catch (FinderException e) {
             }
 
@@ -112,19 +109,16 @@ class GroupParameters implements Parameters, Iterable<Group> {
                 GroupId[] groups = userServer.findGroupsByName(groupName);
 
                 if (groups.length == 0) {
-                    System.err.println("No groups found with name or ID \"" + groupName + "\".");
-                    System.exit(1);
+                    throw new FatalToolException("No groups found with name or ID \"" + groupName + "\".");
                 }
 
                 for (int j = 0; j < groups.length; j++) {
                     addGroup(userServer.findGroup(groups[j]));
                 }
             } catch (RemoteException e) {
-                System.err.println(e.toString());
-                System.exit(1);
+                throw new FatalToolException(e);
             } catch (FinderException e) {
-               System.err.println(e.toString());
-               System.exit(1);
+                throw new FatalToolException(e);
             }
         }
     }

@@ -68,7 +68,7 @@ public class InspectTool implements Tool<ContentIdListParameters> {
                             try {
                                 Group group = userServer.findGroup(groupId);
 
-                                if (group.isMember(userId)) {
+                                if (group.isDirectMember(userId)) {
                                     System.out.println("group" + PREFIX_FIELD_SEPARATOR + group.getName() + " (" + groupId.getGroupIdInt() + ")");
                                 }
                             } catch (Exception e) {

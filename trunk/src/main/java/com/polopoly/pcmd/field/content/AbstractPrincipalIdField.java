@@ -21,19 +21,17 @@ public class AbstractPrincipalIdField {
             try {
                 User user = userServer.getUserByUserId((UserId) principalId);
 
-                return user.getLoginName();
+                String loginName = user.getLoginName();
+
+                if (loginName != null) {
+                    return loginName;
+                }
             } catch (RemoteException e) {
                 System.err.println(principalId.getPrincipalIdString() + ": " + e.toString());
-
-                return principalId.getPrincipalIdString();
             } catch (IllegalArgumentException e) {
                 System.err.println(principalId.getPrincipalIdString() + ": " + e.toString());
-
-                return principalId.getPrincipalIdString();
             } catch (CreateException e) {
                 System.err.println(principalId.getPrincipalIdString() + ": " + e.toString());
-
-                return principalId.getPrincipalIdString();
             }
         }
         else if (principalId instanceof GroupId) {
@@ -43,16 +41,11 @@ public class AbstractPrincipalIdField {
                 return "group:" + group.getName();
             } catch (RemoteException e) {
                 System.err.println(principalId.getPrincipalIdString() + ": " + e.toString());
-
-                return principalId.getPrincipalIdString();
             } catch (FinderException e) {
                 System.err.println(principalId.getPrincipalIdString() + ": " + e.toString());
-
-                return principalId.getPrincipalIdString();
             }
         }
-        else {
-            return principalId.getPrincipalIdString();
-        }
+
+        return principalId.getPrincipalIdString();
     }
 }

@@ -1,3 +1,5 @@
+com.polopoly.pcmd.tool.AddGroupMemberTool
+com.polopoly.pcmd.tool.CreateGroupTool
 com.polopoly.pcmd.tool.DeleteTool
 com.polopoly.pcmd.tool.DeleteVersionTool
 com.polopoly.pcmd.tool.HelpTool

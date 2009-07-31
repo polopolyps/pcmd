@@ -24,14 +24,18 @@ public class UnversionedTool implements Tool<ContentIdListParameters> {
         }
     }
 
-    public void parseParameters(Arguments args,
+    public void parseParameters(final Arguments args,
             ContentIdListParameters parameters, PolopolyContext context)
             throws ArgumentException {
         try {
             parameters.setContentIds(args.getArgumentContentIds(0, parameters.isStopOnException()));
         }
         catch (NotProvidedException npe) {
-            parameters.setContentIds(args.getStdInContentIds());
+            parameters.setContentIds(new Iterable<ContentId>() {
+                public Iterator<ContentId> iterator() {
+                    return args.getStdInContentIds();
+                }
+            });
         }
     }
 

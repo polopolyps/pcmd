@@ -4,7 +4,7 @@
   <artifactId>pcmd</artifactId>
   <packaging>jar</packaging>
   <name>Polopoly Command Tool</name>
-  <version>9.13.0-DP4.0</version>
+  <version>9.13.0.0</version>
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <plugins>
@@ -48,6 +48,12 @@
        </resource>
      </resources>
   </build>
+  <distributionManagement>
+    <repository>
+      <id>prodtest00</id>
+      <url>scp://prodtest00/home/polopoly/www/solutions/maven2</url>
+    </repository>
+  </distributionManagement>
   <repositories>
     <repository>
       <id>maven</id>
@@ -74,7 +80,7 @@
     <dependency>
       <groupId>com.polopoly</groupId>
       <artifactId>polopoly</artifactId>
-      <version>9.13.0-DP4</version>
+      <version>9.13.0</version>
     </dependency>
     <dependency>
       <groupId>jboss</groupId>
@@ -97,6 +103,12 @@
       <artifactId>groovy-all</artifactId> 
       <version>1.6.1</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.ant</groupId>
+        <artifactId>ant</artifactId>
+        <version>1.7.1</version>
+        <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>

@@ -9,6 +9,7 @@ import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.Content;
 import com.polopoly.cm.client.ContentRead;
 import com.polopoly.cm.search.db.SearchExpression;
+import com.polopoly.pcmd.FatalToolException;
 import com.polopoly.pcmd.field.content.AbstractContentIdField;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.ContentIdToContentIterator;
@@ -73,8 +74,8 @@ public class UnlockTool implements Tool<UnlockParameters> {
                 unlock(id, context);
             }
         } catch (CMException e) {
-            System.err.println("Finding all locked content failed: " + e);
-            System.exit(1);
+            throw new FatalToolException(
+                    "Finding all locked content failed: " + e.getMessage(), e);
         }
     }
 

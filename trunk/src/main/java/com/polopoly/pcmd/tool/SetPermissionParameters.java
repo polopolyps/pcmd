@@ -1,5 +1,7 @@
 package com.polopoly.pcmd.tool;
 
+import java.util.List;
+
 import com.polopoly.pcmd.argument.ArgumentException;
 import com.polopoly.pcmd.argument.Arguments;
 import com.polopoly.pcmd.argument.ContentIdListParameters;
@@ -14,7 +16,7 @@ import com.polopoly.util.client.PolopolyContext;
 public class SetPermissionParameters extends ContentIdListParameters {
     private String user;
     private String group;
-    private String permission;
+    private List<String> permissions;
 
     private static final String USER_PARAMETER = "user";
     private static final String GROUP_PARAMETER = "group";
@@ -60,7 +62,7 @@ public class SetPermissionParameters extends ContentIdListParameters {
 
         help.addOption(USER_PARAMETER, null, "The name of the user for which to add a permission.");
         help.addOption(GROUP_PARAMETER, null, "The name of the group for which to add a permission.");
-        help.addOption(PERMISSION_PARAMETER, null, "The name of the permission to add.");
+        help.addOption(PERMISSION_PARAMETER, null, "The name of the permission to add. May be repeated");
     }
 
     @Override
@@ -76,7 +78,7 @@ public class SetPermissionParameters extends ContentIdListParameters {
                     " or the " + GROUP_PARAMETER + " parameter must be specified.");
         }
 
-        permission = args.getOptionString(PERMISSION_PARAMETER);
+        permissions = args.getOptionStrings(PERMISSION_PARAMETER);
     }
 
     public void setUser(String user) {
@@ -99,13 +101,8 @@ public class SetPermissionParameters extends ContentIdListParameters {
     }
 
 
-    public void setPermission(String permission) {
-        this.permission = permission;
-    }
-
-
-    public String getPermission() {
-        return permission;
+    public List<String> getPermissions() {
+        return permissions;
     }
 
 }

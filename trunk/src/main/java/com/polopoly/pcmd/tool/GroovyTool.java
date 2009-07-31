@@ -9,6 +9,7 @@ import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.InputTemplate;
 import com.polopoly.cm.policy.Policy;
+import com.polopoly.pcmd.FatalToolException;
 import com.polopoly.pcmd.field.content.AbstractContentIdField;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.AbstractContentIdIterator;
@@ -120,17 +121,11 @@ public class GroovyTool implements Tool<GroovyParameters> {
                     try {
                         return context.createPolicy(major, parameters.getInputTemplate());
                     } catch (PolicyCreateException e) {
-                        System.err.println(e.getMessage());
-                        System.exit(1);
-
-                        return null;
+                        throw new FatalToolException("While creating policy: " + e.getMessage(), e);
                     }
                 }};
         } catch (CMException e) {
-            System.err.println("Could not fetch major of input template " + parameters.getInputTemplate().getContentIdString() + " was unknown.");
-            System.exit(1);
-
-            return null;
+            throw new FatalToolException("Could not fetch major of input template " + parameters.getInputTemplate().getContentIdString() + " was unknown.");
         }
     }
 
@@ -152,8 +147,8 @@ public class GroovyTool implements Tool<GroovyParameters> {
             inputTemplate = context.getPolicy(
                     parameters.getInputTemplate(), InputTemplate.class);
         } catch (PolicyGetException e) {
-            System.err.println("Could not use specified input template \"" + parameters.getInputTemplate() + "\" of input template " + parameters.getInputTemplate().getContentIdString() + ": " + e);
-            System.exit(1);
+            throw new FatalToolException(
+                "Could not use specified input template \"" + parameters.getInputTemplate() + "\" of input template " + parameters.getInputTemplate().getContentIdString() + ": " + e);
         }
         return inputTemplate;
     }

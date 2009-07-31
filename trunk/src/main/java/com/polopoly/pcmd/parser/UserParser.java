@@ -35,19 +35,15 @@ public class UserParser implements Parser<User> {
         } catch (NumberFormatException e) {
         } catch (IllegalArgumentException e) {
         } catch (RemoteException e) {
-            System.err.println(e.toString());
-            System.exit(1);
+            throw new ParseException(this, parameter, e);
         } catch (CreateException e) {
         }
 
         try {
             return userServer.getUserByLoginName(parameter);
         } catch (RemoteException e) {
-            System.err.println(e.toString());
-            System.exit(1);
+            throw new ParseException(this, parameter, e);
         } catch (FinderException e) {
-            System.err.println(e.toString());
-            System.exit(1);
         }
 
         throw new ParseException(this, parameter, "not a known user name or principal ID.");

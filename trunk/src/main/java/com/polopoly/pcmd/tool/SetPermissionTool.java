@@ -1,6 +1,8 @@
 package com.polopoly.pcmd.tool;
 
+import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.Content;
+import com.polopoly.pcmd.FatalToolException;
 import com.polopoly.pcmd.field.content.AbstractContentIdField;
 import com.polopoly.user.server.Acl;
 import com.polopoly.user.server.AclEntry;
@@ -23,26 +25,30 @@ public class SetPermissionTool implements Tool<SetPermissionParameters> {
         Caller currentCaller = context.getPolicyCMServer().getCurrentCaller();
 
         if (currentCaller instanceof NonLoggedInCaller) {
-            System.err.println("You must log a user to be able to set an ACL. Specify the " +
-                    ClientFromArgumentsConfigurator.PASSWORD + " parameter to log in.");
-            System.exit(1);
+            throw new FatalToolException(
+                "You must log a user to be able to set an ACL. Specify the " +
+                ClientFromArgumentsConfigurator.PASSWORD + " parameter to log in.");
         }
 
         ContentIdToContentIterator it =
             new ContentIdToContentIterator(context, parameters.getContentIds(), parameters.isStopOnException());
 
         while (it.hasNext()) {
-            try {
-                Content content = (Content) it.next();
+            Content content = (Content) it.next();
 
-                System.out.println(AbstractContentIdField.get(content.getContentId(), context));
+            String contentIdString = AbstractContentIdField.get(content.getContentId(), context);
+
+            System.out.println(contentIdString);
+
+            try {
 
                 AclId aclId = content.getAclId();
 
                 if (aclId == null) {
+                    content.lock();
                     aclId = content.createAcl();
 
-                    System.out.println("No ACL existed. Created one.");
+                    System.out.println(contentIdString + ": no ACL existed. Created one.");
                 }
 
                 Acl acl = context.getUserServer().findAcl(aclId);
@@ -55,14 +61,24 @@ public class SetPermissionTool implements Tool<SetPermissionParameters> {
 
                 if (entry == null) {
                     entry = new AclEntry(principalId);
-                    System.out.println("No ACL entry for the user " + principalId.getPrincipalIdString() + " existed. Created one.");
+                    System.out.println("principal " + principalId.getPrincipalIdString() + " in " +
+                        contentIdString + ": no ACL entry existed. Created one.");
                 }
 
-                entry.addPermission(parameters.getPermission());
+                for (String permission : parameters.getPermissions()) {
+                    entry.addPermission(permission);
+                }
+
                 acl.addEntry(entry, currentCaller);
             } catch (Exception e) {
                 System.err.println(e.toString());
                 e.printStackTrace();
+            } finally {
+                try {
+                    content.unlock();
+                } catch (CMException e) {
+                    System.err.println("While unlocking " + contentIdString + ": " + e);
+                }
             }
         }
     }
@@ -70,5 +86,5 @@ public class SetPermissionTool implements Tool<SetPermissionParameters> {
     public String getHelp() {
         return "Adds a permission to an ACL of an object for a certain principal.";
     }
-
 }
+
