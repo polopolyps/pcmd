@@ -28,4 +28,5 @@ public interface PolicyUtil extends Iterable<Policy>, RuntimeExceptionPolicy {
     InputTemplateUtil getInputTemplate();
     void delete() throws PolicyDeleteException;
     Policy getTopPolicy();
+    ContentIdUtil getContentReference(String name);
 }

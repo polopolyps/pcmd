@@ -331,6 +331,16 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
     }
 
     @Override
+    public ContentIdUtil getContentReference(String name) {
+        try {
+            return Util.util(super.getContentReference(name), context);
+        } catch (CMException e) {
+            throw new CMRuntimeException(
+                "Could not get reference " + name + " in " + this + ": " + e.getMessage(), e);
+        }
+    }
+
+    @Override
     public Policy getParentPolicy() {
         return super.getParentPolicy();
     }
