@@ -166,7 +166,7 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
             String inputTemplate = getInputTemplate().getExternalIdString();
 
             throw new NoSuchChildPolicyException("Could not get field " + field +
-                    " in " + this + " (a " + inputTemplate + ") : " + e.getMessage());
+                    " in " + this + " (a " + inputTemplate + ") : " + e.getMessage(), e);
         }
     }
 
@@ -328,6 +328,27 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
     @Override
     public ContentIdUtil getContentId() {
         return Util.util(super.getContentId(), context);
+    }
+
+    @Override
+    public Policy getParentPolicy() {
+        return super.getParentPolicy();
+    }
+
+    public Policy getTopPolicy() {
+        Policy result = this;
+
+        try {
+            Policy parent;
+
+            while ((parent = result.getParentPolicy()) != null) {
+                result = parent;
+            }
+        } catch (CMException e) {
+            throw new CMRuntimeException("While getting parent policy of " + result + ": " + e.getMessage(), e);
+        }
+
+        return result;
     }
 
     public <T> void modifyUtil(final PolicyModification<PolicyUtil> policyModification)
