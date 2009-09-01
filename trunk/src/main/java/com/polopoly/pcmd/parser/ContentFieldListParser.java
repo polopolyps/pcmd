@@ -97,7 +97,7 @@ public class ContentFieldListParser implements Parser<List<Field>> {
             return new InputTemplateField();
         }
         else if (field.startsWith(COMPONENT + ':')) {
-            return new ComponentField(new ComponentParser().parse(field.substring(NAME.length() + 1)));
+            return new ComponentField(new ComponentParser().parse(field.substring(COMPONENT.length() + 1)));
         }
         else if (field.startsWith(CONTENT_REF + PREFIX_FIELD_SEPARATOR)) {
             return new ContentRefField(new ContentRefParser().parse(field.substring(CONTENT_REF.length() + 1)));
