@@ -8,12 +8,11 @@ import java.util.logging.Logger;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.client.CMRuntimeException;
-import com.polopoly.cm.policy.Policy;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.exception.PolicyGetException;
 
-public class CheckedContentIdToPolicyIterator<T extends Policy> extends AbstractContentIdIterator<T> {
+public class CheckedContentIdToPolicyIterator<T> extends AbstractContentIdIterator<T> {
     private Class<T> klass;
 
     private static final Logger logger =

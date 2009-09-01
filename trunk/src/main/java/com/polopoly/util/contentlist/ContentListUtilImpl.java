@@ -116,7 +116,7 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
         return new ContentIdToPolicyIterator(server, contentIds().iterator());
     }
 
-    public <T extends Policy> Iterable<T> policies(final Class<T> policyClass) {
+    public <T> Iterable<T> policies(final Class<T> policyClass) {
         return new Iterable<T>() {
             public Iterator<T> iterator() {
                 return new CheckedContentIdToPolicyIterator<T>(
