@@ -26,6 +26,7 @@ import com.polopoly.util.CheckedCast;
 import com.polopoly.util.CheckedClassCastException;
 import com.polopoly.util.content.ContentReadUtil;
 import com.polopoly.util.content.ContentUtil;
+import com.polopoly.util.contentid.ContentIdUtil;
 import com.polopoly.util.exception.ContentGetException;
 import com.polopoly.util.exception.NoSuchExternalIdException;
 import com.polopoly.util.exception.PolicyCreateException;
@@ -34,6 +35,7 @@ import com.polopoly.util.exception.PolicyModificationException;
 import com.polopoly.util.exception.UserNotLoggedInException;
 import com.polopoly.util.policy.PolicyModification;
 import com.polopoly.util.policy.PolicyUtil;
+import com.polopoly.util.policy.Util;
 
 public class PolopolyContext {
     private static final Logger logger =
@@ -234,7 +236,7 @@ public class PolopolyContext {
         }
     }
 
-    public VersionedContentId resolveExternalId(String externalId) throws NoSuchExternalIdException {
+    public ContentIdUtil resolveExternalId(String externalId) throws NoSuchExternalIdException {
         if (externalId == null) {
             throw new NoSuchExternalIdException(externalId);
         }
@@ -253,7 +255,7 @@ public class PolopolyContext {
             throw new NoSuchExternalIdException(externalId);
         }
 
-        return contentId;
+        return Util.util(contentId, this);
     }
 
 }
