@@ -298,7 +298,7 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
 
     private String rootPolicyToString() {
         return getContent().getName() +
-            " (" + getContentId().getContentId().getContentIdString() + ")";
+            " (" + getContentIdString() + ")";
     }
 
     private String childPolicyToString() {
@@ -310,7 +310,17 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
             name = e.toString();
         }
 
-        return name + " in " + policy.getContentId().getContentId().getContentIdString();
+        return name + " in " + getContentIdString();
+    }
+
+    private String getContentIdString() {
+        String result = getContent().getExternalIdString();
+
+        if (result == null) {
+            result = getContentId().getContentId().getContentIdString();
+        }
+
+        return result;
     }
 
     public void delete() throws PolicyDeleteException {
