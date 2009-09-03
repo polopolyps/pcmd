@@ -19,9 +19,9 @@ import com.polopoly.model.ModelStoreInBean;
 import com.polopoly.render.RenderRequest;
 import com.polopoly.siteengine.dispatcher.ControllerContext;
 import com.polopoly.siteengine.model.TopModel;
+import com.polopoly.siteengine.model.context.PageScope;
+import com.polopoly.siteengine.model.context.SiteScope;
 import com.polopoly.siteengine.model.request.ContentPath;
-import com.polopoly.siteengine.structure.Page;
-import com.polopoly.siteengine.structure.Site;
 import com.polopoly.user.server.UserServer;
 import com.polopoly.util.CheckedCast;
 import com.polopoly.util.CheckedClassCastException;
@@ -135,17 +135,29 @@ public class ControllerUtil {
         return (Policy) context.getContentModel().getAttribute(ModelStoreInBean.BEAN_ATTRIBUTE_NAME);
     }
 
-    public <T extends Page> T getPage(Class<T> pageClass) {
+    public <T> T getPage(Class<T> pageClass) {
         try {
-            return CheckedCast.cast(m.getContext().getPage().getBean(), pageClass, "Current page");
+            PageScope page = m.getContext().getPage();
+
+            if (page == null) {
+                throw new CMRuntimeException("No page available in model for " + request.getRequestURI() + ".");
+            }
+
+            return CheckedCast.cast(page.getBean(), pageClass, "Current page");
         } catch (CheckedClassCastException e) {
             throw new CMRuntimeException(e);
         }
     }
 
-    public <T extends Site> T getSite(Class<T> siteClass) {
+    public <T> T getSite(Class<T> siteClass) {
         try {
-            return CheckedCast.cast(m.getContext().getSite().getBean(), siteClass, "Current site");
+            SiteScope site = m.getContext().getSite();
+
+            if (site == null) {
+                throw new CMRuntimeException("No site available in model for " + request.getRequestURI() + ".");
+            }
+
+            return CheckedCast.cast(site.getBean(), siteClass, "Current site");
         } catch (CheckedClassCastException e) {
             throw new CMRuntimeException(e);
         }
