@@ -1,5 +1,6 @@
 package com.polopoly.util.contentlist;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -202,5 +203,15 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
             public Iterator<ContentReferenceUtil> iterator() {
                 return new ContentReferenceIterator(ContentListUtilImpl.this, getContext());
             }};
+    }
+
+    public <T> List<T> policyList(Class<T> policyClass) {
+        List<T> result = new ArrayList<T>();
+
+        for (T policy : policies(policyClass)) {
+            result.add(policy);
+        }
+
+        return result;
     }
 }
