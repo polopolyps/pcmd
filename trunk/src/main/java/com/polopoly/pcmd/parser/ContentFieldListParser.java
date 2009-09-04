@@ -15,6 +15,7 @@ import com.polopoly.pcmd.field.content.LockerField;
 import com.polopoly.pcmd.field.content.NameField;
 import com.polopoly.pcmd.field.content.NumericalContentIdField;
 import com.polopoly.pcmd.field.content.PaddingField;
+import com.polopoly.pcmd.field.content.SecurityParentField;
 import com.polopoly.pcmd.field.content.VersionCountField;
 import com.polopoly.pcmd.field.content.VersionField;
 import com.polopoly.pcmd.field.content.WorkflowField;
@@ -32,15 +33,16 @@ public class ContentFieldListParser implements Parser<List<Field>> {
     private static final String CONTENT_LIST_SIZE = "contentlistsize";
     public static final String ID = "id";
     public static final String WORKFLOW = "workflow";
-    private static final String INPUT_TEMPLATE = "inputtemplate";
+    public static final String INPUT_TEMPLATE = "inputtemplate";
     public static final String NUMERICAL_ID = "numericalid";
-    private static final String LOCKER = "locker";
+    public static final String LOCKER = "locker";
+    public static final String SECURITY_PARENT = "securityparent";
 
     public String getHelp() {
         return ID + " / " + NUMERICAL_ID + " / " + NAME + " / " + COMPONENT + ":" + new ComponentParser().getHelp() + " / " + CONTENT_REF + ":" +
             new ContentRefParser().getHelp() + " / " + CONTENT_LIST + "[:<content list>] / " +
             CONTENT_LIST_SIZE + "[:<content list>] / " + LOCKER + " / " + INPUT_TEMPLATE + " / " + COMMITTED +
-            " / " + VERSION + " / " + VERSION_COUNT + " / " + WORKFLOW +
+            " / " + VERSION + " / " + VERSION_COUNT + " / " + WORKFLOW + " / " + SECURITY_PARENT +
             " (append :<width> to any field to pad it)";
     }
 
@@ -122,6 +124,9 @@ public class ContentFieldListParser implements Parser<List<Field>> {
             }
 
             return new ContentListField(contentListName);
+        }
+        else if (field.startsWith(SECURITY_PARENT)) {
+            return new SecurityParentField();
         }
         else {
             throw new ParseException(this, field, "Unknown field");

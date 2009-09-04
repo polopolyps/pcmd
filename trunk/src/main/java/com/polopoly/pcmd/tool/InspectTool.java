@@ -2,7 +2,9 @@ package com.polopoly.pcmd.tool;
 
 import static com.polopoly.pcmd.parser.ContentFieldListParser.PREFIX_FIELD_SEPARATOR;
 
+import com.polopoly.cm.ContentId;
 import com.polopoly.cm.ExternalContentId;
+import com.polopoly.cm.LockInfo;
 import com.polopoly.cm.VersionedContentId;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
@@ -19,6 +21,8 @@ import com.polopoly.user.server.UserId;
 import com.polopoly.user.server.UserServer;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.ContentIdToContentIterator;
+import com.polopoly.util.content.ContentUtil;
+import com.polopoly.util.policy.Util;
 
 public class InspectTool implements Tool<ContentIdListParameters> {
     public ContentIdListParameters createParameters() {
@@ -45,6 +49,25 @@ public class InspectTool implements Tool<ContentIdListParameters> {
                 else {
                     System.out.println(ContentFieldListParser.ID + PREFIX_FIELD_SEPARATOR +
                             content.getContentId().getContentIdString());
+                }
+
+                ContentUtil contentUtil = Util.util(content, context.getPolicyCMServer());
+
+                System.out.println(ContentFieldListParser.INPUT_TEMPLATE + PREFIX_FIELD_SEPARATOR +
+                        contentUtil.getInputTemplate().getExternalIdString());
+
+                ContentId securityParentId = content.getSecurityParentId();
+
+                if (securityParentId != null) {
+                    System.out.println(ContentFieldListParser.SECURITY_PARENT + PREFIX_FIELD_SEPARATOR +
+                            AbstractContentIdField.get(securityParentId, context));
+                }
+
+                LockInfo lockInfo = content.getLockInfo();
+
+                if (lockInfo != null && lockInfo.getLocker() != null) {
+                    System.out.println(ContentFieldListParser.LOCKER + PREFIX_FIELD_SEPARATOR +
+                            lockInfo.getLocker().getLoginName());
                 }
 
                 if (content instanceof WorkflowAware) {
