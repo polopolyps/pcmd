@@ -28,6 +28,7 @@ import com.polopoly.util.content.ContentReadUtil;
 import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.contentid.ContentIdUtil;
 import com.polopoly.util.exception.ContentGetException;
+import com.polopoly.util.exception.InvalidPolicyClassException;
 import com.polopoly.util.exception.NoSuchExternalIdException;
 import com.polopoly.util.exception.PolicyCreateException;
 import com.polopoly.util.exception.PolicyGetException;
@@ -185,7 +186,7 @@ public class PolopolyContext {
         } catch (CMException e) {
             throw new PolicyGetException("While fetching policy " + toString(contentId) + ": " + e.getMessage(), e);
         } catch (CheckedClassCastException e) {
-            throw new PolicyGetException("While fetching policy " + toString(contentId) + ": " + e.getMessage(), e);
+            throw new InvalidPolicyClassException("While fetching policy " + toString(contentId) + ": " + e.getMessage(), e);
         }
     }
 
