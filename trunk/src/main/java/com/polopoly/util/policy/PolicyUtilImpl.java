@@ -30,6 +30,7 @@ import com.polopoly.util.exception.NoSuchChildPolicyException;
 import com.polopoly.util.exception.PolicyDeleteException;
 import com.polopoly.util.exception.PolicyGetException;
 import com.polopoly.util.exception.PolicyModificationException;
+import com.polopoly.util.exception.ReferenceNotSetException;
 
 public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements PolicyUtil {
     private Policy policy;
@@ -114,9 +115,16 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
     }
 
     public <T> T getSingleReference(String field, Class<T> policyClass)
-            throws PolicyGetException, NoSuchChildPolicyException {
+            throws PolicyGetException, ReferenceNotSetException, NoSuchChildPolicyException {
         try {
-            return PolopolyContext.getPolicy(getCMServer(), getSingleReference(field), policyClass);
+            ContentIdUtil reference = getSingleReference(field);
+
+            if (reference == null) {
+                throw new ReferenceNotSetException("Field " + field +
+                    " was not set in " + this + ".");
+            }
+
+            return PolopolyContext.getPolicy(getCMServer(), reference, policyClass);
         } catch (PolicyGetException e) {
             throw new PolicyGetException("While getting field " + field +
                     " in " + this + ": " + e.getMessage(), e.getCause());
