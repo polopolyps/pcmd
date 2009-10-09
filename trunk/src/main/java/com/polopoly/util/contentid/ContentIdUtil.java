@@ -10,6 +10,7 @@ import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.exception.ContentGetException;
 import com.polopoly.util.exception.PolicyGetException;
 import com.polopoly.util.policy.PolicyUtil;
+import com.polopoly.util.policy.Util;
 
 public class ContentIdUtil extends VersionedContentId {
     private PolopolyContext context;
@@ -56,12 +57,17 @@ public class ContentIdUtil extends VersionedContentId {
         return getOtherVersionId(VersionedContentId.LATEST_VERSION);
     }
 
-    public ContentId unversioned() {
-        return getContentId();
+    public ContentIdUtil unversioned() {
+        return Util.util(getContentId(), context);
     }
 
     @Override
     public String toString() {
-        return getContentIdString();
+        if (getVersion() == UNDEFINED_VERSION) {
+            return unversioned().getContentIdString();
+        }
+        else {
+            return getContentIdString();
+        }
     }
 }
