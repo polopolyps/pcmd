@@ -8,10 +8,12 @@ import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.contentid.ContentIdUtil;
 import com.polopoly.util.contentlist.ContentListUtilImpl.ContentListContentIds;
 import com.polopoly.util.exception.CMModificationException;
+import com.polopoly.util.policy.PolicyUtil;
 
 public interface ContentListUtil extends RuntimeExceptionContentList, Iterable<Policy> {
     Iterable<ContentUtil> contents();
     <T> Iterable<T> policies(final Class<T> policyClass);
+    Iterable<PolicyUtil> policyUtils();
     <T> List<T> policyList(final Class<T> policyClass);
     ContentListContentIds contentIds();
     void add(int index, Policy policy) throws CMModificationException;

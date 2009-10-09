@@ -20,9 +20,11 @@ import com.polopoly.util.collection.ContentIdToContentUtilIterator;
 import com.polopoly.util.collection.ContentIdToPolicyIterator;
 import com.polopoly.util.collection.ContentListIterator;
 import com.polopoly.util.collection.ContentListListAdapter;
+import com.polopoly.util.collection.TransformingIterator;
 import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.contentid.ContentIdUtil;
 import com.polopoly.util.exception.CMModificationException;
+import com.polopoly.util.policy.PolicyUtil;
 import com.polopoly.util.policy.Util;
 
 public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper implements ContentListUtil {
@@ -122,6 +124,21 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
             public Iterator<T> iterator() {
                 return new CheckedContentIdToPolicyIterator<T>(
                         server, contentIds().iterator(), policyClass);
+            }
+        };
+    }
+
+    public Iterable<PolicyUtil> policyUtils() {
+        return new Iterable<PolicyUtil>() {
+            public Iterator<PolicyUtil> iterator() {
+                return new TransformingIterator<Policy, PolicyUtil>(
+                    new CheckedContentIdToPolicyIterator<Policy>(
+                        server, contentIds().iterator(), Policy.class)) {
+                    @Override
+                    protected PolicyUtil transform(Policy next) {
+                        return Util.util(next);
+                    }
+                };
             }
         };
     }
