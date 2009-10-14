@@ -123,11 +123,11 @@ public class ControllerUtil {
     /**
      * Returns the policy of the object (e.g. an element or an article) the controller is defined on.
      */
-    public <T> T getPolicy(Class<T> policyClass) {
+    public <T> T getPolicy(Class<T> policyClass) throws InvalidControllerPolicyException {
         try {
             return CheckedCast.cast(getPolicy(), policyClass, "The controller's policy");
         } catch (CheckedClassCastException e) {
-            throw new CMRuntimeException(e);
+            throw new InvalidControllerPolicyException(e);
         }
     }
 
