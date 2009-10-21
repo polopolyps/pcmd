@@ -30,13 +30,12 @@ public class UserParser implements Parser<User> {
         }
 
         try {
-            UserId userId = new UserId(parameter);
-            return userServer.getUserByUserId(userId);
+            return userServer.getUserByIntegerId(Integer.valueOf(parameter));
         } catch (NumberFormatException e) {
         } catch (IllegalArgumentException e) {
         } catch (RemoteException e) {
             throw new ParseException(this, parameter, e);
-        } catch (CreateException e) {
+        } catch (FinderException e) {
         }
 
         try {
