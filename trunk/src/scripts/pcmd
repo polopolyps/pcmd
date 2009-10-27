@@ -2,7 +2,7 @@
 
 dir=`dirname $0`
 
-version=9.13.0
+version=9.13.0.0
 polopolyversion=9.13.0
 luceneversion=2.3.1
 

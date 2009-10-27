@@ -32,6 +32,10 @@ public abstract class FetchingIterator<T> implements Iterator<T> {
             next = fetch();
         }
 
+        if (next == null) {
+            throw new IllegalStateException("Passed end of iteration.");
+        }
+
         try {
             return next;
         }

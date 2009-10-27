@@ -30,6 +30,7 @@ import com.polopoly.util.contentid.ContentIdUtil;
 import com.polopoly.util.exception.ContentGetException;
 import com.polopoly.util.exception.InvalidPolicyClassException;
 import com.polopoly.util.exception.NoSuchExternalIdException;
+import com.polopoly.util.exception.NoSuchPolicyException;
 import com.polopoly.util.exception.PolicyCreateException;
 import com.polopoly.util.exception.PolicyGetException;
 import com.polopoly.util.exception.PolicyModificationException;
@@ -75,6 +76,10 @@ public class PolopolyContext {
         return client.getUserServer();
     }
 
+    public CmClient getCmClient() {
+        return client;
+    }
+
     public RmiSearchClient getSearchClient() {
         if (searchClient == null) {
             throw new CMRuntimeException("Search service is not attached.");
@@ -84,7 +89,11 @@ public class PolopolyContext {
     }
 
     public Policy createPolicy(int major, String inputTemplate) throws PolicyCreateException {
-        return createPolicy(major, inputTemplate, null);
+        return createPolicy(major, inputTemplate, null, Policy.class);
+    }
+
+    public <T> T createPolicy(int major, String inputTemplate, Class<T> klass) throws PolicyCreateException {
+        return createPolicy(major, inputTemplate, null, klass);
     }
 
     public Policy createPolicy(int major, ContentId inputTemplate) throws PolicyCreateException {
@@ -182,7 +191,7 @@ public class PolopolyContext {
         try {
             return CheckedCast.cast(server.getPolicy(contentId), klass);
         } catch (EJBFinderException e) {
-            throw new PolicyGetException("The policy " + toString(contentId) + " could not be found.", e);
+            throw new NoSuchPolicyException("The policy " + toString(contentId) + " could not be found.", e);
         } catch (CMException e) {
             throw new PolicyGetException("While fetching policy " + toString(contentId) + ": " + e.getMessage(), e);
         } catch (CheckedClassCastException e) {

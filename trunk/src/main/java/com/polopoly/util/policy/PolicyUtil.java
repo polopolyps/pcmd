@@ -5,6 +5,7 @@ import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.contentid.ContentIdUtil;
 import com.polopoly.util.contentlist.ContentListUtil;
+import com.polopoly.util.exception.EmptyListException;
 import com.polopoly.util.exception.PolicyDeleteException;
 import com.polopoly.util.exception.PolicyGetException;
 import com.polopoly.util.exception.PolicyModificationException;
@@ -19,6 +20,7 @@ public interface PolicyUtil extends Iterable<Policy>, RuntimeExceptionPolicy {
     String getSingleValued(String field);
     <T> T getSingleReference(String field, Class<T> policyClass) throws PolicyGetException;
     ContentIdUtil getSingleReference(String field) throws PolicyGetException;
+    void setSingleReference(String field, Policy policy);
     ContentListUtil getContentListAware(String field);
     <T> T getChildPolicy(String field, Class<T> klass);
     <T> void modify(PolicyModification<T> policyModification, Class<T> klass, boolean createNewVersion) throws PolicyModificationException;
@@ -29,4 +31,7 @@ public interface PolicyUtil extends Iterable<Policy>, RuntimeExceptionPolicy {
     void delete() throws PolicyDeleteException;
     Policy getTopPolicy();
     ContentIdUtil getContentReference(String name);
+
+    <T> T getSingleReferenceInList(String field, Class<T> policyClass) throws PolicyGetException, EmptyListException;
+    void setSingleReferenceInList(String field, Policy policy);
 }

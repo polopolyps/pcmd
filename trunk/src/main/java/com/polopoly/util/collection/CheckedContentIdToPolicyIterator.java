@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.polopoly.cm.ContentId;
+import com.polopoly.cm.VersionedContentId;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.util.client.PolopolyContext;
@@ -34,20 +35,30 @@ public class CheckedContentIdToPolicyIterator<T> extends AbstractContentIdIterat
     protected T fetch() {
         while (it.hasNext()) {
             ContentId contentId = it.next();
+
+            T result;
+
             try {
-                T result = util(server).getPolicy(contentId, klass);
-
-                count++;
-
-                return result;
-            } catch (PolicyGetException e) {
-                if (stopOnException) {
-                    throw new CMRuntimeException(e);
-                }
-                else {
-                    logger.log(Level.WARNING, "While fetching " + contentId.getContentIdString() + ": " + e.toString());
+                result = util(server).getPolicy(contentId, klass);
+            } catch (PolicyGetException defaultVersionException) {
+                try {
+                    // maybe a not yet committed version?
+                    result = util(server).getPolicy(
+                        new VersionedContentId(contentId, VersionedContentId.LATEST_VERSION), klass);
+                } catch (PolicyGetException latestException) {
+                    if (stopOnException) {
+                        throw new CMRuntimeException(defaultVersionException);
+                    }
+                    else {
+                        logger.log(Level.WARNING, "While fetching " + contentId.getContentIdString() + ": " + defaultVersionException.toString());
+                        continue;
+                    }
                 }
             }
+
+            count++;
+
+            return result;
         }
 
         return null;

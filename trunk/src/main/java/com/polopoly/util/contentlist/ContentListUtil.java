@@ -7,7 +7,7 @@ import com.polopoly.pcmd.tool.ContentReferenceUtil;
 import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.contentid.ContentIdUtil;
 import com.polopoly.util.contentlist.ContentListUtilImpl.ContentListContentIds;
-import com.polopoly.util.exception.CMModificationException;
+import com.polopoly.util.exception.PolicyGetException;
 import com.polopoly.util.policy.PolicyUtil;
 
 public interface ContentListUtil extends RuntimeExceptionContentList, Iterable<Policy> {
@@ -16,11 +16,12 @@ public interface ContentListUtil extends RuntimeExceptionContentList, Iterable<P
     Iterable<PolicyUtil> policyUtils();
     <T> List<T> policyList(final Class<T> policyClass);
     ContentListContentIds contentIds();
-    void add(int index, Policy policy) throws CMModificationException;
-    void add(Policy policy) throws CMModificationException;
-    void remove(Policy policy) throws CMModificationException;
+    void add(int index, Policy policy);
+    void add(Policy policy);
+    void remove(Policy policy);
     ContentIdUtil get(int i);
-    <T extends Policy> T get(int i, Class<T> klass);
+    <T> T get(int i, Class<T> klass) throws PolicyGetException;
     boolean contains(Policy policy);
     Iterable<ContentReferenceUtil> references();
+    void clear();
 }

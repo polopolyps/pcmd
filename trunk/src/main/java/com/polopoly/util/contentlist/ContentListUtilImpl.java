@@ -23,7 +23,7 @@ import com.polopoly.util.collection.ContentListListAdapter;
 import com.polopoly.util.collection.TransformingIterator;
 import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.contentid.ContentIdUtil;
-import com.polopoly.util.exception.CMModificationException;
+import com.polopoly.util.exception.PolicyGetException;
 import com.polopoly.util.policy.PolicyUtil;
 import com.polopoly.util.policy.Util;
 
@@ -38,17 +38,17 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
             };
         }
 
-        public void add(int index, ContentId contentId) throws CMModificationException {
+        public void add(int index, ContentId contentId) {
             try {
                 contentList.add(index, new ContentReference(contentId, null));
             }
             catch (CMException e) {
-                throw new CMModificationException(
-                    "While adding " + contentId + " to " + this + ".");
+                throw new CMRuntimeException(
+                    "While adding " + contentId + " to " + this + ": " + e.getMessage(), e);
             }
         }
 
-        public void add(ContentId contentId) throws CMModificationException {
+        public void add(ContentId contentId) {
             add(size(), contentId);
         }
 
@@ -87,6 +87,11 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
                     "While getting entry " + i + " in " + ContentListUtilImpl.this.toString() +
                         ": " + e.getMessage(), e);
             }
+        }
+
+        @Override
+        public String toString() {
+            return ContentListUtilImpl.this.toString();
         }
     }
 
@@ -155,15 +160,15 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
         };
     }
 
-    public void add(int index, Policy policy) throws CMModificationException {
+    public void add(int index, Policy policy) {
         contentIds().add(index, policy.getContentId().getContentId());
     }
 
-    public void add(Policy policy) throws CMModificationException {
+    public void add(Policy policy) {
         add(size(), policy);
     }
 
-    public void remove(Policy policy) throws CMModificationException {
+    public void remove(Policy policy) {
         contentIds().remove(policy.getContentId());
     }
 
@@ -171,9 +176,11 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
         return contentIds().get(i);
     }
 
-    public <T extends Policy> T get(int i, Class<T> klass) {
+    public <T> T get(int i, Class<T> klass) throws PolicyGetException {
         try {
             return getContext().getPolicy(contentIds().get(i), klass);
+        } catch (PolicyGetException e) {
+            throw e;
         } catch (CMException e) {
             throw new CMRuntimeException(
                 "While getting entry " + i + " in " + ContentListUtilImpl.this.toString() +
@@ -230,5 +237,11 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
         }
 
         return result;
+    }
+
+    public void clear() {
+        while (size() > 0) {
+            remove(0);
+        }
     }
 }

@@ -26,6 +26,8 @@ import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.contentid.ContentIdUtil;
 import com.polopoly.util.contentlist.ContentListUtil;
 import com.polopoly.util.contentlist.ContentListUtilImpl;
+import com.polopoly.util.exception.EmptyListException;
+import com.polopoly.util.exception.InvalidPolicyClassException;
 import com.polopoly.util.exception.NoSuchChildPolicyException;
 import com.polopoly.util.exception.PolicyDeleteException;
 import com.polopoly.util.exception.PolicyGetException;
@@ -36,6 +38,8 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
     private Policy policy;
 
     private PolopolyContext context;
+
+    private ContentUtil contentCache;
 
     private static final Logger logger =
         Logger.getLogger(PolicyUtilImpl.class.getName());
@@ -114,10 +118,21 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         getChildPolicy(field, CheckboxPolicy.class).setChecked(checked);
     }
 
+    public void setSingleReference(String field, Policy policy) {
+        try {
+            getChildPolicy(field, SingleReference.class).setReference(policy.getContentId().getContentId());
+        } catch (CMException e) {
+            throw new CMRuntimeException(
+                "While setting field " + field + " in " + this + " to " + util(policy) + ": " + e.getMessage(), e);
+        }
+    }
+
     public <T> T getSingleReference(String field, Class<T> policyClass)
             throws PolicyGetException, ReferenceNotSetException, NoSuchChildPolicyException {
+        ContentIdUtil reference = null;
+
         try {
-            ContentIdUtil reference = getSingleReference(field);
+            reference = getSingleReference(field);
 
             if (reference == null) {
                 throw new ReferenceNotSetException("Field " + field +
@@ -125,9 +140,17 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
             }
 
             return PolopolyContext.getPolicy(getCMServer(), reference, policyClass);
-        } catch (PolicyGetException e) {
-            throw new PolicyGetException("While getting field " + field +
+        } catch (InvalidPolicyClassException e) {
+            throw new InvalidPolicyClassException("While getting field " + field +
                     " in " + this + ": " + e.getMessage(), e.getCause());
+        } catch (PolicyGetException defaultVersionException) {
+            // retry with latest version.
+            try {
+                return PolopolyContext.getPolicy(getCMServer(), reference.getLatestVersion(), policyClass);
+            } catch (PolicyGetException latestException) {
+                throw new PolicyGetException("While getting field " + field +
+                        " in " + this + ": " + defaultVersionException.getMessage(), defaultVersionException.getCause());
+            }
         }
     }
 
@@ -159,7 +182,11 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
 
     @Override
     public ContentUtil getContent() {
-        return Util.util(policy.getContent(), getContext());
+        if (contentCache == null) {
+            contentCache = Util.util(policy.getContent(), getContext());
+        }
+
+        return contentCache;
     }
 
     public Policy asPolicy() {
@@ -304,12 +331,18 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         }
     }
 
-    private String rootPolicyToString() {
+    protected String rootPolicyToString() {
+        String contentIdString = getContent().getExternalIdString();
+
+        if (contentIdString == null) {
+            contentIdString = getContentId().getContentId().getContentIdString();
+        }
+
         return getContent().getName() +
-            " (" + getContentIdString() + ")";
+            " (" + contentIdString + ")";
     }
 
-    private String childPolicyToString() {
+    protected String childPolicyToString() {
         String name;
 
         try {
@@ -332,14 +365,16 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
     }
 
     public void delete() throws PolicyDeleteException {
+        String toString = this.toString();
+
         try {
             getCMServer().removeContent(getContentId().unversioned());
 
             if (logger.isLoggable(Level.INFO)) {
-                logger.log(Level.INFO, "Deleted " + this + ".");
+                logger.log(Level.INFO, "Deleted " + toString + ".");
             }
         } catch (CMException e) {
-            throw new PolicyDeleteException("While deleting " + this + ": " + e.getMessage(), e);
+            throw new PolicyDeleteException("While deleting " + toString + ": " + e.getMessage(), e);
         }
     }
 
@@ -385,5 +420,43 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
             public void modify(Policy newVersion) throws CMException {
                 policyModification.modify(Util.util(newVersion));
             }}, Policy.class);
+    }
+
+    public <T> T getSingleReferenceInList(String field, Class<T> policyClass)
+            throws PolicyGetException, EmptyListException {
+        ContentListUtil contentList = util(this).getContentListAware(field);
+
+        int size = contentList.size();
+
+        if (size > 1) {
+            logger.log(Level.WARNING, "There are multiple object in " + contentList + ".");
+        }
+
+        if (size > 0) {
+            return contentList.get(0, policyClass);
+        }
+
+        throw new EmptyListException();
+    }
+
+    public void setSingleReferenceInList(String field, Policy policy) {
+        ContentListUtil teaserImageList = util(this).getContentListAware(field);
+
+        teaserImageList.clear();
+
+        if (policy != null) {
+            teaserImageList.add(policy);
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Policy &&
+            super.getContentId().equalsIgnoreVersion(((Policy) obj).getContentId());
+    }
+
+    @Override
+    public int hashCode() {
+        return super.getContentId().getContentId().hashCode();
     }
 }

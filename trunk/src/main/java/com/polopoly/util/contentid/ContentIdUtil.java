@@ -4,6 +4,8 @@ import static com.polopoly.util.policy.Util.util;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.VersionedContentId;
+import com.polopoly.cm.client.CMException;
+import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.policy.Policy;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.content.ContentUtil;
@@ -62,12 +64,30 @@ public class ContentIdUtil extends VersionedContentId {
     }
 
     @Override
+    public String getContentIdString() {
+        if (getVersion() == UNDEFINED_VERSION) {
+            return super.getContentId().getContentIdString();
+        }
+        else {
+            return super.getContentIdString();
+        }
+    }
+
+    @Override
     public String toString() {
         if (getVersion() == UNDEFINED_VERSION) {
-            return unversioned().getContentIdString();
+            return super.getContentId().getContentIdString();
         }
         else {
             return getContentIdString();
+        }
+    }
+
+    public ContentIdUtil resolveSymbolicVersion() {
+        try {
+            return Util.util(context.getPolicyCMServer().translateSymbolicContentId(this), context);
+        } catch (CMException e) {
+            throw new CMRuntimeException("While resolving " + this + ": " + e.getMessage(), e);
         }
     }
 }
