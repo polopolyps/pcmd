@@ -23,8 +23,8 @@ public interface PolicyUtil extends Iterable<Policy>, RuntimeExceptionPolicy {
     void setSingleReference(String field, Policy policy);
     ContentListUtil getContentListAware(String field);
     <T> T getChildPolicy(String field, Class<T> klass);
-    <T> void modify(PolicyModification<T> policyModification, Class<T> klass, boolean createNewVersion) throws PolicyModificationException;
-    <T> void modify(PolicyModification<T> policyModification, Class<T> klass) throws PolicyModificationException;
+    <T> T modify(PolicyModification<T> policyModification, Class<T> klass, boolean createNewVersion) throws PolicyModificationException;
+    <T> T modify(PolicyModification<T> policyModification, Class<T> klass) throws PolicyModificationException;
     <T> void modifyUtil(PolicyModification<PolicyUtil> policyModification) throws PolicyModificationException;
     Policy asPolicy();
     InputTemplateUtil getInputTemplate();

@@ -15,7 +15,7 @@ import com.polopoly.util.policy.PolicyUtil;
 import com.polopoly.util.policy.Util;
 
 public class ContentIdUtil extends VersionedContentId {
-    private PolopolyContext context;
+    private transient PolopolyContext context;
 
     public ContentIdUtil(PolopolyContext context, ContentId contentId) {
         super(contentId,

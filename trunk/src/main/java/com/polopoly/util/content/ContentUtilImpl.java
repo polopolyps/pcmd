@@ -2,7 +2,6 @@ package com.polopoly.util.content;
 
 import java.util.Iterator;
 
-import com.polopoly.cm.ContentId;
 import com.polopoly.cm.ExternalContentId;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
@@ -131,14 +130,14 @@ public class ContentUtilImpl extends RuntimeExceptionContentWrapper implements C
     }
 
     public ContentIterable getSecurityParentChain() {
-        Iterable<ContentId> securityParentIdIterable =
-            new Iterable<ContentId>() {
-                public Iterator<ContentId> iterator() {
-                    return new FetchingIterator<ContentId>() {
+        Iterable<ContentIdUtil> securityParentIdIterable =
+            new Iterable<ContentIdUtil>() {
+                public Iterator<ContentIdUtil> iterator() {
+                    return new FetchingIterator<ContentIdUtil>() {
                         ContentUtil at = ContentUtilImpl.this;
 
                         @Override
-                        protected ContentId fetch() {
+                        protected ContentIdUtil fetch() {
                             if (at == null) {
                                 return null;
                             }

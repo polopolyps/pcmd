@@ -12,13 +12,13 @@ import com.polopoly.util.policy.Util;
 public class ContentIdToContentUtilIterator extends TransformingIterator<ContentRead, ContentUtil>{
     private PolicyCMServer server;
 
-    public ContentIdToContentUtilIterator(PolopolyContext context, Iterator<ContentId> contentIds, boolean stopOnException) {
+    public ContentIdToContentUtilIterator(PolopolyContext context, Iterator<? extends ContentId> contentIds, boolean stopOnException) {
         super(new ContentIdToContentIterator(context, contentIds, stopOnException));
 
         this.server = context.getPolicyCMServer();
     }
 
-    public ContentIdToContentUtilIterator(PolicyCMServer server, Iterator<ContentId> contentIds) {
+    public ContentIdToContentUtilIterator(PolicyCMServer server, Iterator<? extends ContentId> contentIds) {
         super(new ContentIdToContentIterator(server, contentIds));
 
         this.server = server;

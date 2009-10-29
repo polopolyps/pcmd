@@ -15,11 +15,11 @@ public class ContentIdToContentIterator extends AbstractContentIdIterator<Conten
     private static final Logger logger =
         Logger.getLogger(ContentIdToContentIterator.class.getName());
 
-    public ContentIdToContentIterator(PolopolyContext context, Iterator<ContentId> contentIds, boolean stopOnException) {
+    public ContentIdToContentIterator(PolopolyContext context, Iterator<? extends ContentId> contentIds, boolean stopOnException) {
         super(context, contentIds, stopOnException);
     }
 
-    public ContentIdToContentIterator(PolicyCMServer server, Iterator<ContentId> contentIds) {
+    public ContentIdToContentIterator(PolicyCMServer server, Iterator<? extends ContentId> contentIds) {
         super(server, contentIds);
     }
 

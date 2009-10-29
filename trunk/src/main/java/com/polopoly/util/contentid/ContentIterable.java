@@ -12,10 +12,10 @@ import com.polopoly.util.collection.ContentIdToPolicyIterator;
 import com.polopoly.util.content.ContentUtil;
 
 public class ContentIterable implements Iterable<Policy> {
-    private Iterable<ContentId> contentIdIterable;
+    private Iterable<ContentIdUtil> contentIdIterable;
     private PolopolyContext context;
 
-    public ContentIterable(PolopolyContext context, Iterable<ContentId> contentIdIterable) {
+    public ContentIterable(PolopolyContext context, Iterable<ContentIdUtil> contentIdIterable) {
         this.contentIdIterable = contentIdIterable;
         this.context = context;
     }
@@ -37,7 +37,7 @@ public class ContentIterable implements Iterable<Policy> {
         };
     }
 
-    public Iterable<ContentId> contentIds() {
+    public Iterable<ContentIdUtil> contentIds() {
         return contentIdIterable;
     }
 

@@ -205,12 +205,12 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         }
     }
 
-    public <T> void modify(PolicyModification<T> policyModification, Class<T> klass)
+    public <T> T modify(PolicyModification<T> policyModification, Class<T> klass)
             throws PolicyModificationException {
-        modify(policyModification, klass, true);
+        return modify(policyModification, klass, true);
     }
 
-    public <T> void modify(PolicyModification<T> policyModification, Class<T> klass, boolean createNewVersion)
+    public <T> T modify(PolicyModification<T> policyModification, Class<T> klass, boolean createNewVersion)
             throws PolicyModificationException {
         LockInfo lockInfo = policy.getContent().getLockInfo();
 
@@ -244,7 +244,23 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         }
 
         try {
-            policyModification.modify(CheckedCast.cast(policy, klass));
+            T result = CheckedCast.cast(policy, klass);
+            policyModification.modify(result);
+
+            try {
+                getContent().commit();
+            } catch (CMException e) {
+                abort(server, createNewVersion);
+
+                throw new PolicyModificationException("While modifying " +
+                        policy.getContentId().getContentId().getContentIdString() + ": " + e.getMessage(), e);
+            }
+
+            if (logger.isLoggable(Level.INFO)) {
+                logger.log(Level.INFO, "Committed " + this + " after modification.");
+            }
+
+            return result;
         } catch (CMException e) {
             abort(server, createNewVersion);
 
@@ -259,19 +275,6 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
 
             throw new PolicyModificationException("New version of " +
                     policy.getContentId().getContentId().getContentIdString() + ": " + e.getMessage(), e);
-        }
-
-        try {
-            getContent().commit();
-        } catch (CMException e) {
-            abort(server, createNewVersion);
-
-            throw new PolicyModificationException("While modifying " +
-                    policy.getContentId().getContentId().getContentIdString() + ": " + e.getMessage(), e);
-        }
-
-        if (logger.isLoggable(Level.INFO)) {
-            logger.log(Level.INFO, "Committed " + this + " after modification.");
         }
     }
 

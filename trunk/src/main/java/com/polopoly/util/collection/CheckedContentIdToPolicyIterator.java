@@ -19,7 +19,8 @@ public class CheckedContentIdToPolicyIterator<T> extends AbstractContentIdIterat
     private static final Logger logger =
         Logger.getLogger(CheckedContentIdToPolicyIterator.class.getName());
 
-    public CheckedContentIdToPolicyIterator(PolopolyContext context, Iterator<ContentId> contentIds, Class<T> klass, boolean stopOnException) {
+    public CheckedContentIdToPolicyIterator(PolopolyContext context, Iterator<? extends ContentId> contentIds,
+            Class<T> klass, boolean stopOnException) {
         super(context, contentIds, stopOnException);
 
         this.klass = klass;

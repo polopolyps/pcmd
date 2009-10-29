@@ -8,23 +8,23 @@ import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.util.client.PolopolyContext;
 
 public abstract class AbstractContentIdIterator<T> extends FetchingIterator<T> {
-    protected Iterator<ContentId> it;
+    protected Iterator<? extends ContentId> it;
     protected PolicyCMServer server;
     protected boolean stopOnException;
     protected long startTime;
     protected int count;
 
-    protected AbstractContentIdIterator(PolopolyContext context, Iterator<ContentId> contentIds) {
+    protected AbstractContentIdIterator(PolopolyContext context, Iterator<? extends ContentId> contentIds) {
         this(context, contentIds, false);
     }
 
-    protected AbstractContentIdIterator(PolopolyContext context, Iterator<ContentId> contentIds, boolean stopOnException) {
+    protected AbstractContentIdIterator(PolopolyContext context, Iterator<? extends ContentId> contentIds, boolean stopOnException) {
         this(context.getPolicyCMServer(), contentIds);
 
         this.stopOnException = stopOnException;
     }
 
-    protected AbstractContentIdIterator(PolicyCMServer server, Iterator<ContentId> contentIds) {
+    protected AbstractContentIdIterator(PolicyCMServer server, Iterator<? extends ContentId> contentIds) {
         this.it = contentIds;
         this.server = server;
 
