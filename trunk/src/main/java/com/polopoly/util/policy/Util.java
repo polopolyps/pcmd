@@ -1,13 +1,11 @@
 package com.polopoly.util.policy;
 
 import com.polopoly.cm.ContentId;
-import com.polopoly.cm.ContentReference;
 import com.polopoly.cm.client.ContentRead;
 import com.polopoly.cm.client.InputTemplate;
 import com.polopoly.cm.collections.ContentListRead;
 import com.polopoly.cm.policy.Policy;
 import com.polopoly.cm.policy.PolicyCMServer;
-import com.polopoly.pcmd.tool.ContentReferenceUtil;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.content.ContentUtilImpl;
@@ -51,9 +49,5 @@ public class Util {
     }
     public static InputTemplateUtil util(InputTemplate inputTemplate, PolopolyContext context) {
         return new InputTemplateUtilImpl(inputTemplate, context);
-    }
-
-    public static ContentReferenceUtil util(ContentReference entry, PolopolyContext context) {
-        return new ContentReferenceUtil(entry, context);
     }
 }

@@ -140,7 +140,7 @@ public class PolopolyClient {
             throw new ConnectException("Error connecting to Polopoly server with connection URL " + connectionUrl + ": " + e, e);
         }
 
-        PolopolyContext context = new PolopolyContext(cmClient, searchClient);
+        PolopolyContext context = new PolopolyContext(app);
 
         login(context);
 

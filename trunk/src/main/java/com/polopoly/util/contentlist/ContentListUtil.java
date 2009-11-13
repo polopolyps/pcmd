@@ -3,7 +3,7 @@ package com.polopoly.util.contentlist;
 import java.util.List;
 
 import com.polopoly.cm.policy.Policy;
-import com.polopoly.pcmd.tool.ContentReferenceUtil;
+import com.polopoly.cm.policy.ReferenceMetaDataPolicy;
 import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.contentid.ContentIdUtil;
 import com.polopoly.util.contentlist.ContentListUtilImpl.ContentListContentIds;
@@ -17,7 +17,9 @@ public interface ContentListUtil extends RuntimeExceptionContentList, Iterable<P
     <T> List<T> policyList(final Class<T> policyClass);
     ContentListContentIds contentIds();
     void add(int index, Policy policy);
+    void add(int index, Policy policy, ReferenceMetaDataPolicy referenceMetaData);
     void add(Policy policy);
+    void add(Policy policy, ReferenceMetaDataPolicy referenceMetaData);
     void remove(Policy policy);
     ContentIdUtil get(int i);
     <T> T get(int i, Class<T> klass) throws PolicyGetException;

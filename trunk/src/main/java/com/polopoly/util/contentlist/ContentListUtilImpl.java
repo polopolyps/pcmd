@@ -13,7 +13,7 @@ import com.polopoly.cm.collections.ContentList;
 import com.polopoly.cm.collections.ContentListRead;
 import com.polopoly.cm.policy.Policy;
 import com.polopoly.cm.policy.PolicyCMServer;
-import com.polopoly.pcmd.tool.ContentReferenceUtil;
+import com.polopoly.cm.policy.ReferenceMetaDataPolicy;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.CheckedContentIdToPolicyIterator;
 import com.polopoly.util.collection.ContentIdToContentUtilIterator;
@@ -39,12 +39,16 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
         }
 
         public void add(int index, ContentId contentId) {
+            add(index, contentId, null);
+        }
+
+        public void add(int index, ContentId contentId, ContentId referenceMetaDataId) {
             try {
-                contentList.add(index, new ContentReference(contentId, null));
+                contentList.add(index, new ContentReference(contentId, referenceMetaDataId));
             }
             catch (CMException e) {
                 throw new CMRuntimeException(
-                    "While adding " + contentId + " to " + this + ": " + e.getMessage(), e);
+                    "While adding " + contentId.getContentIdString() + " to " + this + ": " + e.getMessage(), e);
             }
         }
 
@@ -168,6 +172,15 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
         add(size(), policy);
     }
 
+    public void add(int index, Policy policy,
+            ReferenceMetaDataPolicy referenceMetaData) {
+        contentIds().add(index, policy.getContentId().getContentId(), referenceMetaData.getContentId().getContentId());
+    }
+
+    public void add(Policy policy, ReferenceMetaDataPolicy referenceMetaData) {
+        add(size(), policy,  referenceMetaData);
+    }
+
     public void remove(Policy policy) {
         contentIds().remove(policy.getContentId());
     }
@@ -177,15 +190,7 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
     }
 
     public <T> T get(int i, Class<T> klass) throws PolicyGetException {
-        try {
-            return getContext().getPolicy(contentIds().get(i), klass);
-        } catch (PolicyGetException e) {
-            throw e;
-        } catch (CMException e) {
-            throw new CMRuntimeException(
-                "While getting entry " + i + " in " + ContentListUtilImpl.this.toString() +
-                    ": " + e.getMessage(), e);
-        }
+        return getContext().getPolicy(contentIds().get(i), klass);
     }
 
     private PolopolyContext getContext() {
@@ -215,10 +220,10 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
     @Override
     public String toString() {
         if (toString == null) {
-            return "content list";
+            return "content list \"" + contentList + "\"";
         }
         else {
-            return "content list in " + toString.toString();
+            return "content list \"" + contentList + "\" in " + toString.toString();
         }
     }
 

@@ -341,8 +341,13 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
             contentIdString = getContentId().getContentId().getContentIdString();
         }
 
-        return getContent().getName() +
-            " (" + contentIdString + ")";
+        String contentName = getContent().getName();
+
+        if (contentName == null || contentName.toString().equals("")) {
+            contentName = "unnamed " + getInputTemplate().getExternalIdString();
+        }
+
+        return contentName + " (" + contentIdString + ")";
     }
 
     protected String childPolicyToString() {

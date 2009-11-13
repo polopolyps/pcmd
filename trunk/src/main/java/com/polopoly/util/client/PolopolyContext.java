@@ -46,10 +46,13 @@ public class PolopolyContext {
     private PolicyCMServer server;
     private RmiSearchClient searchClient;
     private CmClient client;
+    private Application application;
 
     public PolopolyContext(Application application) {
         this((CmClient) application.getApplicationComponent(EjbCmClient.DEFAULT_COMPOUND_NAME),
              (RmiSearchClient) application.getApplicationComponent(RmiSearchClient.DEFAULT_COMPOUND_NAME));
+
+        this.application = application;
     }
 
     public PolopolyContext(CmClient cmClient, RmiSearchClient searchClient) {
@@ -66,6 +69,14 @@ public class PolopolyContext {
 
     public PolicyCMServer getPolicyCMServer() {
         return server;
+    }
+
+    public Application getApplication() {
+        if (application == null) {
+            throw new CMRuntimeException("No application provided to context constructor.");
+        }
+
+        return application;
     }
 
     public UserServer getUserServer() {

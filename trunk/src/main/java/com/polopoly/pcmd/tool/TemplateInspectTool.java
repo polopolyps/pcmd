@@ -6,6 +6,7 @@ import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.ContentIdToContentIterator;
 import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.contentid.ContentIdUtil;
+import com.polopoly.util.contentlist.ContentReferenceUtil;
 import com.polopoly.util.exception.ContentGetException;
 import com.polopoly.util.policy.Util;
 
