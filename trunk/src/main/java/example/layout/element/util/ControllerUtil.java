@@ -176,14 +176,14 @@ public class ControllerUtil {
     }
 
     public <T> T getArticle(Class<T> articleClass) throws NoCurrentArticleException {
-        ContentPath contentPath = m.getContext().getPage().getContentPath();
+        ContentPath contentPath = m.getContext().getPage().getPathAfterPage();
 
         for (int i = contentPath.size()-1; i >= 0; i--) {
             ContentId contentId = (ContentId) contentPath.get(i);
 
             if (contentId.getMajor() == 1) {
                 try {
-                    return polopolyContext.getPolicy(contentId, articleClass);
+                    return getPolopolyContext().getPolicy(contentId, articleClass);
                 } catch (PolicyGetException e) {
                     throw new NoCurrentArticleException(e);
                 }
