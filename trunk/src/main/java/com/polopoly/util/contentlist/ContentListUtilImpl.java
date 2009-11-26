@@ -27,7 +27,8 @@ import com.polopoly.util.exception.PolicyGetException;
 import com.polopoly.util.policy.PolicyUtil;
 import com.polopoly.util.policy.Util;
 
-public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper implements ContentListUtil {
+public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper
+        implements ContentListUtil {
     public class ContentListContentIds implements Iterable<ContentId> {
         public Iterator<ContentId> iterator() {
             return new ContentListIterator(contentList) {
@@ -42,13 +43,15 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
             add(index, contentId, null);
         }
 
-        public void add(int index, ContentId contentId, ContentId referenceMetaDataId) {
+        public void add(int index, ContentId contentId,
+                ContentId referenceMetaDataId) {
             try {
-                contentList.add(index, new ContentReference(contentId, referenceMetaDataId));
-            }
-            catch (CMException e) {
-                throw new CMRuntimeException(
-                    "While adding " + contentId.getContentIdString() + " to " + this + ": " + e.getMessage(), e);
+                contentList.add(index, new ContentReference(contentId,
+                        referenceMetaDataId));
+            } catch (CMException e) {
+                throw new CMRuntimeException("While adding "
+                        + contentId.getContentIdString() + " to " + this + ": "
+                        + e.getMessage(), e);
             }
         }
 
@@ -57,7 +60,7 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
         }
 
         public void remove(ContentId contentId) {
-            for (int i = contentList.size()-1; i >= 0; i--) {
+            for (int i = contentList.size() - 1; i >= 0; i--) {
                 if (get(i).equalsIgnoreVersion(contentId)) {
                     remove(i);
                 }
@@ -78,18 +81,18 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
 
         public ContentIdUtil get(int i) {
             try {
-                ContentId result = contentList.getEntry(i).getReferredContentId();
+                ContentId result = contentList.getEntry(i)
+                        .getReferredContentId();
 
                 if (result != null) {
                     return Util.util(result, context);
-                }
-                else {
+                } else {
                     return null;
                 }
             } catch (CMException e) {
-                throw new CMRuntimeException(
-                    "While getting entry " + i + " in " + ContentListUtilImpl.this.toString() +
-                        ": " + e.getMessage(), e);
+                throw new CMRuntimeException("While getting entry " + i
+                        + " in " + ContentListUtilImpl.this.toString() + ": "
+                        + e.getMessage(), e);
             }
         }
 
@@ -100,23 +103,30 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
     }
 
     private ContentList contentList;
+
     private PolicyCMServer server;
+
     private PolopolyContext context;
+
     private Object toString;
 
     /**
-     * Use {@link Util#util(ContentListRead, PolicyCMServer)} to get an instance.
+     * Use {@link Util#util(ContentListRead, PolicyCMServer)} to get an
+     * instance.
      */
-    public ContentListUtilImpl(ContentListRead contentList, Object toString, PolopolyContext context) {
+    public ContentListUtilImpl(ContentListRead contentList, Object toString,
+            PolopolyContext context) {
         this(contentList, toString, context.getPolicyCMServer());
 
         this.context = context;
     }
 
     /**
-     * Use {@link Util#util(ContentListRead, PolicyCMServer)} to get an instance.
+     * Use {@link Util#util(ContentListRead, PolicyCMServer)} to get an
+     * instance.
      */
-    public ContentListUtilImpl(ContentListRead contentList, Object toString, PolicyCMServer server) {
+    public ContentListUtilImpl(ContentListRead contentList, Object toString,
+            PolicyCMServer server) {
         super(contentList);
 
         this.contentList = (ContentList) contentList;
@@ -131,8 +141,8 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
     public <T> Iterable<T> policies(final Class<T> policyClass) {
         return new Iterable<T>() {
             public Iterator<T> iterator() {
-                return new CheckedContentIdToPolicyIterator<T>(
-                        server, contentIds().iterator(), policyClass);
+                return new CheckedContentIdToPolicyIterator<T>(server,
+                        contentIds().iterator(), policyClass);
             }
         };
     }
@@ -141,8 +151,8 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
         return new Iterable<PolicyUtil>() {
             public Iterator<PolicyUtil> iterator() {
                 return new TransformingIterator<Policy, PolicyUtil>(
-                    new CheckedContentIdToPolicyIterator<Policy>(
-                        server, contentIds().iterator(), Policy.class)) {
+                        new CheckedContentIdToPolicyIterator<Policy>(server,
+                                contentIds().iterator(), Policy.class)) {
                     @Override
                     protected PolicyUtil transform(Policy next) {
                         return Util.util(next);
@@ -159,7 +169,8 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
     public Iterable<ContentUtil> contents() {
         return new Iterable<ContentUtil>() {
             public Iterator<ContentUtil> iterator() {
-                return new ContentIdToContentUtilIterator(server, contentIds().iterator());
+                return new ContentIdToContentUtilIterator(server, contentIds()
+                        .iterator());
             }
         };
     }
@@ -174,11 +185,12 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
 
     public void add(int index, Policy policy,
             ReferenceMetaDataPolicy referenceMetaData) {
-        contentIds().add(index, policy.getContentId().getContentId(), referenceMetaData.getContentId().getContentId());
+        contentIds().add(index, policy.getContentId().getContentId(),
+                referenceMetaData.getContentId().getContentId());
     }
 
     public void add(Policy policy, ReferenceMetaDataPolicy referenceMetaData) {
-        add(size(), policy,  referenceMetaData);
+        add(size(), policy, referenceMetaData);
     }
 
     public void remove(Policy policy) {
@@ -219,19 +231,27 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper impl
 
     @Override
     public String toString() {
-        if (toString == null) {
-            return "content list \"" + contentList + "\"";
+        String group;
+        try {
+            group = contentList.getContentListStorageGroup();
+        } catch (CMException e) {
+            group = e.getMessage();
         }
-        else {
-            return "content list \"" + contentList + "\" in " + toString.toString();
+
+        if (toString == null) {
+            return "content list \"" + group + "\"";
+        } else {
+            return "content list \"" + group + "\" in " + toString.toString();
         }
     }
 
     public Iterable<ContentReferenceUtil> references() {
         return new Iterable<ContentReferenceUtil>() {
             public Iterator<ContentReferenceUtil> iterator() {
-                return new ContentReferenceIterator(ContentListUtilImpl.this, getContext());
-            }};
+                return new ContentReferenceIterator(ContentListUtilImpl.this,
+                        getContext());
+            }
+        };
     }
 
     public <T> List<T> policyList(Class<T> policyClass) {
