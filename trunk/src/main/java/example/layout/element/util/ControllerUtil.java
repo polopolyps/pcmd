@@ -29,12 +29,15 @@ import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.exception.PolicyGetException;
 
 public class ControllerUtil {
-    private static final Logger logger =
-        Logger.getLogger(ControllerUtil.class.getName());
+    private static final Logger logger = Logger.getLogger(ControllerUtil.class
+            .getName());
 
     private RenderRequest request;
+
     private TopModel m;
+
     private ControllerContext context;
+
     private PolopolyContext polopolyContext;
 
     public ControllerUtil(RenderRequest request, TopModel m,
@@ -50,9 +53,9 @@ public class ControllerUtil {
 
             if (application != null) {
                 polopolyContext = new PolopolyContext(application);
-            }
-            else {
-                throw new CMRuntimeException("Could not get the application from controller context.");
+            } else {
+                throw new CMRuntimeException(
+                        "Could not get the application from controller context.");
             }
         }
 
@@ -68,43 +71,54 @@ public class ControllerUtil {
     }
 
     public String createUrl(List<ContentId> newContentIdPath) {
-        URLBuilder urlBuilder = RequestPreparator.getURLBuilder(
-                (HttpServletRequest) request);
+        URLBuilder urlBuilder = RequestPreparator
+                .getURLBuilder((HttpServletRequest) request);
 
         if (urlBuilder == null) {
-            logger.log(Level.WARNING, "Found no URL builder in request. Could not create URL for path " + newContentIdPath + ".");
+            logger.log(Level.WARNING,
+                    "Found no URL builder in request. Could not create URL for path "
+                            + newContentIdPath + ".");
             return "";
         }
 
         try {
-            return urlBuilder.createUrl(newContentIdPath, (HttpServletRequest) request);
+            return urlBuilder.createUrl(newContentIdPath,
+                    (HttpServletRequest) request);
         } catch (CMException e) {
-            logger.log(Level.WARNING, "Could not create URL for path " +
-                    newContentIdPath + " using URL builder of type " + urlBuilder.getClass().getName() + ": " + e.getMessage(), e);
+            logger.log(Level.WARNING, "Could not create URL for path "
+                    + newContentIdPath + " using URL builder of type "
+                    + urlBuilder.getClass().getName() + ": " + e.getMessage(),
+                    e);
 
             return "";
         }
     }
 
-    public <T> T getStack(String variable, Class<T> klass) throws ModelGetException {
+    public <T> T getStack(String variable, Class<T> klass)
+            throws ModelGetException {
         try {
             Object bean = ModelPathUtil.getBean(m.getStack(), variable);
 
             if (bean == null) {
-                throw new ModelVariableNullException("Variable stack/" + variable + " was null.");
+                throw new ModelVariableNullException("Variable stack/"
+                        + variable + " was null.");
             }
 
             return CheckedCast.cast(bean, klass);
         } catch (CheckedClassCastException e) {
-            throw new ModelGetException("While getting variable stack/" + variable + ": " + e.getMessage());
+            throw new ModelGetException("While getting variable stack/"
+                    + variable + ": " + e.getMessage());
         }
     }
 
-    public <T> T getLocal(String variable, Class<T> klass) throws ModelGetException {
+    public <T> T getLocal(String variable, Class<T> klass)
+            throws ModelGetException {
         try {
-            return CheckedCast.cast(ModelPathUtil.getBean(m.getLocal(), variable), klass);
+            return CheckedCast.cast(ModelPathUtil.getBean(m.getLocal(),
+                    variable), klass);
         } catch (CheckedClassCastException e) {
-            throw new ModelGetException("While getting variable local/" + variable + ": " + e.getMessage());
+            throw new ModelGetException("While getting variable local/"
+                    + variable + ": " + e.getMessage());
         }
     }
 
@@ -121,18 +135,22 @@ public class ControllerUtil {
     }
 
     /**
-     * Returns the policy of the object (e.g. an element or an article) the controller is defined on.
+     * Returns the policy of the object (e.g. an element or an article) the
+     * controller is defined on.
      */
-    public <T> T getPolicy(Class<T> policyClass) throws InvalidControllerPolicyException {
+    public <T> T getPolicy(Class<T> policyClass)
+            throws InvalidControllerPolicyException {
         try {
-            return CheckedCast.cast(getPolicy(), policyClass, "The controller's policy");
+            return CheckedCast.cast(getPolicy(), policyClass,
+                    "The controller's policy");
         } catch (CheckedClassCastException e) {
             throw new InvalidControllerPolicyException(e);
         }
     }
 
     public Policy getPolicy() {
-        return (Policy) context.getContentModel().getAttribute(ModelStoreInBean.BEAN_ATTRIBUTE_NAME);
+        return (Policy) context.getContentModel().getAttribute(
+                ModelStoreInBean.BEAN_ATTRIBUTE_NAME);
     }
 
     public <T> T getPage(Class<T> pageClass) {
@@ -140,7 +158,8 @@ public class ControllerUtil {
             PageScope page = m.getContext().getPage();
 
             if (page == null) {
-                throw new CMRuntimeException("No page available in model for " + request.getRequestURI() + ".");
+                throw new CMRuntimeException("No page available in model for "
+                        + request.getRequestURI() + ".");
             }
 
             return CheckedCast.cast(page.getBean(), pageClass, "Current page");
@@ -154,7 +173,8 @@ public class ControllerUtil {
             SiteScope site = m.getContext().getSite();
 
             if (site == null) {
-                throw new CMRuntimeException("No site available in model for " + request.getRequestURI() + ".");
+                throw new CMRuntimeException("No site available in model for "
+                        + request.getRequestURI() + ".");
             }
 
             return CheckedCast.cast(site.getBean(), siteClass, "Current site");
@@ -175,21 +195,33 @@ public class ControllerUtil {
         return getArticle(Policy.class);
     }
 
-    public <T> T getArticle(Class<T> articleClass) throws NoCurrentArticleException {
-        ContentPath contentPath = m.getContext().getPage().getPathAfterPage();
+    public <T> T getArticle(Class<T> articleClass)
+            throws NoCurrentArticleException {
+        PageScope page = m.getContext().getPage();
 
-        for (int i = contentPath.size()-1; i >= 0; i--) {
+        if (page == null) {
+            logger.log(Level.WARNING, "No page available in model context.");
+
+            throw new NoCurrentArticleException(
+                    "No page available in model context.");
+        }
+
+        ContentPath contentPath = page.getPathAfterPage();
+
+        for (int i = contentPath.size() - 1; i >= 0; i--) {
             ContentId contentId = (ContentId) contentPath.get(i);
 
             if (contentId.getMajor() == 1) {
                 try {
-                    return getPolopolyContext().getPolicy(contentId, articleClass);
+                    return getPolopolyContext().getPolicy(contentId,
+                            articleClass);
                 } catch (PolicyGetException e) {
                     throw new NoCurrentArticleException(e);
                 }
             }
         }
 
-        throw new NoCurrentArticleException("There was no article in the content path.");
+        throw new NoCurrentArticleException(
+                "There was no article in the content path.");
     }
 }

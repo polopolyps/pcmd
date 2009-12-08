@@ -68,6 +68,33 @@ public class RuntimeExceptionPolicyWrapper extends DelegatingPolicy implements R
         }
     }
 
+    @Override
+    public String getComponent(String name)  {
+        try {
+            return super.getComponent(name);
+        } catch (CMException e) {
+            throw toRuntimeException(e, "getComponent");
+        }
+    }
+
+    @Override
+    public void setComponent(String name, String value) {
+        try {
+            super.setComponent(name, value);
+        } catch (CMException e) {
+            throw toRuntimeException(e, "setComponent");
+        }
+    }
+
+    @Override
+    public String[] getComponentNames() {
+        try {
+            return super.getComponentNames();
+        } catch (CMException e) {
+            throw toRuntimeException(e, "getComponentNames");
+        }
+    }
+
     private RuntimeException toRuntimeException(Exception e, String operation) {
         return new CMRuntimeException("While performing operation " + operation + " on " +
                 this + ": " + e.getMessage(), e);

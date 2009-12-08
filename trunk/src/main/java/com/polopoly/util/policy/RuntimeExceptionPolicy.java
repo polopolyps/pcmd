@@ -13,4 +13,10 @@ public interface RuntimeExceptionPolicy extends Policy {
     Policy getChildPolicy(String name);
     PolicyCMServer getCMServer();
     InputTemplate getInputTemplate();
+
+    String[] getComponentNames();
+
+    void setComponent(String name, String value);
+    String getComponent(String name);
+
 }

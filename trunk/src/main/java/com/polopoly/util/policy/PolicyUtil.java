@@ -12,26 +12,57 @@ import com.polopoly.util.exception.PolicyModificationException;
 
 public interface PolicyUtil extends Iterable<Policy>, RuntimeExceptionPolicy {
     PolopolyContext getContext();
+
     ContentUtil getContent();
+
     String getName();
+
     ContentIdUtil getContentId();
+
     void setSingleValued(String field, String value);
+
     String getSingleValued(String field, String defaultValue);
+
     String getSingleValued(String field);
-    <T> T getSingleReference(String field, Class<T> policyClass) throws PolicyGetException;
+
+    <T> T getSingleReference(String field, Class<T> policyClass)
+            throws PolicyGetException;
+
     ContentIdUtil getSingleReference(String field) throws PolicyGetException;
+
     void setSingleReference(String field, Policy policy);
+
+    <T> T getSingleReference(Class<T> policyClass) throws PolicyGetException;
+
+    ContentIdUtil getSingleReference() throws PolicyGetException;
+
+    void setSingleReference(Policy reference);
+
     ContentListUtil getContentListAware(String field);
+
     <T> T getChildPolicy(String field, Class<T> klass);
-    <T> T modify(PolicyModification<T> policyModification, Class<T> klass, boolean createNewVersion) throws PolicyModificationException;
-    <T> T modify(PolicyModification<T> policyModification, Class<T> klass) throws PolicyModificationException;
-    <T> void modifyUtil(PolicyModification<PolicyUtil> policyModification) throws PolicyModificationException;
+
+    <T> T modify(PolicyModification<T> policyModification, Class<T> klass,
+            boolean createNewVersion) throws PolicyModificationException;
+
+    <T> T modify(PolicyModification<T> policyModification, Class<T> klass)
+            throws PolicyModificationException;
+
+    <T> void modifyUtil(PolicyModification<PolicyUtil> policyModification)
+            throws PolicyModificationException;
+
     Policy asPolicy();
+
     InputTemplateUtil getInputTemplate();
+
     void delete() throws PolicyDeleteException;
+
     Policy getTopPolicy();
+
     ContentIdUtil getContentReference(String name);
 
-    <T> T getSingleReferenceInList(String field, Class<T> policyClass) throws PolicyGetException, EmptyListException;
+    <T> T getSingleReferenceInList(String field, Class<T> policyClass)
+            throws PolicyGetException, EmptyListException;
+
     void setSingleReferenceInList(String field, Policy policy);
 }

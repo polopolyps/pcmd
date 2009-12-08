@@ -34,15 +34,16 @@ import com.polopoly.util.exception.PolicyGetException;
 import com.polopoly.util.exception.PolicyModificationException;
 import com.polopoly.util.exception.ReferenceNotSetException;
 
-public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements PolicyUtil {
+public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
+        PolicyUtil {
     private Policy policy;
 
     private PolopolyContext context;
 
     private ContentUtil contentCache;
 
-    private static final Logger logger =
-        Logger.getLogger(PolicyUtilImpl.class.getName());
+    private static final Logger logger = Logger.getLogger(PolicyUtilImpl.class
+            .getName());
 
     /**
      * Use {@link Util#util(Policy)} to get an instance.
@@ -71,16 +72,18 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         return getContent().getName();
     }
 
-    public void setSingleValued(String field, String value) throws NoSuchChildPolicyException {
+    public void setSingleValued(String field, String value)
+            throws NoSuchChildPolicyException {
         try {
             getChildPolicy(field, SingleValued.class).setValue(value);
         } catch (CMException e) {
-            throw new CMRuntimeException(
-                    "Could not set field " + field + " in " + this + ": " + e.getMessage());
+            throw new CMRuntimeException("Could not set field " + field
+                    + " in " + this + ": " + e.getMessage());
         }
     }
 
-    public String getSingleValued(String field, String defaultValue) throws NoSuchChildPolicyException {
+    public String getSingleValued(String field, String defaultValue)
+            throws NoSuchChildPolicyException {
         String result = null;
 
         try {
@@ -96,12 +99,13 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         return result;
     }
 
-    public String getSingleValued(String field) throws NoSuchChildPolicyException {
+    public String getSingleValued(String field)
+            throws NoSuchChildPolicyException {
         try {
             return getChildPolicy(field, SingleValued.class).getValue();
         } catch (CMException e) {
-            throw new CMRuntimeException(
-                    "Could not get field " + field + " in " + this + ": " + e.getMessage(), e);
+            throw new CMRuntimeException("Could not get field " + field
+                    + " in " + this + ": " + e.getMessage(), e);
         }
     }
 
@@ -109,47 +113,100 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         try {
             return getChildPolicy(field, CheckboxPolicy.class).getChecked();
         } catch (CMException e) {
-            throw new CMRuntimeException(
-                    "Could not get field " + field + " in " + this + ": " + e.getMessage(), e);
+            throw new CMRuntimeException("Could not get field " + field
+                    + " in " + this + ": " + e.getMessage(), e);
         }
     }
 
-    public void setChecked(String field, boolean checked) throws NoSuchChildPolicyException, CMException {
+    public void setChecked(String field, boolean checked)
+            throws NoSuchChildPolicyException, CMException {
         getChildPolicy(field, CheckboxPolicy.class).setChecked(checked);
     }
 
     public void setSingleReference(String field, Policy policy) {
         try {
-            getChildPolicy(field, SingleReference.class).setReference(policy.getContentId().getContentId());
+            getChildPolicy(field, SingleReference.class).setReference(
+                    policy.getContentId().getContentId());
         } catch (CMException e) {
-            throw new CMRuntimeException(
-                "While setting field " + field + " in " + this + " to " + util(policy) + ": " + e.getMessage(), e);
+            throw new CMRuntimeException("While setting field " + field
+                    + " in " + this + " to " + util(policy) + ": "
+                    + e.getMessage(), e);
+        }
+    }
+
+    public void setSingleReference(Policy reference) {
+        try {
+            CheckedCast.cast(this.policy, SingleReference.class).setReference(
+                    reference.getContentId().getContentId());
+        } catch (CMException e) {
+            throw new CMRuntimeException("While setting reference in " + this
+                    + " to " + util(reference) + ": " + e.getMessage(), e);
+        } catch (CheckedClassCastException e) {
+            throw new CMRuntimeException(this + " was of unexpected type: "
+                    + e.getMessage());
         }
     }
 
     public <T> T getSingleReference(String field, Class<T> policyClass)
-            throws PolicyGetException, ReferenceNotSetException, NoSuchChildPolicyException {
+            throws PolicyGetException, ReferenceNotSetException,
+            NoSuchChildPolicyException {
         ContentIdUtil reference = null;
 
         try {
             reference = getSingleReference(field);
 
             if (reference == null) {
-                throw new ReferenceNotSetException("Field " + field +
-                    " was not set in " + this + ".");
+                throw new ReferenceNotSetException("Field " + field
+                        + " was not set in " + this + ".");
             }
 
-            return PolopolyContext.getPolicy(getCMServer(), reference, policyClass);
+            return PolopolyContext.getPolicy(getCMServer(), reference,
+                    policyClass);
         } catch (InvalidPolicyClassException e) {
-            throw new InvalidPolicyClassException("While getting field " + field +
-                    " in " + this + ": " + e.getMessage(), e.getCause());
+            throw new InvalidPolicyClassException("While getting field "
+                    + field + " in " + this + ": " + e.getMessage(), e
+                    .getCause());
         } catch (PolicyGetException defaultVersionException) {
             // retry with latest version.
             try {
-                return PolopolyContext.getPolicy(getCMServer(), reference.getLatestVersion(), policyClass);
+                return PolopolyContext.getPolicy(getCMServer(), reference
+                        .getLatestVersion(), policyClass);
             } catch (PolicyGetException latestException) {
-                throw new PolicyGetException("While getting field " + field +
-                        " in " + this + ": " + defaultVersionException.getMessage(), defaultVersionException.getCause());
+                throw new PolicyGetException("While getting field " + field
+                        + " in " + this + ": "
+                        + defaultVersionException.getMessage(),
+                        defaultVersionException.getCause());
+            }
+        }
+    }
+
+    public <T> T getSingleReference(Class<T> policyClass)
+            throws PolicyGetException, ReferenceNotSetException,
+            NoSuchChildPolicyException {
+        ContentIdUtil reference = null;
+
+        try {
+            reference = getSingleReference();
+
+            if (reference == null) {
+                throw new ReferenceNotSetException("Reference  was not set in "
+                        + this + ".");
+            }
+
+            return PolopolyContext.getPolicy(getCMServer(), reference,
+                    policyClass);
+        } catch (InvalidPolicyClassException e) {
+            throw new InvalidPolicyClassException("While getting reference in "
+                    + this + ": " + e.getMessage(), e.getCause());
+        } catch (PolicyGetException defaultVersionException) {
+            // retry with latest version.
+            try {
+                return PolopolyContext.getPolicy(getCMServer(), reference
+                        .getLatestVersion(), policyClass);
+            } catch (PolicyGetException latestException) {
+                throw new PolicyGetException("While getting reference in "
+                        + this + ": " + defaultVersionException.getMessage(),
+                        defaultVersionException.getCause());
             }
         }
     }
@@ -157,26 +214,49 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
     public ContentIdUtil getSingleReference(String field)
             throws PolicyGetException, NoSuchChildPolicyException {
         try {
-            ContentId result = getChildPolicy(field, SingleReference.class).getReference();
+            ContentId result = getChildPolicy(field, SingleReference.class)
+                    .getReference();
 
             if (result == null) {
                 return null;
-            }
-            else {
+            } else {
                 return util(result, getContext());
             }
         } catch (CMException e) {
-            throw new PolicyGetException(
-                "Could not get field " + field + " in " + this + ": " + e.getMessage(), e);
+            throw new PolicyGetException("Could not get field " + field
+                    + " in " + this + ": " + e.getMessage(), e);
+        }
+    }
+
+    public ContentIdUtil getSingleReference() throws PolicyGetException,
+            NoSuchChildPolicyException {
+        try {
+            ContentId result = CheckedCast.cast(policy, SingleReference.class)
+                    .getReference();
+
+            if (result == null) {
+                return null;
+            } else {
+                return util(result, getContext());
+            }
+        } catch (CMException e) {
+            throw new PolicyGetException("Could not get get reference in "
+                    + this + ": " + e.getMessage(), e);
+        } catch (CheckedClassCastException e) {
+            throw new PolicyGetException(this + " is of an unexpected type: "
+                    + e.getMessage(), e);
         }
     }
 
     public ContentListUtil getContentListAware(String field)
             throws NoSuchChildPolicyException {
         try {
-            return new ContentListUtilImpl(getChildPolicy(field, ContentListAware.class).getContentList(), this, getContext());
+            return new ContentListUtilImpl(getChildPolicy(field,
+                    ContentListAware.class).getContentList(), this,
+                    getContext());
         } catch (CMException e) {
-            throw new CMRuntimeException("While getting content list of field " + field + " in " + this + ": " + e.getMessage(), e);
+            throw new CMRuntimeException("While getting content list of field "
+                    + field + " in " + this + ": " + e.getMessage(), e);
         }
     }
 
@@ -200,8 +280,9 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         } catch (Exception e) {
             String inputTemplate = getInputTemplate().getExternalIdString();
 
-            throw new NoSuchChildPolicyException("Could not get field " + field +
-                    " in " + this + " (a " + inputTemplate + ") : " + e.getMessage(), e);
+            throw new NoSuchChildPolicyException("Could not get field " + field
+                    + " in " + this + " (a " + inputTemplate + ") : "
+                    + e.getMessage(), e);
         }
     }
 
@@ -210,7 +291,8 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         return modify(policyModification, klass, true);
     }
 
-    public <T> T modify(PolicyModification<T> policyModification, Class<T> klass, boolean createNewVersion)
+    public <T> T modify(PolicyModification<T> policyModification,
+            Class<T> klass, boolean createNewVersion)
             throws PolicyModificationException {
         LockInfo lockInfo = policy.getContent().getLockInfo();
 
@@ -218,28 +300,32 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
 
         if (createNewVersion) {
             if (lockInfo != null) {
-                throw new PolicyModificationException(
-                    "Content " + policy.getContentId().getContentId().getContentIdString() + " was locked.");
+                throw new PolicyModificationException("Content "
+                        + policy.getContentId().getContentId()
+                                .getContentIdString() + " was locked.");
             }
 
             try {
                 policy = server.createContentVersion(policy.getContentId());
             } catch (CMException e) {
                 throw new PolicyModificationException(
-                        "While creating new version of " + policy.getContentId().getContentId().getContentIdString() +
-                        ": " + e.getMessage(), e);
+                        "While creating new version of "
+                                + policy.getContentId().getContentId()
+                                        .getContentIdString() + ": "
+                                + e.getMessage(), e);
             }
-        }
-        else {
+        } else {
             try {
-                if (lockInfo == null || !lockInfo.isLockedBy(server.getCurrentCaller())) {
-                    throw new PolicyModificationException(
-                            "Content " + policy.getContentId().getContentId().getContentIdString() + " was not locked by current caller.");
+                if (lockInfo == null
+                        || !lockInfo.isLockedBy(server.getCurrentCaller())) {
+                    throw new PolicyModificationException("Content "
+                            + policy.getContentId().getContentId()
+                                    .getContentIdString()
+                            + " was not locked by current caller.");
                 }
             } catch (CMException e) {
-                throw new PolicyModificationException(
-                        "While determining if " + toString() +
-                        " was locked: " + e.getMessage(), e);
+                throw new PolicyModificationException("While determining if "
+                        + toString() + " was locked: " + e.getMessage(), e);
             }
         }
 
@@ -252,20 +338,24 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
             } catch (CMException e) {
                 abort(server, createNewVersion);
 
-                throw new PolicyModificationException("While modifying " +
-                        policy.getContentId().getContentId().getContentIdString() + ": " + e.getMessage(), e);
+                throw new PolicyModificationException("While modifying "
+                        + policy.getContentId().getContentId()
+                                .getContentIdString() + ": " + e.getMessage(),
+                        e);
             }
 
             if (logger.isLoggable(Level.INFO)) {
-                logger.log(Level.INFO, "Committed " + this + " after modification.");
+                logger.log(Level.INFO, "Committed " + this
+                        + " after modification.");
             }
 
             return result;
         } catch (CMException e) {
             abort(server, createNewVersion);
 
-            throw new PolicyModificationException("While modifying " +
-                    policy.getContentId().getContentId().getContentIdString() + ": " + e.getMessage(), e);
+            throw new PolicyModificationException("While modifying "
+                    + policy.getContentId().getContentId().getContentIdString()
+                    + ": " + e.getMessage(), e);
         } catch (RuntimeException e) {
             abort(server, createNewVersion);
 
@@ -273,8 +363,9 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         } catch (CheckedClassCastException e) {
             abort(server, createNewVersion);
 
-            throw new PolicyModificationException("New version of " +
-                    policy.getContentId().getContentId().getContentIdString() + ": " + e.getMessage(), e);
+            throw new PolicyModificationException("New version of "
+                    + policy.getContentId().getContentId().getContentIdString()
+                    + ": " + e.getMessage(), e);
         }
     }
 
@@ -289,7 +380,8 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
     public Iterator<Policy> iterator() {
         try {
             return new FetchingIterator<Policy>() {
-                Iterator<String> names = policy.getChildPolicyNames().iterator();
+                Iterator<String> names = policy.getChildPolicyNames()
+                        .iterator();
 
                 @Override
                 public void remove() {
@@ -303,16 +395,21 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
                         try {
                             return policy.getChildPolicy(childPolicyName);
                         } catch (CMException e) {
-                            logger.log(Level.WARNING, "While getting child policy " + childPolicyName + " of " + this + ": " + e.getMessage(), e);
+                            logger.log(Level.WARNING,
+                                    "While getting child policy "
+                                            + childPolicyName + " of " + this
+                                            + ": " + e.getMessage(), e);
 
                             return fetch();
                         }
                     }
 
                     return null;
-                }};
+                }
+            };
         } catch (CMException e) {
-            logger.log(Level.WARNING, "While getting child policy names of " + this + ": " + e.getMessage(), e);
+            logger.log(Level.WARNING, "While getting child policy names of "
+                    + this + ": " + e.getMessage(), e);
 
             List<Policy> emptyList = Collections.emptyList();
             return emptyList.iterator();
@@ -328,8 +425,7 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
     public String toString() {
         if (getParentPolicy() != null) {
             return childPolicyToString();
-        }
-        else {
+        } else {
             return rootPolicyToString();
         }
     }
@@ -338,7 +434,8 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         String contentIdString = getContent().getExternalIdString();
 
         if (contentIdString == null) {
-            contentIdString = getContentId().getContentId().getContentIdString();
+            contentIdString = getContentId().getContentId()
+                    .getContentIdString();
         }
 
         String contentName = getContent().getName();
@@ -382,7 +479,8 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
                 logger.log(Level.INFO, "Deleted " + toString + ".");
             }
         } catch (CMException e) {
-            throw new PolicyDeleteException("While deleting " + toString + ": " + e.getMessage(), e);
+            throw new PolicyDeleteException("While deleting " + toString + ": "
+                    + e.getMessage(), e);
         }
     }
 
@@ -396,8 +494,8 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         try {
             return util(super.getContentReference(name), getContext());
         } catch (CMException e) {
-            throw new CMRuntimeException(
-                "Could not get reference " + name + " in " + this + ": " + e.getMessage(), e);
+            throw new CMRuntimeException("Could not get reference " + name
+                    + " in " + this + ": " + e.getMessage(), e);
         }
     }
 
@@ -416,18 +514,21 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
                 result = parent;
             }
         } catch (CMException e) {
-            throw new CMRuntimeException("While getting parent policy of " + result + ": " + e.getMessage(), e);
+            throw new CMRuntimeException("While getting parent policy of "
+                    + result + ": " + e.getMessage(), e);
         }
 
         return result;
     }
 
-    public <T> void modifyUtil(final PolicyModification<PolicyUtil> policyModification)
+    public <T> void modifyUtil(
+            final PolicyModification<PolicyUtil> policyModification)
             throws PolicyModificationException {
-         modify(new PolicyModification<Policy>() {
+        modify(new PolicyModification<Policy>() {
             public void modify(Policy newVersion) throws CMException {
                 policyModification.modify(Util.util(newVersion));
-            }}, Policy.class);
+            }
+        }, Policy.class);
     }
 
     public <T> T getSingleReferenceInList(String field, Class<T> policyClass)
@@ -437,7 +538,8 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
         int size = contentList.size();
 
         if (size > 1) {
-            logger.log(Level.WARNING, "There are multiple object in " + contentList + ".");
+            logger.log(Level.WARNING, "There are multiple object in "
+                    + contentList + ".");
         }
 
         if (size > 0) {
@@ -459,8 +561,9 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Policy &&
-            super.getContentId().equalsIgnoreVersion(((Policy) obj).getContentId());
+        return obj instanceof Policy
+                && super.getContentId().equalsIgnoreVersion(
+                        ((Policy) obj).getContentId());
     }
 
     @Override

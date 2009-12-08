@@ -1,6 +1,6 @@
 package example.layout.element.util;
 
-public class InvalidControllerPolicyException extends Exception {
+public class InvalidControllerPolicyException extends RuntimeException {
 
     public InvalidControllerPolicyException() {
     }

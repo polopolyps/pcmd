@@ -6,15 +6,16 @@ import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.ContentRead;
 
-public class RuntimeExceptionContentWrapper extends DelegatingContent implements RuntimeExceptionContent {
+public class RuntimeExceptionContentWrapper extends DelegatingContent implements
+        RuntimeExceptionContent {
 
     public RuntimeExceptionContentWrapper(ContentRead delegate) {
         super(delegate);
     }
 
     private RuntimeException toRuntimeException(Exception e, String operation) {
-        return new CMRuntimeException("While performing operation " + operation + " on " +
-                this + ": " + e.getMessage(), e);
+        return new CMRuntimeException("While performing operation " + operation
+                + " on " + this + ": " + e.getMessage(), e);
     }
 
     @Override
@@ -94,6 +95,15 @@ public class RuntimeExceptionContentWrapper extends DelegatingContent implements
     public ContentId getOutputTemplateId(String mode) {
         try {
             return super.getOutputTemplateId(mode);
+        } catch (CMException e) {
+            throw toRuntimeException(e, "getOutputTemplateId");
+        }
+    }
+
+    @Override
+    public void setComponent(String groupName, String name, String value) {
+        try {
+            super.setComponent(groupName, name, value);
         } catch (CMException e) {
             throw toRuntimeException(e, "getOutputTemplateId");
         }

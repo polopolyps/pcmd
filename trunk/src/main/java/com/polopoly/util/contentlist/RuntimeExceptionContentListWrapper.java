@@ -5,7 +5,8 @@ import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.collections.ContentListRead;
 
-public class RuntimeExceptionContentListWrapper extends DelegatingContentList implements RuntimeExceptionContentList {
+public class RuntimeExceptionContentListWrapper extends DelegatingContentList
+        implements RuntimeExceptionContentList {
 
     public RuntimeExceptionContentListWrapper(ContentListRead delegate) {
         super(delegate);
@@ -20,8 +21,17 @@ public class RuntimeExceptionContentListWrapper extends DelegatingContentList im
         }
     }
 
+    @Override
+    public String getContentListStorageGroup() {
+        try {
+            return super.getContentListStorageGroup();
+        } catch (CMException e) {
+            throw toRuntimeException(e, "getContentListStorageGroup");
+        }
+    }
+
     private RuntimeException toRuntimeException(Exception e, String operation) {
-        return new CMRuntimeException("While performing operation " + operation + " on " +
-                this + ": " + e.getMessage(), e);
+        return new CMRuntimeException("While performing operation " + operation
+                + " on " + this + ": " + e.getMessage(), e);
     }
 }
