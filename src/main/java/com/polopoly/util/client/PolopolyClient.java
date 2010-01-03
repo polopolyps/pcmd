@@ -114,8 +114,8 @@ public class PolopolyClient {
 	private boolean testConnection(String url) {
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-			connection.setConnectTimeout(100);
-			connection.setReadTimeout(100);
+			connection.setConnectTimeout(1000);
+			connection.setReadTimeout(1000);
 			connection.connect();
 
 			if (connection.getResponseCode() >= 400 && connection.getResponseCode() < 600) {

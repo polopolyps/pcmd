@@ -18,6 +18,7 @@ import com.polopoly.ps.pcmd.tool.HelpTool;
 import com.polopoly.ps.pcmd.tool.RequiresIndexServer;
 import com.polopoly.ps.pcmd.tool.RequiresPollServer;
 import com.polopoly.ps.pcmd.tool.RequiresSolr;
+import com.polopoly.ps.pcmd.tool.RequiresStatisticsServer;
 import com.polopoly.ps.pcmd.util.ToolRetriever;
 import com.polopoly.ps.pcmd.util.ToolRetriever.NoSuchToolException;
 import com.polopoly.util.client.ClientFromArgumentsConfigurator;
@@ -61,7 +62,7 @@ public class Main {
 
 			if (!(tool instanceof DoesNotRequireRunningPolopoly)) {
 				PcmdPolopolyClient client = new PcmdPolopolyClient();
-				client.setAttachStatisticsService(false);
+				client.setAttachStatisticsService(tool instanceof RequiresStatisticsServer);
 				client.setAttachSearchService(tool instanceof RequiresIndexServer);
 				client.setAttachPollService(tool instanceof RequiresPollServer);
 				client.setAttachSolrSearchClient(tool instanceof RequiresSolr);
@@ -121,6 +122,7 @@ public class Main {
 	protected void configureLogging() {
 		if (System.getProperty("java.util.logging.config.file") == null) {
 			Logger.getLogger("").setLevel(Level.WARNING);
+			Logger.getLogger("com.polopoly.ps").setLevel(Level.INFO);
 		}
 	}
 
