@@ -2,6 +2,8 @@ package com.polopoly.util.client;
 
 import java.lang.management.ManagementFactory;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,12 +11,14 @@ import javax.ejb.FinderException;
 
 import com.polopoly.application.ConnectionProperties;
 import com.polopoly.application.StandardApplication;
-import com.polopoly.cm.client.CmClient;
+import com.polopoly.cm.client.ContentFilterSettings;
 import com.polopoly.cm.client.EjbCmClient;
+import com.polopoly.cm.client.filter.ContentFilter;
 import com.polopoly.cm.search.index.RmiSearchClient;
 import com.polopoly.community.client.CommunityClient;
 import com.polopoly.management.ManagedBeanRegistry;
 import com.polopoly.management.jmx.JMXManagedBeanRegistry;
+import com.polopoly.poll.client.PollClient;
 import com.polopoly.statistics.client.StatisticsClient;
 import com.polopoly.statistics.message.logging.UDPLogMsgClient;
 import com.polopoly.user.server.AuthenticationFailureException;
@@ -24,19 +28,31 @@ import com.polopoly.user.server.UserId;
 
 public class PolopolyClient {
     private String applicationName = "polopolyclient";
+
     private String connectionUrl = "localhost";
+
     private String userName = "sysadmin";
+
     private String password = null;
+
     private boolean attachSearchService = true;
+
     private boolean attachStatisticsService = true;
 
-    private static final Logger javaUtilLogger = Logger.getLogger(PolopolyClient.class.getName());
-    private PolopolyClientLogger logger =
-        new PolopolyClientLogger() {
-            public void info(String logMessage) {
-                javaUtilLogger.log(Level.INFO, logMessage);
-            }};
+    private boolean attachPollService = false;
 
+    private List<Class<? extends ContentFilter>> contentFilterClasses = new ArrayList<Class<? extends ContentFilter>>();
+
+    private static final Logger javaUtilLogger = Logger
+            .getLogger(PolopolyClient.class.getName());
+
+    private PolopolyClientLogger logger = new PolopolyClientLogger() {
+        public void info(String logMessage) {
+            javaUtilLogger.log(Level.INFO, logMessage);
+        }
+    };
+
+    private PollClient pollClient;
 
     public String getApplicationName() {
         return applicationName;
@@ -79,12 +95,15 @@ public class PolopolyClient {
     }
 
     public PolopolyContext connect() throws ConnectException {
-        if (connectionUrl.indexOf('/') == -1 && connectionUrl.indexOf(':') == -1) {
-            // if the URL does not contain a slash or colon, it's not a URL but just the server name. Assume default URL on it.
-            connectionUrl = "http://" + connectionUrl + ":8040/connection.properties";
+        if (connectionUrl.indexOf('/') == -1
+                && connectionUrl.indexOf(':') == -1) {
+            // if the URL does not contain a slash or colon, it's not a URL but
+            // just the server name. Assume default URL on it.
+            connectionUrl = "http://" + connectionUrl
+                    + ":8040/connection.properties";
         }
 
-        CmClient cmClient = null;
+        EjbCmClient cmClient = null;
         StandardApplication app = null;
         RmiSearchClient searchClient = null;
         StatisticsClient statisticsClient = null;
@@ -92,15 +111,24 @@ public class PolopolyClient {
 
         try {
             // Create connection properties from an URL.
-            ConnectionProperties connectionProperties =
-                new ConnectionProperties(new URL(connectionUrl));
+            ConnectionProperties connectionProperties = new ConnectionProperties(
+                    new URL(connectionUrl));
 
             // Create a ManagedBeanRegistry from the standard MBeanServer.
-            ManagedBeanRegistry registry =
-                new JMXManagedBeanRegistry(ManagementFactory.getPlatformMBeanServer());
+            ManagedBeanRegistry registry = new JMXManagedBeanRegistry(
+                    ManagementFactory.getPlatformMBeanServer());
 
             // Create a CM client ApplicationComponent.
             cmClient = new EjbCmClient();
+
+            if (contentFilterClasses.size() > 0) {
+                ContentFilterSettings contentFilterSettings = new ContentFilterSettings();
+
+                contentFilterSettings
+                        .setContentFilterClassNames(toNames(contentFilterClasses));
+
+                cmClient.setContentFilterSettings(contentFilterSettings);
+            }
 
             // Create the Application.
             app = new StandardApplication(applicationName);
@@ -114,6 +142,11 @@ public class PolopolyClient {
             if (isAttachSearchService()) {
                 searchClient = new RmiSearchClient();
                 app.addApplicationComponent(searchClient);
+            }
+
+            if (isAttachPollService()) {
+                pollClient = new PollClient();
+                app.addApplicationComponent(pollClient);
             }
 
             if (isAttachStatisticsService()) {
@@ -137,7 +170,9 @@ public class PolopolyClient {
             // Init.
             app.init();
         } catch (Exception e) {
-            throw new ConnectException("Error connecting to Polopoly server with connection URL " + connectionUrl + ": " + e, e);
+            throw new ConnectException(
+                    "Error connecting to Polopoly server with connection URL "
+                            + connectionUrl + ": " + e, e);
         }
 
         PolopolyContext context = new PolopolyContext(app);
@@ -147,18 +182,36 @@ public class PolopolyClient {
         return context;
     }
 
-    private void loginUserWithoutPassword(PolopolyContext context) throws Exception{
-        User user = context.getUserServer().getUserByLoginName(userName);
-        UserId userId = user.getUserId();
-        context.getPolicyCMServer().setCurrentCaller(new NonLoggedInCaller(userId, null, null, userName));
+    private List<String> toNames(List<? extends Class<?>> klasses) {
+        List<String> result = new ArrayList<String>();
 
-        logger.info("No password provided. Set caller to user \"" + userName + "\" but did not log in.");
+        for (Class<?> klass : klasses) {
+            result.add(klass.getName());
+        }
+
+        return result;
     }
 
-    private void loginUserWithPassword(PolopolyContext context) throws Exception {
-        Caller caller = context.getUserServer().loginAndMerge(
-            userName, password,
-                context.getPolicyCMServer().getCurrentCaller());
+    public void addContentFilter(
+            Class<? extends ContentFilter> contentFilterClass) {
+        contentFilterClasses.add(contentFilterClass);
+    }
+
+    private void loginUserWithoutPassword(PolopolyContext context)
+            throws Exception {
+        User user = context.getUserServer().getUserByLoginName(userName);
+        UserId userId = user.getUserId();
+        context.getPolicyCMServer().setCurrentCaller(
+                new NonLoggedInCaller(userId, null, null, userName));
+
+        logger.info("No password provided. Set caller to user \"" + userName
+                + "\" but did not log in.");
+    }
+
+    private void loginUserWithPassword(PolopolyContext context)
+            throws Exception {
+        Caller caller = context.getUserServer().loginAndMerge(userName,
+                password, context.getPolicyCMServer().getCurrentCaller());
 
         context.getPolicyCMServer().setCurrentCaller(caller);
 
@@ -169,16 +222,19 @@ public class PolopolyClient {
         try {
             if (password != null) {
                 loginUserWithPassword(context);
-            }
-            else {
+            } else {
                 loginUserWithoutPassword(context);
             }
         } catch (FinderException e) {
-            throw new ConnectException("The user " + userName + " to log in could not be found.");
+            throw new ConnectException("The user " + userName
+                    + " to log in could not be found.");
         } catch (AuthenticationFailureException e) {
-            throw new ConnectException("The password supplied for user " + userName + " was incorrect.");
+            throw new ConnectException("The password supplied for user "
+                    + userName + " was incorrect.");
         } catch (Exception e) {
-            throw new ConnectException("An error occurred while trying to log in user " + userName + ": " + e.getMessage(), e);
+            throw new ConnectException(
+                    "An error occurred while trying to log in user " + userName
+                            + ": " + e.getMessage(), e);
         }
     }
 
@@ -188,6 +244,14 @@ public class PolopolyClient {
 
     public boolean isAttachStatisticsService() {
         return attachStatisticsService;
+    }
+
+    public void setAttachPollService(boolean attachPollService) {
+        this.attachPollService = attachPollService;
+    }
+
+    public boolean isAttachPollService() {
+        return this.attachPollService;
     }
 
     public void setAttachSearchService(boolean attachSearchService) {

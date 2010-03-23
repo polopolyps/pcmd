@@ -41,4 +41,8 @@ public interface ContentListUtil extends RuntimeExceptionContentList,
     Iterable<ContentReferenceUtil> references();
 
     void clear();
+
+    int indexOf(Policy policy);
+
+    ContentReferenceUtil getEntry(int index);
 }

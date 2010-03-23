@@ -18,10 +18,15 @@ public class ContentIdUtil extends VersionedContentId {
     private transient PolopolyContext context;
 
     public ContentIdUtil(PolopolyContext context, ContentId contentId) {
-        super(contentId,
-                (contentId instanceof VersionedContentId ?
-                        ((VersionedContentId) contentId).getVersion() :
-                            VersionedContentId.UNDEFINED_VERSION));
+        super(
+                contentId,
+                (contentId instanceof VersionedContentId ? ((VersionedContentId) contentId)
+                        .getVersion()
+                        : VersionedContentId.UNDEFINED_VERSION));
+
+        if (context == null) {
+            throw new IllegalArgumentException("Context was null.");
+        }
 
         this.context = context;
     }
@@ -67,8 +72,7 @@ public class ContentIdUtil extends VersionedContentId {
     public String getContentIdString() {
         if (getVersion() == UNDEFINED_VERSION) {
             return super.getContentId().getContentIdString();
-        }
-        else {
+        } else {
             return super.getContentIdString();
         }
     }
@@ -77,17 +81,18 @@ public class ContentIdUtil extends VersionedContentId {
     public String toString() {
         if (getVersion() == UNDEFINED_VERSION) {
             return super.getContentId().getContentIdString();
-        }
-        else {
+        } else {
             return getContentIdString();
         }
     }
 
     public ContentIdUtil resolveSymbolicVersion() {
         try {
-            return Util.util(context.getPolicyCMServer().translateSymbolicContentId(this), context);
+            return Util.util(context.getPolicyCMServer()
+                    .translateSymbolicContentId(this), context);
         } catch (CMException e) {
-            throw new CMRuntimeException("While resolving " + this + ": " + e.getMessage(), e);
+            throw new CMRuntimeException("While resolving " + this + ": "
+                    + e.getMessage(), e);
         }
     }
 }

@@ -10,8 +10,10 @@ import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.collections.ContentList;
 
-public class ContentListListAdapter extends AbstractList<ContentId> implements List<ContentId> {
+public class ContentListListAdapter extends AbstractList<ContentId> implements
+        List<ContentId> {
     private ContentList contentList;
+
     private Object toString;
 
     public ContentListListAdapter(ContentList contentList, Object toString) {
@@ -23,10 +25,9 @@ public class ContentListListAdapter extends AbstractList<ContentId> implements L
     public void add(int index, ContentId contentId) {
         try {
             contentList.add(index, new ContentReference(contentId, null));
-        }
-        catch (CMException e) {
-            throw new CMRuntimeException(
-                "While adding " + contentId + " to " + this + ".");
+        } catch (CMException e) {
+            throw new CMRuntimeException("While adding " + contentId + " to "
+                    + this + ".");
         }
     }
 
@@ -38,7 +39,7 @@ public class ContentListListAdapter extends AbstractList<ContentId> implements L
     }
 
     public void remove(ContentId contentId) {
-        for (int i = contentList.size()-1; i >= 0; i--) {
+        for (int i = contentList.size() - 1; i >= 0; i--) {
             if (get(i).equalsIgnoreVersion(contentId)) {
                 remove(i);
             }
@@ -63,10 +64,26 @@ public class ContentListListAdapter extends AbstractList<ContentId> implements L
         try {
             return contentList.getEntry(i).getReferredContentId();
         } catch (CMException e) {
-            throw new CMRuntimeException(
-                "While getting entry " + i + " in " + toString() +
-                    ": " + e.getMessage(), e);
+            throw new CMRuntimeException("While getting entry " + i + " in "
+                    + toString() + ": " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        if (!(o instanceof ContentId)) {
+            return -1;
+        }
+
+        ContentId id = (ContentId) o;
+
+        for (int i = size() - 1; i >= 0; i--) {
+            if (get(i).equalsIgnoreVersion(id)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     @Override
@@ -84,8 +101,8 @@ public class ContentListListAdapter extends AbstractList<ContentId> implements L
         try {
             contentList.setEntry(index, new ContentReference(id, null));
         } catch (CMException e) {
-            throw new CMRuntimeException(
-                "While setting entry " + index + " in " + this + ": " + e.getMessage(), e);
+            throw new CMRuntimeException("While setting entry " + index
+                    + " in " + this + ": " + e.getMessage(), e);
         }
         return id;
     }
@@ -93,16 +110,27 @@ public class ContentListListAdapter extends AbstractList<ContentId> implements L
     @Override
     public String toString() {
         if (toString == null) {
-            return "content list";
-        }
-        else {
+            StringBuffer result = new StringBuffer(100);
+
+            int size = size();
+
+            for (int i = 0; i < size; i++) {
+                if (i > 0) {
+                    result.append(", ");
+                }
+
+                result.append(get(i).getContentIdString());
+            }
+
+            return result.toString();
+        } else {
             return toString.toString();
         }
     }
 
     @Override
     protected void removeRange(int fromIndex, int toIndex) {
-        for (int j = toIndex-fromIndex; j >= 0; j--) {
+        for (int j = toIndex - fromIndex; j >= 0; j--) {
             contentList.remove(fromIndex);
         }
     }

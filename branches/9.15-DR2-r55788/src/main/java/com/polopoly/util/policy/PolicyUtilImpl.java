@@ -1,5 +1,6 @@
 package com.polopoly.util.policy;
 
+import static com.polopoly.util.client.PolopolyContext.getPolicy;
 import static com.polopoly.util.policy.Util.util;
 
 import java.util.Collections;
@@ -28,6 +29,7 @@ import com.polopoly.util.contentlist.ContentListUtil;
 import com.polopoly.util.contentlist.ContentListUtilImpl;
 import com.polopoly.util.exception.EmptyListException;
 import com.polopoly.util.exception.InvalidPolicyClassException;
+import com.polopoly.util.exception.InvalidTopPolicyClassException;
 import com.polopoly.util.exception.NoSuchChildPolicyException;
 import com.polopoly.util.exception.PolicyDeleteException;
 import com.polopoly.util.exception.PolicyGetException;
@@ -48,13 +50,13 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
     /**
      * Use {@link Util#util(Policy)} to get an instance.
      */
-    PolicyUtilImpl(Policy policy) {
+    public PolicyUtilImpl(Policy policy) {
         super(policy);
 
         this.policy = policy;
     }
 
-    PolicyUtilImpl(Policy policy, PolopolyContext context) {
+    public PolicyUtilImpl(Policy policy, PolopolyContext context) {
         this(policy);
 
         this.context = context;
@@ -119,8 +121,13 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
     }
 
     public void setChecked(String field, boolean checked)
-            throws NoSuchChildPolicyException, CMException {
-        getChildPolicy(field, CheckboxPolicy.class).setChecked(checked);
+            throws NoSuchChildPolicyException {
+        try {
+            getChildPolicy(field, CheckboxPolicy.class).setChecked(checked);
+        } catch (CMException e) {
+            throw new CMRuntimeException("While settign field " + field
+                    + " in " + this + ": " + e.getMessage(), e);
+        }
     }
 
     public void setSingleReference(String field, Policy policy) {
@@ -136,8 +143,16 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
 
     public void setSingleReference(Policy reference) {
         try {
+            ContentId contentId;
+
+            if (reference == null) {
+                contentId = null;
+            } else {
+                contentId = reference.getContentId().getContentId();
+            }
+
             CheckedCast.cast(this.policy, SingleReference.class).setReference(
-                    reference.getContentId().getContentId());
+                    contentId);
         } catch (CMException e) {
             throw new CMRuntimeException("While setting reference in " + this
                     + " to " + util(reference) + ": " + e.getMessage(), e);
@@ -160,23 +175,23 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
                         + " was not set in " + this + ".");
             }
 
-            return PolopolyContext.getPolicy(getCMServer(), reference,
-                    policyClass);
+            try {
+                return getPolicy(getCMServer(), reference, policyClass);
+            } catch (PolicyGetException defaultVersionException) {
+                try {
+                    // retry with latest version.
+                    return reference.getLatestVersion().asPolicy(policyClass);
+                } catch (PolicyGetException latestException) {
+                    throw new PolicyGetException("While getting field " + field
+                            + " in " + this + ": "
+                            + defaultVersionException.getMessage(),
+                            defaultVersionException.getCause());
+                }
+            }
         } catch (InvalidPolicyClassException e) {
             throw new InvalidPolicyClassException("While getting field "
                     + field + " in " + this + ": " + e.getMessage(), e
                     .getCause());
-        } catch (PolicyGetException defaultVersionException) {
-            // retry with latest version.
-            try {
-                return PolopolyContext.getPolicy(getCMServer(), reference
-                        .getLatestVersion(), policyClass);
-            } catch (PolicyGetException latestException) {
-                throw new PolicyGetException("While getting field " + field
-                        + " in " + this + ": "
-                        + defaultVersionException.getMessage(),
-                        defaultVersionException.getCause());
-            }
         }
     }
 
@@ -504,6 +519,16 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
         return super.getParentPolicy();
     }
 
+    public <T> T getTopPolicy(Class<T> policyClass)
+            throws InvalidTopPolicyClassException {
+        try {
+            return CheckedCast.cast(getTopPolicy(), policyClass);
+        } catch (CheckedClassCastException e) {
+            throw new InvalidTopPolicyClassException("Top policy of " + this
+                    + ": " + e.getMessage());
+        }
+    }
+
     public Policy getTopPolicy() {
         Policy result = this;
 
@@ -538,7 +563,7 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
         int size = contentList.size();
 
         if (size > 1) {
-            logger.log(Level.WARNING, "There are multiple object in "
+            logger.log(Level.WARNING, "There are multiple objects in "
                     + contentList + ".");
         }
 

@@ -6,6 +6,8 @@ import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.contentid.ContentIdUtil;
 import com.polopoly.util.contentlist.ContentListUtil;
 import com.polopoly.util.exception.EmptyListException;
+import com.polopoly.util.exception.InvalidTopPolicyClassException;
+import com.polopoly.util.exception.NoSuchChildPolicyException;
 import com.polopoly.util.exception.PolicyDeleteException;
 import com.polopoly.util.exception.PolicyGetException;
 import com.polopoly.util.exception.PolicyModificationException;
@@ -21,9 +23,15 @@ public interface PolicyUtil extends Iterable<Policy>, RuntimeExceptionPolicy {
 
     void setSingleValued(String field, String value);
 
-    String getSingleValued(String field, String defaultValue);
+    String getSingleValued(String field, String defaultValue)
+            throws NoSuchChildPolicyException;
 
-    String getSingleValued(String field);
+    String getSingleValued(String field) throws NoSuchChildPolicyException;
+
+    boolean getChecked(String field) throws NoSuchChildPolicyException;
+
+    void setChecked(String field, boolean checked)
+            throws NoSuchChildPolicyException;
 
     <T> T getSingleReference(String field, Class<T> policyClass)
             throws PolicyGetException;
@@ -58,6 +66,9 @@ public interface PolicyUtil extends Iterable<Policy>, RuntimeExceptionPolicy {
     void delete() throws PolicyDeleteException;
 
     Policy getTopPolicy();
+
+    <T> T getTopPolicy(Class<T> policyClass)
+            throws InvalidTopPolicyClassException;
 
     ContentIdUtil getContentReference(String name);
 
