@@ -18,6 +18,7 @@ import com.polopoly.util.client.PolopolyContext;
 
 public class SearchTool implements Tool<SearchParameters> {
     static final int DEFAULT_BATCH_SIZE = 500;
+
     private static final String WILDCARD = "weirdUnlikelyString";
 
     public SearchParameters createParameters() {
@@ -30,10 +31,8 @@ public class SearchTool implements Tool<SearchParameters> {
         ContentId inputTemplate = parameters.getInputTemplate();
 
         if (inputTemplate != null) {
-            searchExpr = new ReferringTo(
-                ServerNames.CONTENT_ATTRG_SYSTEM,
-                ServerNames.CONTENT_ATTR_INPUT_TEMPLATEID,
-                inputTemplate);
+            searchExpr = new ReferringTo(ServerNames.CONTENT_ATTRG_SYSTEM,
+                    ServerNames.CONTENT_ATTR_INPUT_TEMPLATEID, inputTemplate);
         }
 
         Component component = parameters.getComponent();
@@ -42,11 +41,13 @@ public class SearchTool implements Tool<SearchParameters> {
             String componentValue = parameters.getComponentValue();
 
             if (component != null && componentValue != null) {
-                searchExpr = add(searchExpr, new ComponentValue(component.getGroup(), component.getComponent(), componentValue));
-            }
-            else {
-                searchExpr = add(searchExpr, new ComponentValue(component.getGroup(),
-                        component.getComponent(), "thisIsAVeryUnlikelyValue4711", ComponentValue.NOT_EQUALS));
+                searchExpr = add(searchExpr, new ComponentValue(component
+                        .getGroup(), component.getComponent(), componentValue));
+            } else {
+                searchExpr = add(searchExpr, new ComponentValue(component
+                        .getGroup(), component.getComponent(),
+                        "thisIsAVeryUnlikelyValue4711",
+                        ComponentValue.NOT_EQUALS));
             }
         }
 
@@ -60,7 +61,8 @@ public class SearchTool implements Tool<SearchParameters> {
                 group = WILDCARD;
             }
 
-            String name = (contentref == null ? null : contentref.getReference());
+            String name = (contentref == null ? null : contentref
+                    .getReference());
 
             if (name == null || name.equals("*")) {
                 name = WILDCARD;
@@ -70,8 +72,7 @@ public class SearchTool implements Tool<SearchParameters> {
 
             if (group == WILDCARD && name == WILDCARD) {
                 referringTo = new ReferringTo(contentrefValue);
-            }
-            else {
+            } else {
                 referringTo = new ReferringTo(group, name, contentrefValue);
 
                 if (group == WILDCARD) {
@@ -86,7 +87,8 @@ public class SearchTool implements Tool<SearchParameters> {
             searchExpr = add(searchExpr, referringTo);
         }
 
-        searchExpr = add(searchExpr, new Version(VersionedContentId.LATEST_COMMITTED_VERSION));
+        searchExpr = add(searchExpr, new Version(
+                VersionedContentId.LATEST_COMMITTED_VERSION));
 
         Integer major = parameters.getMajor();
 
@@ -97,13 +99,15 @@ public class SearchTool implements Tool<SearchParameters> {
         Integer sinceVersion = parameters.getSinceVersion();
 
         if (sinceVersion != null) {
-            searchExpr = add(searchExpr, new Version(sinceVersion, Version.GREATER_THAN_OR_EQ));
+            searchExpr = add(searchExpr, new Version(sinceVersion,
+                    Version.GREATER_THAN_OR_EQ));
         }
 
         Integer untilVersion = parameters.getUntilVersion();
 
         if (untilVersion != null) {
-            searchExpr = add(searchExpr, new Version(untilVersion, Version.LESS_THAN_OR_EQ));
+            searchExpr = add(searchExpr, new Version(untilVersion,
+                    Version.LESS_THAN_OR_EQ));
         }
 
         searchExpr = OrderByContentId.descending(searchExpr);
@@ -115,22 +119,35 @@ public class SearchTool implements Tool<SearchParameters> {
 
         try {
             while (true) {
-                VersionedContentId[] ids = context.getPolicyCMServer().findContentIdsBySearchExpression(searchExpr, batchSize, at);
+                VersionedContentId[] ids = context.getPolicyCMServer()
+                        .findContentIdsBySearchExpression(searchExpr,
+                                batchSize, at);
 
                 if (ids.length < batchSize && at == 0) {
-                    System.err.println("Found " + (at + ids.length) + " result(s).");
+                    System.err.println("Found " + (at + ids.length)
+                            + " result(s).");
                 }
 
                 if (at > 0 || ids.length == batchSize) {
-                    System.err.println("Processing objects " + (at+1) + " to " + (at + ids.length) + ".");
+                    System.err.println("Processing objects " + (at + 1)
+                            + " to " + (at + ids.length) + ".");
                 }
 
                 for (int i = 0; i < ids.length; i++) {
-                    System.out.println(AbstractContentIdField.get(ids[i].getContentId(), context));
+                    ContentId versionedId = ids[i].getContentId();
+
+                    if (parameters.isResolveExternalId()) {
+                        System.out.println(AbstractContentIdField.get(
+                                versionedId, context));
+                    } else {
+                        System.out.println(versionedId.getContentId()
+                                .getContentIdString());
+                    }
                 }
 
                 if (ids.length < batchSize && at > 0) {
-                    System.err.println("Found " + (at + ids.length) + " result(s).");
+                    System.err.println("Found " + (at + ids.length)
+                            + " result(s).");
                 }
 
                 if (ids.length < batchSize) {
@@ -140,15 +157,15 @@ public class SearchTool implements Tool<SearchParameters> {
                 at += ids.length;
             }
         } catch (CMException e) {
-            throw new CMRuntimeException("While searching using " + searchExpr + ": " + e, e);
+            throw new CMRuntimeException("While searching using " + searchExpr
+                    + ": " + e, e);
         }
     }
 
     private static SearchExpression add(SearchExpression a, SearchExpression b) {
         if (a != null) {
             return a.and(b);
-        }
-        else {
+        } else {
             return b;
         }
     }
@@ -157,4 +174,3 @@ public class SearchTool implements Tool<SearchParameters> {
         return "Uses a search expression to search for content.";
     }
 }
-

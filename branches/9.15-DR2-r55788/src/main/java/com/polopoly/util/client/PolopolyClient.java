@@ -11,9 +11,11 @@ import javax.ejb.FinderException;
 
 import com.polopoly.application.ConnectionProperties;
 import com.polopoly.application.StandardApplication;
+import com.polopoly.cm.client.CMServer;
 import com.polopoly.cm.client.ContentFilterSettings;
 import com.polopoly.cm.client.EjbCmClient;
 import com.polopoly.cm.client.filter.ContentFilter;
+import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.cm.search.index.RmiSearchClient;
 import com.polopoly.community.client.CommunityClient;
 import com.polopoly.management.ManagedBeanRegistry;
@@ -104,7 +106,6 @@ public class PolopolyClient {
         }
 
         EjbCmClient cmClient = null;
-        StandardApplication app = null;
         RmiSearchClient searchClient = null;
         StatisticsClient statisticsClient = null;
         UDPLogMsgClient logMsgClient = null;
@@ -118,8 +119,23 @@ public class PolopolyClient {
             ManagedBeanRegistry registry = new JMXManagedBeanRegistry(
                     ManagementFactory.getPlatformMBeanServer());
 
+            // Create the Application.
+            final StandardApplication app = new StandardApplication(
+                    applicationName);
+
             // Create a CM client ApplicationComponent.
-            cmClient = new EjbCmClient();
+
+            cmClient = new EjbCmClient() {
+                @Override
+                protected PolicyCMServer createPolicyCMServer(
+                        CMServer legacyWrapper) {
+                    return PolopolyClient.this.createPolicyCMServer(super
+                            .createPolicyCMServer(legacyWrapper), this, app,
+                            legacyWrapper);
+                }
+            };
+
+            setUpCmClient(cmClient);
 
             if (contentFilterClasses.size() > 0) {
                 ContentFilterSettings contentFilterSettings = new ContentFilterSettings();
@@ -129,9 +145,6 @@ public class PolopolyClient {
 
                 cmClient.setContentFilterSettings(contentFilterSettings);
             }
-
-            // Create the Application.
-            app = new StandardApplication(applicationName);
 
             // Set the registry.
             app.setManagedBeanRegistry(registry);
@@ -169,17 +182,33 @@ public class PolopolyClient {
 
             // Init.
             app.init();
+            PolopolyContext context = new PolopolyContext(app);
+
+            login(context);
+
+            return context;
+        } catch (ConnectException e) {
+            throw e;
         } catch (Exception e) {
             throw new ConnectException(
                     "Error connecting to Polopoly server with connection URL "
                             + connectionUrl + ": " + e, e);
         }
+    }
 
-        PolopolyContext context = new PolopolyContext(app);
+    /**
+     * Intended for overriding.
+     */
+    protected void setUpCmClient(EjbCmClient cmClient) {
+    }
 
-        login(context);
-
-        return context;
+    /**
+     * Intended for overriding for clients needing to wrap the CM server.
+     */
+    protected PolicyCMServer createPolicyCMServer(
+            PolicyCMServer originalServer, EjbCmClient cmClient,
+            StandardApplication app, CMServer legacyWrapper) {
+        return originalServer;
     }
 
     private List<String> toNames(List<? extends Class<?>> klasses) {

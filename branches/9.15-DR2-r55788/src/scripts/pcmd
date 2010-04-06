@@ -2,8 +2,8 @@
 
 dir=`dirname $0`
 
-version=9.13.0.6-SNAPSHOT
-polopolyversion=9.13.0
+version=9.15-DR5-SNAPSHOT
+polopolyversion=9.15-DR5
 luceneversion=2.3.1
 
 # if the JAR doesn't exist in the current directory, this is probably

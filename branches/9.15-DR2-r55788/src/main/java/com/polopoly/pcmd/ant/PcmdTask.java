@@ -10,6 +10,7 @@ import org.apache.tools.ant.types.Parameter;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.pcmd.FatalToolException;
 import com.polopoly.pcmd.Main;
+import com.polopoly.pcmd.PcmdPolopolyClient;
 import com.polopoly.pcmd.argument.ArgumentException;
 import com.polopoly.pcmd.argument.DefaultArguments;
 import com.polopoly.pcmd.tool.HelpParameters;
@@ -20,12 +21,13 @@ import com.polopoly.pcmd.util.ToolRetriever;
 import com.polopoly.pcmd.util.ToolRetriever.NoSuchToolException;
 import com.polopoly.util.client.ClientFromArgumentsConfigurator;
 import com.polopoly.util.client.ConnectException;
-import com.polopoly.util.client.PolopolyClient;
 import com.polopoly.util.client.PolopolyContext;
 
 public class PcmdTask extends Task {
     private List<Parameter> parameters = new ArrayList<Parameter>();
+
     private String toolName;
+
     private static PolopolyContext context;
 
     @Override
@@ -57,20 +59,24 @@ public class PcmdTask extends Task {
         }
     }
 
-    private void executeAndThrowException() throws BuildException, NoSuchToolException, ArgumentException, ConnectException, FatalToolException {
+    private void executeAndThrowException() throws BuildException,
+            NoSuchToolException, ArgumentException, ConnectException,
+            FatalToolException {
         if (toolName == null) {
-            throw new BuildException("Tool parameter to PCMD task must be specified. Run \"pcmd help\" for a list of tools.");
+            throw new BuildException(
+                    "Tool parameter to PCMD task must be specified. Run \"pcmd help\" for a list of tools.");
         }
 
         System.out.println("pcmd " + toolName + ":");
 
         Tool<?> tool = ToolRetriever.getTool(toolName);
 
-        PolopolyClient client = new PolopolyClient();
+        PcmdPolopolyClient client = new PcmdPolopolyClient();
         client.setAttachStatisticsService(false);
         client.setAttachSearchService(tool instanceof RequiresIndexServer);
 
-        DefaultArguments arguments = new ParameterArgumentParser().parse(toolName, parameters);
+        DefaultArguments arguments = new ParameterArgumentParser().parse(
+                toolName, parameters);
 
         if (context == null) {
             new ClientFromArgumentsConfigurator(client, arguments).configure();

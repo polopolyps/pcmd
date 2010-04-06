@@ -19,7 +19,6 @@ import com.polopoly.pcmd.util.ToolRetriever;
 import com.polopoly.pcmd.util.ToolRetriever.NoSuchToolException;
 import com.polopoly.util.client.ClientFromArgumentsConfigurator;
 import com.polopoly.util.client.ConnectException;
-import com.polopoly.util.client.PolopolyClient;
 import com.polopoly.util.client.PolopolyContext;
 
 public class Main {
@@ -47,7 +46,7 @@ public class Main {
         try {
             Tool<?> tool = ToolRetriever.getTool(toolName);
 
-            PolopolyClient client = new PolopolyClient();
+            PcmdPolopolyClient client = new PcmdPolopolyClient();
             client.setAttachStatisticsService(false);
             client.setAttachSearchService(tool instanceof RequiresIndexServer);
 
@@ -57,12 +56,10 @@ public class Main {
 
             try {
                 execute(tool, context, arguments);
-            }
-            catch (FatalToolException e) {
+            } catch (FatalToolException e) {
                 System.err.println(e.getMessage());
                 System.exit(1);
-            }
-            catch (CMRuntimeException e) {
+            } catch (CMRuntimeException e) {
                 if (e.getCause() instanceof Exception) {
                     throw (Exception) e.getCause();
                 }
@@ -72,7 +69,8 @@ public class Main {
             }
         } catch (NoSuchToolException e) {
             System.err.println(e.getMessage());
-            System.err.println("Call with \"help\" as argument to see a list of tools.");
+            System.err
+                    .println("Call with \"help\" as argument to see a list of tools.");
         } catch (ArgumentException e) {
             System.err.println("Invalid parameters: " + e.getMessage());
 
@@ -108,7 +106,8 @@ public class Main {
         System.exit(1);
     }
 
-    public static <T extends Parameters> void execute(Tool<T> tool, PolopolyContext context, Arguments arguments)
+    public static <T extends Parameters> void execute(Tool<T> tool,
+            PolopolyContext context, Arguments arguments)
             throws ArgumentException, FatalToolException {
         T parameters = tool.createParameters();
 
@@ -117,7 +116,9 @@ public class Main {
         Set<String> unusedParameters = arguments.getUnusedParameters();
 
         if (!unusedParameters.isEmpty()) {
-            throw new ArgumentException("The following specified parameters were not recognized: " + unusedParameters);
+            throw new ArgumentException(
+                    "The following specified parameters were not recognized: "
+                            + unusedParameters);
         }
 
         tool.execute(context, parameters);

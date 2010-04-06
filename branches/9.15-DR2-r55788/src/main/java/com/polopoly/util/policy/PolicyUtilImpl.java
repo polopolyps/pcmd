@@ -359,8 +359,8 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
                         e);
             }
 
-            if (logger.isLoggable(Level.INFO)) {
-                logger.log(Level.INFO, "Committed " + this
+            if (logger.isLoggable(Level.FINE)) {
+                logger.log(Level.FINE, "Committed " + this
                         + " after modification.");
             }
 
