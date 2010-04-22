@@ -2,8 +2,8 @@
 
 dir=`dirname $0`
 
-version=9.15-DR5-SNAPSHOT
-polopolyversion=9.15-DR5
+version=9.16-SNAPSHOT
+polopolyversion=9.16
 luceneversion=2.3.1
 
 # if the JAR doesn't exist in the current directory, this is probably
@@ -103,10 +103,8 @@ fi
 
 classpath=$CLASSPATH
 
-if [ -f "$jbossjar" ] 
+if [ ! -f "$jbossjar" ] 
 then
-    classpath=$classpath:$jbossjar
-else 
     echo "Could not find jbossall-client.jar, neither in $dir, nor in $jbossjar and JBoss doesn't seem to be running locally."
     exit;
 fi
@@ -289,9 +287,10 @@ fi
 
 if [ "$1" = "--verbose" ]
 then
-    echo "Using $jbossjar, $polopolyjar, $lucenejar and $jar"
-    echo "Clientlibs are $clientlibs"
-    echo "Adding system classpath $CLASSPATH"
+    echo "Full classpath consists of: $classpath"
+    echo "...followed by client libs: $clientlibs"
+    echo "...followed by PCMD JAR: $jar"
+    echo "...followed by the JBoss JAR: $jbossjar"
 fi
 
-java $JAVA_OPTS -cp $classpath$clientlibs:$jar com.polopoly.pcmd.Main$options "$@"
+java $JAVA_OPTS -cp $classpath$clientlibs:$jar:$jbossjar com.polopoly.pcmd.Main$options "$@"
