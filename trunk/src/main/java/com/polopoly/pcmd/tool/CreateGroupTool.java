@@ -31,7 +31,21 @@ public class CreateGroupTool implements Tool<CreateGroupParameters> {
             }
 
             if (groupIds != null && groupIds.length > 0) {
-                System.err.println(groupNameToCreate + " already exists.");
+                if (groupIds.length == 1) {
+                    try {
+                        group = context.getUserServer().findGroup(groupIds[0]);
+                        System.err.println(groupNameToCreate + " already exists. Using it to add memebers and owners.");
+                    } catch (Exception e) {
+                        System.err.println("While looking up group name: " + groupNameToCreate + ": " + e.toString());
+                        
+                        continue;
+                    }
+                }
+                else {
+                    System.err.println("Group name: " + groupNameToCreate + " is ambigous. " + groupIds.length +" groups match.");
+                    
+                    continue;
+                }
             }
             else {
                 try {
@@ -70,7 +84,7 @@ public class CreateGroupTool implements Tool<CreateGroupParameters> {
     }
 
     public String getHelp() {
-        return null;
+        return "Creates group(s) and add member(s) and owner(s) to it";
     }
 
 }
