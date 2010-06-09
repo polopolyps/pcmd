@@ -92,9 +92,8 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
             logger.log(Level.WARNING, e.getMessage(), e);
         }
 
-        if (result == null) {
+        if (result == null)
             return defaultValue;
-        }
 
         return result;
     }
@@ -152,14 +151,14 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
             NoSuchChildPolicyException {
         ContentIdUtil reference = null;
 
+        
+        reference = getSingleReference(field);
+
+        if (reference == null)
+            throw new ReferenceNotSetException("Field " + field
+                    + " was not set in " + this + ".");
+        
         try {
-            reference = getSingleReference(field);
-
-            if (reference == null) {
-                throw new ReferenceNotSetException("Field " + field
-                        + " was not set in " + this + ".");
-            }
-
             return PolopolyContext.getPolicy(getCMServer(), reference,
                     policyClass);
         } catch (InvalidPolicyClassException e) {
@@ -188,10 +187,9 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
         try {
             reference = getSingleReference();
 
-            if (reference == null) {
+            if (reference == null)
                 throw new ReferenceNotSetException("Reference  was not set in "
                         + this + ".");
-            }
 
             return PolopolyContext.getPolicy(getCMServer(), reference,
                     policyClass);
@@ -217,11 +215,10 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
             ContentId result = getChildPolicy(field, SingleReference.class)
                     .getReference();
 
-            if (result == null) {
+            if (result == null)
                 return null;
-            } else {
+            else
                 return util(result, getContext());
-            }
         } catch (CMException e) {
             throw new PolicyGetException("Could not get field " + field
                     + " in " + this + ": " + e.getMessage(), e);
@@ -234,11 +231,10 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
             ContentId result = CheckedCast.cast(policy, SingleReference.class)
                     .getReference();
 
-            if (result == null) {
+            if (result == null)
                 return null;
-            } else {
+            else
                 return util(result, getContext());
-            }
         } catch (CMException e) {
             throw new PolicyGetException("Could not get get reference in "
                     + this + ": " + e.getMessage(), e);
@@ -299,11 +295,10 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
         PolicyCMServer server = getCMServer();
 
         if (createNewVersion) {
-            if (lockInfo != null) {
+            if (lockInfo != null)
                 throw new PolicyModificationException("Content "
                         + policy.getContentId().getContentId()
                                 .getContentIdString() + " was locked.");
-            }
 
             try {
                 policy = server.createContentVersion(policy.getContentId());
@@ -317,12 +312,11 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
         } else {
             try {
                 if (lockInfo == null
-                        || !lockInfo.isLockedBy(server.getCurrentCaller())) {
+                        || !lockInfo.isLockedBy(server.getCurrentCaller()))
                     throw new PolicyModificationException("Content "
                             + policy.getContentId().getContentId()
                                     .getContentIdString()
                             + " was not locked by current caller.");
-                }
             } catch (CMException e) {
                 throw new PolicyModificationException("While determining if "
                         + toString() + " was locked: " + e.getMessage(), e);
@@ -423,11 +417,10 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
 
     @Override
     public String toString() {
-        if (getParentPolicy() != null) {
+        if (getParentPolicy() != null)
             return childPolicyToString();
-        } else {
+        else
             return rootPolicyToString();
-        }
     }
 
     protected String rootPolicyToString() {
@@ -542,9 +535,8 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
                     + contentList + ".");
         }
 
-        if (size > 0) {
+        if (size > 0)
             return contentList.get(0, policyClass);
-        }
 
         throw new EmptyListException();
     }
