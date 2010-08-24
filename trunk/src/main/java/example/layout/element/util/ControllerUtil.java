@@ -27,6 +27,7 @@ import com.polopoly.util.CheckedCast;
 import com.polopoly.util.CheckedClassCastException;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.exception.PolicyGetException;
+import com.polopoly.util.policy.Util;
 
 public class ControllerUtil {
     private static final Logger logger = Logger.getLogger(ControllerUtil.class
@@ -153,18 +154,19 @@ public class ControllerUtil {
                 ModelStoreInBean.BEAN_ATTRIBUTE_NAME);
     }
 
-    public <T> T getPage(Class<T> pageClass) {
+    public <T> T getPage(Class<T> pageClass) throws NoCurrentPageException {
         try {
             PageScope page = m.getContext().getPage();
 
             if (page == null) {
-                throw new CMRuntimeException("No page available in model for "
-                        + request.getRequestURI() + ".");
+                throw new NoCurrentPageException(
+                        "No page available in model for "
+                                + request.getRequestURI() + ".");
             }
 
             return CheckedCast.cast(page.getBean(), pageClass, "Current page");
         } catch (CheckedClassCastException e) {
-            throw new CMRuntimeException(e);
+            throw new NoCurrentPageException(e);
         }
     }
 
@@ -199,14 +201,13 @@ public class ControllerUtil {
             throws NoCurrentArticleException {
         PageScope page = m.getContext().getPage();
 
+        ContentPath contentPath;
+
         if (page == null) {
-            logger.log(Level.WARNING, "No page available in model context.");
-
-            throw new NoCurrentArticleException(
-                    "No page available in model context.");
+            contentPath = m.getRequest().getOriginalContentPath();
+        } else {
+            contentPath = page.getPathAfterPage();
         }
-
-        ContentPath contentPath = page.getPathAfterPage();
 
         for (int i = contentPath.size() - 1; i >= 0; i--) {
             ContentId contentId = (ContentId) contentPath.get(i);
@@ -222,6 +223,26 @@ public class ControllerUtil {
         }
 
         throw new NoCurrentArticleException(
-                "There was no article in the content path.");
+                "There was no article in the content path ("
+                        + toString(contentPath) + ").");
+    }
+
+    private String toString(ContentPath contentPath) {
+        String result = "";
+
+        for (int i = contentPath.size() - 1; i >= 0; i--) {
+            result += ((ContentId) contentPath.get(i)).getContentIdString();
+
+            if (i > 0) {
+                result += ", ";
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return request.getRequestURI() + " (" + Util.util(getPolicy()) + ")";
     }
 }

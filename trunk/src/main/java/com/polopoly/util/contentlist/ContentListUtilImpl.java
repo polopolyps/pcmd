@@ -85,7 +85,7 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper
                         .getReferredContentId();
 
                 if (result != null) {
-                    return Util.util(result, context);
+                    return Util.util(result, getContext());
                 } else {
                     return null;
                 }
@@ -106,7 +106,7 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper
 
     private PolicyCMServer server;
 
-    private PolopolyContext context;
+    private PolopolyContext lazyContext;
 
     private Object toString;
 
@@ -118,7 +118,11 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper
             PolopolyContext context) {
         this(contentList, toString, context.getPolicyCMServer());
 
-        this.context = context;
+        if (context == null) {
+            throw new IllegalArgumentException("Context was null.");
+        }
+
+        this.lazyContext = context;
     }
 
     /**
@@ -185,8 +189,11 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper
 
     public void add(int index, Policy policy,
             ReferenceMetaDataPolicy referenceMetaData) {
-        contentIds().add(index, policy.getContentId().getContentId(),
-                referenceMetaData.getContentId().getContentId());
+        contentIds().add(
+                index,
+                policy.getContentId().getContentId(),
+                (referenceMetaData != null ? referenceMetaData.getContentId()
+                        .getContentId() : null));
     }
 
     public void add(Policy policy, ReferenceMetaDataPolicy referenceMetaData) {
@@ -206,23 +213,15 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper
     }
 
     private PolopolyContext getContext() {
-        if (context == null) {
-            context = Util.util(server);
+        if (lazyContext == null) {
+            lazyContext = Util.util(server);
         }
 
-        return context;
+        return lazyContext;
     }
 
     public boolean contains(Policy policy) {
-        VersionedContentId policyId = policy.getContentId();
-
-        for (ContentId childId : contentIds()) {
-            if (childId.equalsIgnoreVersion(policyId)) {
-                return true;
-            }
-        }
-
-        return false;
+        return indexOf(policy) >= 0;
     }
 
     public PolicyCMServer getPolicyCMServer() {
@@ -254,6 +253,13 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper
         };
     }
 
+    @Override
+    public ContentReferenceUtil getEntry(int index) {
+        ContentReference unwrapped = super.getEntry(index);
+
+        return new ContentReferenceUtil(unwrapped, this, getContext());
+    }
+
     public <T> List<T> policyList(Class<T> policyClass) {
         List<T> result = new ArrayList<T>();
 
@@ -268,5 +274,18 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper
         while (size() > 0) {
             remove(0);
         }
+    }
+
+    public int indexOf(Policy policy) {
+        VersionedContentId policyId = policy.getContentId();
+
+        for (int i = size() - 1; i >= 0; i--) {
+            if (getEntry(i).getReferredContentId()
+                    .equalsIgnoreVersion(policyId)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }

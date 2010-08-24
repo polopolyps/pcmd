@@ -19,6 +19,8 @@ import com.polopoly.cm.client.impl.exceptions.EJBFinderException;
 import com.polopoly.cm.policy.Policy;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.cm.search.index.RmiSearchClient;
+import com.polopoly.poll.client.PollClient;
+import com.polopoly.poll.client.PollManager;
 import com.polopoly.user.server.Caller;
 import com.polopoly.user.server.UserId;
 import com.polopoly.user.server.UserServer;
@@ -31,9 +33,11 @@ import com.polopoly.util.exception.ContentGetException;
 import com.polopoly.util.exception.InvalidPolicyClassException;
 import com.polopoly.util.exception.NoSuchExternalIdException;
 import com.polopoly.util.exception.NoSuchPolicyException;
+import com.polopoly.util.exception.NotAcceptedByFilterException;
 import com.polopoly.util.exception.PolicyCreateException;
 import com.polopoly.util.exception.PolicyGetException;
 import com.polopoly.util.exception.PolicyModificationException;
+import com.polopoly.util.exception.UserNotFoundException;
 import com.polopoly.util.exception.UserNotLoggedInException;
 import com.polopoly.util.policy.PolicyModification;
 import com.polopoly.util.policy.PolicyUtil;
@@ -47,6 +51,8 @@ public class PolopolyContext {
 
     private RmiSearchClient searchClient;
 
+    private PollClient pollClient;
+
     private CmClient client;
 
     private Application application;
@@ -56,21 +62,35 @@ public class PolopolyContext {
                 (CmClient) application
                         .getApplicationComponent(EjbCmClient.DEFAULT_COMPOUND_NAME),
                 (RmiSearchClient) application
-                        .getApplicationComponent(RmiSearchClient.DEFAULT_COMPOUND_NAME));
+                        .getApplicationComponent(RmiSearchClient.DEFAULT_COMPOUND_NAME),
+                (PollClient) application
+                        .getApplicationComponent(PollClient.DEFAULT_COMPOUND_NAME));
 
         this.application = application;
     }
 
-    public PolopolyContext(CmClient cmClient, RmiSearchClient searchClient) {
+    public PolopolyContext(CmClient cmClient, RmiSearchClient searchClient,
+            PollClient pollClient) {
         this.client = cmClient;
         if (cmClient != null) {
             this.server = cmClient.getPolicyCMServer();
         }
+
+        this.pollClient = pollClient;
+
         this.searchClient = searchClient;
     }
 
     public PolopolyContext(PolicyCMServer server) {
         this.server = server;
+    }
+
+    public PolopolyContext(PolopolyContext context) {
+        this.application = context.application;
+        this.searchClient = context.searchClient;
+        this.client = context.client;
+        this.server = context.server;
+        this.pollClient = context.pollClient;
     }
 
     public PolicyCMServer getPolicyCMServer() {
@@ -93,6 +113,18 @@ public class PolopolyContext {
         }
 
         return client.getUserServer();
+    }
+
+    public PollManager getPollManager() {
+        return getPollClient().getPollManager();
+    }
+
+    public PollClient getPollClient() {
+        if (pollClient == null) {
+            throw new CMRuntimeException("Poll client is not attached.");
+        }
+
+        return pollClient;
     }
 
     public CmClient getCmClient() {
@@ -244,6 +276,14 @@ public class PolopolyContext {
         try {
             return CheckedCast.cast(server.getPolicy(contentId), klass);
         } catch (EJBFinderException e) {
+            if (e.getMessage().contains("not accepted by filter")) {
+                throw new NotAcceptedByFilterException(
+                        "The policy "
+                                + toString(contentId)
+                                + " cannot be accessed due to the current content filters: "
+                                + e.getMessage(), e);
+            }
+
             throw new NoSuchPolicyException("The policy " + toString(contentId)
                     + " could not be found.", e);
         } catch (CMException e) {
@@ -291,23 +331,30 @@ public class PolopolyContext {
             throw new UserNotLoggedInException();
         }
 
-        return getUser(userId, userClass);
+        try {
+            return getUser(userId, userClass);
+        } catch (UserNotFoundException e) {
+            logger.log(Level.WARNING, e.getMessage(), e);
+
+            throw new UserNotLoggedInException(e);
+        }
+
     }
 
     /**
      * Returns the policy of the specified user.
      */
     public <T> T getUser(UserId userId, Class<T> userClass)
-            throws UserNotLoggedInException {
+            throws UserNotFoundException {
         try {
             return getPolicy(userId.getPrincipalIdString(), userClass);
         } catch (PolicyGetException e) {
-            logger.log(Level.WARNING,
-                    "Fetching current user with principal ID "
-                            + userId.getPrincipalIdString() + ": "
-                            + e.getMessage(), e);
+            String message = "Fetching current user with principal ID "
+                    + userId.getPrincipalIdString() + ": " + e.getMessage();
 
-            throw new UserNotLoggedInException();
+            logger.log(Level.WARNING, message, e);
+
+            throw new UserNotFoundException(message, e);
         }
     }
 
