@@ -1,6 +1,5 @@
 package com.polopoly.util.policy;
 
-import static com.polopoly.util.client.PolopolyContext.getPolicy;
 import static com.polopoly.util.policy.Util.util;
 
 import java.util.Collections;

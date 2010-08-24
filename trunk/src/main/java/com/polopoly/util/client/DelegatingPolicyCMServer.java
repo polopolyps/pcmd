@@ -19,6 +19,7 @@ import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.cm.search.db.SearchExpression;
 import com.polopoly.user.server.Caller;
 
+@SuppressWarnings("deprecation")
 public class DelegatingPolicyCMServer implements PolicyCMServer {
     private PolicyCMServer delegate;
 
@@ -149,6 +150,7 @@ public class DelegatingPolicyCMServer implements PolicyCMServer {
         return delegate.findContentIdsBySearchExpression(searchExpr);
     }
 
+    @SuppressWarnings("deprecation")
     public TagInfo[] getAllTagInfos(ContentId contentId) throws CMException {
         return delegate.getAllTagInfos(contentId);
     }
@@ -171,6 +173,7 @@ public class DelegatingPolicyCMServer implements PolicyCMServer {
         return delegate.getContentListFilterChain();
     }
 
+    @SuppressWarnings("deprecation")
     public ContentRead getContentUnfiltered(ContentId contentId)
             throws CMException {
         return delegate.getContentUnfiltered(contentId);
@@ -196,6 +199,7 @@ public class DelegatingPolicyCMServer implements PolicyCMServer {
         return delegate.getMajorInfo(major);
     }
 
+    @SuppressWarnings("deprecation")
     public Policy getPolicy(ContentId contentId, ContentId inputTemplateId)
             throws CMException {
         return delegate.getPolicy(contentId, inputTemplateId);
@@ -205,15 +209,18 @@ public class DelegatingPolicyCMServer implements PolicyCMServer {
         return delegate.getPolicy(contentId);
     }
 
+    @SuppressWarnings("deprecation")
     public Policy getPolicy(ContentId[] contentIds, ContentId inputTemplateId)
             throws CMException {
         return delegate.getPolicy(contentIds, inputTemplateId);
     }
 
+    @SuppressWarnings("deprecation")
     public Policy getPolicy(ContentId[] contentIds) throws CMException {
         return delegate.getPolicy(contentIds);
     }
 
+    @SuppressWarnings("deprecation")
     public Policy getPolicyFor(Content content, ContentId inputTemplateId)
             throws CMException {
         return delegate.getPolicyFor(content, inputTemplateId);
@@ -223,11 +230,13 @@ public class DelegatingPolicyCMServer implements PolicyCMServer {
         return delegate.getPolicyFor(content);
     }
 
+    @SuppressWarnings("deprecation")
     public Policy getPolicyFor(Content[] contents, ContentId inputTemplateId)
             throws CMException {
         return delegate.getPolicyFor(contents, inputTemplateId);
     }
 
+    @SuppressWarnings("deprecation")
     public Policy getPolicyFor(Content[] contents) throws CMException {
         return delegate.getPolicyFor(contents);
     }
