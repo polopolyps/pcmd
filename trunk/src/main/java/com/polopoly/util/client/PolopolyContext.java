@@ -72,6 +72,7 @@ public class PolopolyContext {
     public PolopolyContext(CmClient cmClient, RmiSearchClient searchClient,
             PollClient pollClient) {
         this.client = cmClient;
+
         if (cmClient != null) {
             this.server = cmClient.getPolicyCMServer();
         }

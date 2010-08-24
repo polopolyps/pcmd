@@ -20,32 +20,28 @@ public class HelpTool implements Tool<HelpParameters> {
                 Tool<?> tool = ToolRetriever.getTool(parameters.getTool());
 
                 ParameterHelp help = new ParameterHelp();
-                help.addOption(ClientFromArgumentsConfigurator.SERVER, null,
-                        "The server name or the connection URL to use to connect to Polopoly. Defaults to localhost.");
-                help.addOption(ClientFromArgumentsConfigurator.USER, null,
-                        "The Polopoly user to log in. Defaults to \"sysadmin\".");
-                help.addOption(ClientFromArgumentsConfigurator.PASSWORD, null,
-                        "The password of the Polopoly user to log in. " +
-            		"If not specified, no user will be logged in (which is fine for most operations).");
+
+                ClientFromArgumentsConfigurator.getHelp(help);
 
                 tool.createParameters().getHelp(help);
 
-                System.err.println(parameters.getTool() + ": " + tool.getHelp());
+                System.err
+                        .println(parameters.getTool() + ": " + tool.getHelp());
                 help.print(System.err);
             } catch (NoSuchToolException e) {
                 System.err.println(e.getMessage());
                 System.err.println("Use Main help to see a list of all tools.");
             }
-        }
-        else {
+        } else {
             System.err.println("Usage: pcmd <tool> [--option=value]*");
-            System.err.println("Use pcmd help <tool> to get help on a specific tool");
+            System.err
+                    .println("Use pcmd help <tool> to get help on a specific tool");
 
             try {
                 System.err.println("Available tools: ");
                 ServiceLoader<Tool> toolLoader = ServiceLoader.load(Tool.class);
 
-               for (Tool tool : toolLoader) {
+                for (Tool tool : toolLoader) {
                     StringBuffer sb = new StringBuffer(80);
 
                     sb.append(ToolRetriever.getToolName(tool.getClass()));
@@ -57,9 +53,9 @@ public class HelpTool implements Tool<HelpParameters> {
                     sb.append(tool.getHelp());
                     System.err.println(sb);
                 }
-            }
-            catch (NoClassDefFoundError e) {
-                System.err.println("You need JDK 1.6+ to retrieve information on available tools.");
+            } catch (NoClassDefFoundError e) {
+                System.err
+                        .println("You need JDK 1.6+ to retrieve information on available tools.");
             }
         }
     }
@@ -68,4 +64,3 @@ public class HelpTool implements Tool<HelpParameters> {
         return "Returns help on a tool";
     }
 }
-
