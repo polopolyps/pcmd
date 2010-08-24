@@ -22,20 +22,22 @@ import com.polopoly.management.ServiceNotAvailableException;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.ContentIdToContentIterator;
 
-public class LuceneInspectTool implements Tool<LuceneInspectParameters>, RequiresIndexServer {
+public class LuceneInspectTool implements Tool<LuceneInspectParameters>,
+        RequiresIndexServer {
     public LuceneInspectParameters createParameters() {
         return new LuceneInspectParameters();
     }
 
-    @SuppressWarnings({ "unchecked", "deprecation" })
-    public void execute(PolopolyContext context, LuceneInspectParameters parameters) {
+    @SuppressWarnings( { "unchecked" })
+    public void execute(PolopolyContext context,
+            LuceneInspectParameters parameters) {
         try {
-            RemoteSearchService searchService =
-                context.getSearchClient().getRemoteSearchService(parameters.getIndex());
+            RemoteSearchService searchService = context.getSearchClient()
+                    .getRemoteSearchService(parameters.getIndex());
 
-            ContentIdToContentIterator it =
-                new ContentIdToContentIterator(context,
-                    parameters.getContentIds(), parameters.isStopOnException());
+            ContentIdToContentIterator it = new ContentIdToContentIterator(
+                    context, parameters.getContentIds(), parameters
+                            .isStopOnException());
 
             StringBuffer line = new StringBuffer(100);
 
@@ -45,9 +47,11 @@ public class LuceneInspectTool implements Tool<LuceneInspectParameters>, Require
                 line.setLength(0);
 
                 ContentRead content = it.next();
-                String contentIdString = content.getContentId().getContentId().getContentIdString();
+                String contentIdString = content.getContentId().getContentId()
+                        .getContentIdString();
 
-                Query query = new TermQuery(new Term("contentid", contentIdString));
+                Query query = new TermQuery(new Term("contentid",
+                        contentIdString));
 
                 BooleanQuery bool = new BooleanQuery();
                 bool.add(new BooleanClause(query, BooleanClause.Occur.MUST));
@@ -55,17 +59,20 @@ public class LuceneInspectTool implements Tool<LuceneInspectParameters>, Require
 
                 SearchResult result;
 
-                result = searchService.search(query, null, Sort.INDEXORDER, 10, 0);
+                result = searchService.search(query, null, Sort.INDEXORDER, 10,
+                        0);
 
                 if (result.getContentIds().size() != 1) {
-                    System.err.println("There were " + result.getContentIds().size() + " results when searching for " + contentIdString + ".");
+                    System.err.println("There were "
+                            + result.getContentIds().size()
+                            + " results when searching for " + contentIdString
+                            + ".");
                 }
 
                 for (SearchHit hit : result.getSearchHits()) {
                     if (!first) {
                         System.out.println();
-                    }
-                    else {
+                    } else {
                         first = false;
                     }
 

@@ -28,7 +28,7 @@ public class PcmdPolopolyClient extends PolopolyClient {
         }
 
         if (contentCacheSize != null) {
-            contentCacheSettings.setPolicyMemoryCacheSize(contentCacheSize
+            contentCacheSettings.setContentMemoryCacheSize(contentCacheSize
                     .intValue());
         }
 

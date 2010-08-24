@@ -1,10 +1,13 @@
 package com.polopoly.util.collection;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * An abstract {@link Iterator} implementation that requests the next object
- * from an abstract method and caches it between successive calls to {@link #hasNext()}.
+ * from an abstract method and caches it between successive calls to
+ * {@link #hasNext()}.
+ * 
  * @author AndreasE
  */
 public abstract class FetchingIterator<T> implements Iterator<T> {
@@ -33,14 +36,13 @@ public abstract class FetchingIterator<T> implements Iterator<T> {
         }
 
         if (next == null) {
-            throw new IllegalStateException("Passed end of iteration.");
+            throw new NoSuchElementException("Passed end of iteration.");
         }
 
         try {
             return next;
-        }
-        finally {
-            next =null;
+        } finally {
+            next = null;
         }
     }
 }

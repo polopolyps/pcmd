@@ -2,11 +2,9 @@ package com.polopoly.pcmd.parser;
 
 import java.rmi.RemoteException;
 
-import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 
 import com.polopoly.user.server.User;
-import com.polopoly.user.server.UserId;
 import com.polopoly.user.server.UserServer;
 import com.polopoly.util.client.PolopolyContext;
 
@@ -26,7 +24,8 @@ public class UserParser implements Parser<User> {
 
     public User parse(String parameter) throws ParseException {
         if (userServer == null) {
-            throw new ParseException(this, parameter, "No context provided in constructor.");
+            throw new ParseException(this, parameter,
+                    "No context provided in constructor.");
         }
 
         try {
@@ -45,6 +44,7 @@ public class UserParser implements Parser<User> {
         } catch (FinderException e) {
         }
 
-        throw new ParseException(this, parameter, "not a known user name or principal ID.");
+        throw new ParseException(this, parameter,
+                "not a known user name or principal ID.");
     }
 }
