@@ -1,8 +1,11 @@
 package com.polopoly.util.contentlist;
 
+import static java.util.logging.Level.WARNING;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.ContentReference;
@@ -28,264 +31,276 @@ import com.polopoly.util.policy.PolicyUtil;
 import com.polopoly.util.policy.Util;
 
 public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper
-        implements ContentListUtil {
-    public class ContentListContentIds implements Iterable<ContentId> {
-        public Iterator<ContentId> iterator() {
-            return new ContentListIterator(contentList) {
-                @Override
-                public String toString() {
-                    return ContentListUtilImpl.this.toString();
-                }
-            };
-        }
+		implements ContentListUtil {
+	private static Logger LOGGER = Logger.getLogger(ContentListUtilImpl.class
+			.getName());
 
-        public void add(int index, ContentId contentId) {
-            add(index, contentId, null);
-        }
+	public class ContentListContentIds implements Iterable<ContentId> {
+		public Iterator<ContentId> iterator() {
+			return new ContentListIterator(contentList) {
+				@Override
+				public String toString() {
+					return ContentListUtilImpl.this.toString();
+				}
+			};
+		}
 
-        public void add(int index, ContentId contentId,
-                ContentId referenceMetaDataId) {
-            try {
-                contentList.add(index, new ContentReference(contentId,
-                        referenceMetaDataId));
-            } catch (CMException e) {
-                throw new CMRuntimeException("While adding "
-                        + contentId.getContentIdString() + " to " + this + ": "
-                        + e.getMessage(), e);
-            }
-        }
+		public void add(int index, ContentId contentId) {
+			add(index, contentId, null);
+		}
 
-        public void add(ContentId contentId) {
-            add(size(), contentId);
-        }
+		public void add(int index, ContentId contentId,
+				ContentId referenceMetaDataId) {
+			try {
+				contentList.add(index, new ContentReference(contentId,
+						referenceMetaDataId));
+			} catch (CMException e) {
+				throw new CMRuntimeException("While adding "
+						+ contentId.getContentIdString() + " to " + this + ": "
+						+ e.getMessage(), e);
+			}
+		}
 
-        public void remove(ContentId contentId) {
-            for (int i = contentList.size() - 1; i >= 0; i--) {
-                if (get(i).equalsIgnoreVersion(contentId)) {
-                    remove(i);
-                }
-            }
-        }
+		public void add(ContentId contentId) {
+			add(size(), contentId);
+		}
 
-        private void remove(int index) {
-            contentList.remove(index);
-        }
+		public void remove(ContentId contentId) {
+			for (int i = contentList.size() - 1; i >= 0; i--) {
+				if (get(i).equalsIgnoreVersion(contentId)) {
+					remove(i);
+				}
+			}
+		}
 
-        public int size() {
-            return contentList.size();
-        }
+		private void remove(int index) {
+			contentList.remove(index);
+		}
 
-        public List<ContentId> toList() {
-            return new ContentListListAdapter(contentList, toString);
-        }
+		public int size() {
+			return contentList.size();
+		}
 
-        public ContentIdUtil get(int i) {
-            try {
-                ContentId result = contentList.getEntry(i)
-                        .getReferredContentId();
+		public List<ContentId> toList() {
+			return new ContentListListAdapter(contentList, toString);
+		}
 
-                if (result != null) {
-                    return Util.util(result, getContext());
-                } else {
-                    return null;
-                }
-            } catch (CMException e) {
-                throw new CMRuntimeException("While getting entry " + i
-                        + " in " + ContentListUtilImpl.this.toString() + ": "
-                        + e.getMessage(), e);
-            }
-        }
+		public ContentIdUtil get(int i) {
+			try {
+				ContentId result = contentList.getEntry(i)
+						.getReferredContentId();
 
-        @Override
-        public String toString() {
-            return ContentListUtilImpl.this.toString();
-        }
-    }
+				if (result != null) {
+					return Util.util(result, getContext());
+				} else {
+					return null;
+				}
+			} catch (CMException e) {
+				throw new CMRuntimeException("While getting entry " + i
+						+ " in " + ContentListUtilImpl.this.toString() + ": "
+						+ e.getMessage(), e);
+			}
+		}
 
-    private ContentList contentList;
+		@Override
+		public String toString() {
+			return ContentListUtilImpl.this.toString();
+		}
+	}
 
-    private PolicyCMServer server;
+	private ContentList contentList;
 
-    private PolopolyContext lazyContext;
+	private PolicyCMServer server;
 
-    private Object toString;
+	private PolopolyContext lazyContext;
 
-    /**
-     * Use {@link Util#util(ContentListRead, PolicyCMServer)} to get an
-     * instance.
-     */
-    public ContentListUtilImpl(ContentListRead contentList, Object toString,
-            PolopolyContext context) {
-        this(contentList, toString, context.getPolicyCMServer());
+	private Object toString;
 
-        if (context == null) {
-            throw new IllegalArgumentException("Context was null.");
-        }
+	/**
+	 * Use {@link Util#util(ContentListRead, PolicyCMServer)} to get an
+	 * instance.
+	 */
+	public ContentListUtilImpl(ContentListRead contentList, Object toString,
+			PolopolyContext context) {
+		this(contentList, toString, context.getPolicyCMServer());
 
-        this.lazyContext = context;
-    }
+		if (context == null) {
+			throw new IllegalArgumentException("Context was null.");
+		}
 
-    /**
-     * Use {@link Util#util(ContentListRead, PolicyCMServer)} to get an
-     * instance.
-     */
-    public ContentListUtilImpl(ContentListRead contentList, Object toString,
-            PolicyCMServer server) {
-        super(contentList);
+		this.lazyContext = context;
+	}
 
-        this.contentList = (ContentList) contentList;
-        this.server = server;
-        this.toString = toString;
-    }
+	/**
+	 * Use {@link Util#util(ContentListRead, PolicyCMServer)} to get an
+	 * instance.
+	 */
+	public ContentListUtilImpl(ContentListRead contentList, Object toString,
+			PolicyCMServer server) {
+		super(contentList);
 
-    public Iterator<Policy> iterator() {
-        return new ContentIdToPolicyIterator(server, contentIds().iterator());
-    }
+		this.contentList = (ContentList) contentList;
+		this.server = server;
+		this.toString = toString;
+	}
 
-    public <T> Iterable<T> policies(final Class<T> policyClass) {
-        return new Iterable<T>() {
-            public Iterator<T> iterator() {
-                return new CheckedContentIdToPolicyIterator<T>(server,
-                        contentIds().iterator(), policyClass);
-            }
-        };
-    }
+	public Iterator<Policy> iterator() {
+		return new ContentIdToPolicyIterator(server, contentIds().iterator());
+	}
 
-    public Iterable<PolicyUtil> policyUtils() {
-        return new Iterable<PolicyUtil>() {
-            public Iterator<PolicyUtil> iterator() {
-                return new TransformingIterator<Policy, PolicyUtil>(
-                        new CheckedContentIdToPolicyIterator<Policy>(server,
-                                contentIds().iterator(), Policy.class)) {
-                    @Override
-                    protected PolicyUtil transform(Policy next) {
-                        return Util.util(next);
-                    }
-                };
-            }
-        };
-    }
+	public <T> Iterable<T> policies(final Class<T> policyClass) {
+		return new Iterable<T>() {
+			public Iterator<T> iterator() {
+				return new CheckedContentIdToPolicyIterator<T>(server,
+						contentIds().iterator(), policyClass);
+			}
+		};
+	}
 
-    public ContentListContentIds contentIds() {
-        return new ContentListContentIds();
-    }
+	public Iterable<PolicyUtil> policyUtils() {
+		return new Iterable<PolicyUtil>() {
+			public Iterator<PolicyUtil> iterator() {
+				return new TransformingIterator<Policy, PolicyUtil>(
+						new CheckedContentIdToPolicyIterator<Policy>(server,
+								contentIds().iterator(), Policy.class)) {
+					@Override
+					protected PolicyUtil transform(Policy next) {
+						return Util.util(next);
+					}
+				};
+			}
+		};
+	}
 
-    public Iterable<ContentUtil> contents() {
-        return new Iterable<ContentUtil>() {
-            public Iterator<ContentUtil> iterator() {
-                return new ContentIdToContentUtilIterator(server, contentIds()
-                        .iterator());
-            }
-        };
-    }
+	public ContentListContentIds contentIds() {
+		return new ContentListContentIds();
+	}
 
-    public void add(int index, Policy policy) {
-        contentIds().add(index, policy.getContentId().getContentId());
-    }
+	public Iterable<ContentUtil> contents() {
+		return new Iterable<ContentUtil>() {
+			public Iterator<ContentUtil> iterator() {
+				return new ContentIdToContentUtilIterator(server, contentIds()
+						.iterator());
+			}
+		};
+	}
 
-    public void add(Policy policy) {
-        add(size(), policy);
-    }
+	public void add(int index, Policy policy) {
+		contentIds().add(index, policy.getContentId().getContentId());
+	}
 
-    public void add(int index, Policy policy,
-            ReferenceMetaDataPolicy referenceMetaData) {
-        contentIds().add(
-                index,
-                policy.getContentId().getContentId(),
-                (referenceMetaData != null ? referenceMetaData.getContentId()
-                        .getContentId() : null));
-    }
+	public void add(Policy policy) {
+		add(size(), policy);
+	}
 
-    public void add(Policy policy, ReferenceMetaDataPolicy referenceMetaData) {
-        add(size(), policy, referenceMetaData);
-    }
+	public void add(int index, Policy policy,
+			ReferenceMetaDataPolicy referenceMetaData) {
+		contentIds().add(
+				index,
+				policy.getContentId().getContentId(),
+				(referenceMetaData != null ? referenceMetaData.getContentId()
+						.getContentId() : null));
+	}
 
-    public void remove(Policy policy) {
-        contentIds().remove(policy.getContentId());
-    }
+	public void add(Policy policy, ReferenceMetaDataPolicy referenceMetaData) {
+		add(size(), policy, referenceMetaData);
+	}
 
-    public ContentIdUtil get(int i) {
-        return contentIds().get(i);
-    }
+	public void remove(Policy policy) {
+		contentIds().remove(policy.getContentId());
+	}
 
-    public <T> T get(int i, Class<T> klass) throws PolicyGetException {
-        return getContext().getPolicy(contentIds().get(i), klass);
-    }
+	public ContentIdUtil get(int i) {
+		return contentIds().get(i);
+	}
 
-    private PolopolyContext getContext() {
-        if (lazyContext == null) {
-            lazyContext = Util.util(server);
-        }
+	public <T> T get(int i, Class<T> klass) throws PolicyGetException {
+		return getContext().getPolicy(contentIds().get(i), klass);
+	}
 
-        return lazyContext;
-    }
+	private PolopolyContext getContext() {
+		if (lazyContext == null) {
+			lazyContext = Util.util(server);
+		}
 
-    public boolean contains(Policy policy) {
-        return indexOf(policy) >= 0;
-    }
+		return lazyContext;
+	}
 
-    public PolicyCMServer getPolicyCMServer() {
-        return server;
-    }
+	public boolean contains(Policy policy) {
+		return indexOf(policy) >= 0;
+	}
 
-    @Override
-    public String toString() {
-        String group;
-        try {
-            group = contentList.getContentListStorageGroup();
-        } catch (CMException e) {
-            group = e.getMessage();
-        }
+	public PolicyCMServer getPolicyCMServer() {
+		return server;
+	}
 
-        if (toString == null) {
-            return "content list \"" + group + "\"";
-        } else {
-            return "content list \"" + group + "\" in " + toString.toString();
-        }
-    }
+	@Override
+	public String toString() {
+		String group;
+		try {
+			group = contentList.getContentListStorageGroup();
+		} catch (CMException e) {
+			group = e.getMessage();
+		}
 
-    public Iterable<ContentReferenceUtil> references() {
-        return new Iterable<ContentReferenceUtil>() {
-            public Iterator<ContentReferenceUtil> iterator() {
-                return new ContentReferenceIterator(ContentListUtilImpl.this,
-                        getContext());
-            }
-        };
-    }
+		if (toString == null) {
+			return "content list \"" + group + "\"";
+		} else {
+			return "content list \"" + group + "\" in " + toString.toString();
+		}
+	}
 
-    @Override
-    public ContentReferenceUtil getEntry(int index) {
-        ContentReference unwrapped = super.getEntry(index);
+	public Iterable<ContentReferenceUtil> references() {
+		return new Iterable<ContentReferenceUtil>() {
+			public Iterator<ContentReferenceUtil> iterator() {
+				return new ContentReferenceIterator(ContentListUtilImpl.this,
+						getContext());
+			}
+		};
+	}
 
-        return new ContentReferenceUtil(unwrapped, this, getContext());
-    }
+	@Override
+	public ContentReferenceUtil getEntry(int index) {
+		ContentReference unwrapped = super.getEntry(index);
 
-    public <T> List<T> policyList(Class<T> policyClass) {
-        List<T> result = new ArrayList<T>();
+		return new ContentReferenceUtil(unwrapped, this, getContext());
+	}
 
-        for (T policy : policies(policyClass)) {
-            result.add(policy);
-        }
+	public <T> List<T> policyList(Class<T> policyClass) {
+		List<T> result = new ArrayList<T>();
 
-        return result;
-    }
+		for (T policy : policies(policyClass)) {
+			result.add(policy);
+		}
 
-    public void clear() {
-        while (size() > 0) {
-            remove(0);
-        }
-    }
+		return result;
+	}
 
-    public int indexOf(Policy policy) {
-        VersionedContentId policyId = policy.getContentId();
+	public void clear() {
+		while (size() > 0) {
+			remove(0);
+		}
+	}
 
-        for (int i = size() - 1; i >= 0; i--) {
-            if (getEntry(i).getReferredContentId()
-                    .equalsIgnoreVersion(policyId)) {
-                return i;
-            }
-        }
+	public int indexOf(Policy policy) {
+		VersionedContentId policyId = policy.getContentId();
 
-        return -1;
-    }
+		for (int i = size() - 1; i >= 0; i--) {
+			ContentIdUtil referredContentId = getEntry(i)
+					.getReferredContentId();
+
+			if (referredContentId == null) {
+				LOGGER.log(WARNING,
+						"There was a null ID added to the content list " + this
+								+ ".");
+				continue;
+			}
+
+			if (referredContentId.equalsIgnoreVersion(policyId)) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
 }

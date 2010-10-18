@@ -11,6 +11,7 @@ import javax.ejb.FinderException;
 
 import com.polopoly.application.ConnectionProperties;
 import com.polopoly.application.StandardApplication;
+import com.polopoly.cache.LRUSynchronizedUpdateCache;
 import com.polopoly.cm.client.CMServer;
 import com.polopoly.cm.client.ContentFilterSettings;
 import com.polopoly.cm.client.EjbCmClient;
@@ -29,266 +30,291 @@ import com.polopoly.user.server.User;
 import com.polopoly.user.server.UserId;
 
 public class PolopolyClient {
-    private String applicationName = "polopolyclient";
+	private String applicationName = "polopolyclient";
 
-    private String connectionUrl = "localhost";
+	private String connectionUrl = "localhost";
 
-    private String userName = "sysadmin";
+	private String userName = "sysadmin";
 
-    private String password = null;
+	private String password = null;
 
-    private boolean attachSearchService = true;
+	private boolean attachSearchService = true;
 
-    private boolean attachStatisticsService = true;
+	private boolean attachStatisticsService = true;
 
-    private boolean attachPollService = false;
+	private boolean attachPollService = false;
 
-    private List<Class<? extends ContentFilter>> contentFilterClasses = new ArrayList<Class<? extends ContentFilter>>();
+	private List<Class<? extends ContentFilter>> contentFilterClasses = new ArrayList<Class<? extends ContentFilter>>();
 
-    private static final Logger javaUtilLogger = Logger
-            .getLogger(PolopolyClient.class.getName());
+	private static final Logger javaUtilLogger = Logger
+			.getLogger(PolopolyClient.class.getName());
 
-    private PolopolyClientLogger logger = new PolopolyClientLogger() {
-        public void info(String logMessage) {
-            javaUtilLogger.log(Level.INFO, logMessage);
-        }
-    };
+	private PolopolyClientLogger logger = new PolopolyClientLogger() {
+		public void info(String logMessage) {
+			javaUtilLogger.log(Level.INFO, logMessage);
+		}
+	};
 
-    private PollClient pollClient;
+	private PollClient pollClient;
 
-    public String getApplicationName() {
-        return applicationName;
-    }
+	private boolean attachLRUSynchronizedUpdateCache;
 
-    public void setApplicationName(String applicationName) {
-        this.applicationName = applicationName;
-    }
+	public String getApplicationName() {
+		return applicationName;
+	}
 
-    public String getConnectionUrl() {
-        return connectionUrl;
-    }
+	public void setApplicationName(String applicationName) {
+		this.applicationName = applicationName;
+	}
 
-    public void setConnectionUrl(String connectionUrl) {
-        this.connectionUrl = connectionUrl;
-    }
+	public String getConnectionUrl() {
+		return connectionUrl;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public void setConnectionUrl(String connectionUrl) {
+		this.connectionUrl = connectionUrl;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public String getUserName() {
-        return userName;
-    }
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
-    public void setLogger(PolopolyClientLogger logger) {
-        this.logger = logger;
-    }
+	public String getUserName() {
+		return userName;
+	}
 
-    public PolopolyClientLogger getLogger() {
-        return logger;
-    }
+	public void setLogger(PolopolyClientLogger logger) {
+		this.logger = logger;
+	}
 
-    public PolopolyContext connect() throws ConnectException {
-        if (connectionUrl.indexOf('/') == -1
-                && connectionUrl.indexOf(':') == -1) {
-            // if the URL does not contain a slash or colon, it's not a URL but
-            // just the server name. Assume default URL on it.
-            connectionUrl = "http://" + connectionUrl
-                    + ":8040/connection.properties";
-        }
+	public PolopolyClientLogger getLogger() {
+		return logger;
+	}
 
-        EjbCmClient cmClient = null;
-        RmiSearchClient searchClient = null;
-        StatisticsClient statisticsClient = null;
-        UDPLogMsgClient logMsgClient = null;
+	public PolopolyContext connect() throws ConnectException {
+		if (connectionUrl.indexOf('/') == -1
+				&& connectionUrl.indexOf(':') == -1) {
+			// if the URL does not contain a slash or colon, it's not a URL but
+			// just the server name. Assume default URL on it.
+			connectionUrl = "http://" + connectionUrl
+					+ ":8040/connection.properties";
+		}
 
-        try {
-            // Create connection properties from an URL.
-            ConnectionProperties connectionProperties = new ConnectionProperties(
-                    new URL(connectionUrl));
+		EjbCmClient cmClient = null;
+		RmiSearchClient searchClient = null;
+		StatisticsClient statisticsClient = null;
+		UDPLogMsgClient logMsgClient = null;
 
-            // Create a ManagedBeanRegistry from the standard MBeanServer.
-            ManagedBeanRegistry registry = new JMXManagedBeanRegistry(
-                    ManagementFactory.getPlatformMBeanServer());
+		try {
+			// Create connection properties from an URL.
+			ConnectionProperties connectionProperties = new ConnectionProperties(
+					new URL(connectionUrl));
 
-            // Create the Application.
-            final StandardApplication app = new StandardApplication(
-                    applicationName);
+			// Create a ManagedBeanRegistry from the standard MBeanServer.
+			ManagedBeanRegistry registry = new JMXManagedBeanRegistry(
+					ManagementFactory.getPlatformMBeanServer());
 
-            // Create a CM client ApplicationComponent.
+			// Create the Application.
+			final StandardApplication app = new StandardApplication(
+					applicationName);
 
-            cmClient = new EjbCmClient() {
-                @Override
-                protected PolicyCMServer createPolicyCMServer(
-                        CMServer legacyWrapper) {
-                    return PolopolyClient.this.createPolicyCMServer(super
-                            .createPolicyCMServer(legacyWrapper), this, app,
-                            legacyWrapper);
-                }
-            };
+			// Create a CM client ApplicationComponent.
 
-            setUpCmClient(cmClient);
+			cmClient = new EjbCmClient() {
+				@Override
+				protected PolicyCMServer createPolicyCMServer(
+						CMServer legacyWrapper) {
+					return PolopolyClient.this.createPolicyCMServer(
+							super.createPolicyCMServer(legacyWrapper), this,
+							app, legacyWrapper);
+				}
+			};
 
-            if (contentFilterClasses.size() > 0) {
-                ContentFilterSettings contentFilterSettings = new ContentFilterSettings();
+			setUpCmClient(cmClient);
 
-                contentFilterSettings
-                        .setContentFilterClassNames(toNames(contentFilterClasses));
+			if (contentFilterClasses.size() > 0) {
+				ContentFilterSettings contentFilterSettings = new ContentFilterSettings();
 
-                cmClient.setContentFilterSettings(contentFilterSettings);
-            }
+				contentFilterSettings
+						.setContentFilterClassNames(toNames(contentFilterClasses));
 
-            // Set the registry.
-            app.setManagedBeanRegistry(registry);
+				cmClient.setContentFilterSettings(contentFilterSettings);
+			}
 
-            // Add the CM client.
-            app.addApplicationComponent(cmClient);
+			// Set the registry.
+			app.setManagedBeanRegistry(registry);
 
-            if (isAttachSearchService()) {
-                searchClient = new RmiSearchClient();
-                app.addApplicationComponent(searchClient);
-            }
+			// Add the CM client.
+			app.addApplicationComponent(cmClient);
 
-            if (isAttachPollService()) {
-                pollClient = new PollClient();
-                app.addApplicationComponent(pollClient);
-            }
+			if (isAttachSearchService()) {
+				searchClient = new RmiSearchClient();
+				app.addApplicationComponent(searchClient);
+			}
 
-            if (isAttachStatisticsService()) {
-                statisticsClient = new StatisticsClient();
-                app.addApplicationComponent(statisticsClient);
-            }
+			if (isAttachPollService()) {
+				pollClient = new PollClient();
+				app.addApplicationComponent(pollClient);
+			}
 
-            logMsgClient = new UDPLogMsgClient();
-            app.addApplicationComponent(logMsgClient);
+			if (isAttachStatisticsService()) {
+				statisticsClient = new StatisticsClient();
+				app.addApplicationComponent(statisticsClient);
+			}
 
-            try {
-                CommunityClient communityClient = new CommunityClient(cmClient);
-                app.addApplicationComponent(communityClient);
-            } catch (Throwable t) {
-                // Community JAR not present in class path. Skip it.
-            }
+			if (isAttachLRUSynchronizedUpdateCache()) {
+				LRUSynchronizedUpdateCache cache = new LRUSynchronizedUpdateCache();
 
-            // Read connection properties.
-            app.readConnectionProperties(connectionProperties);
+				setUpLRUSynchronizedUpdateCache(cache);
 
-            // Init.
-            app.init();
-            PolopolyContext context = new PolopolyContext(app);
+				app.addApplicationComponent(cache);
+			}
 
-            login(context);
+			logMsgClient = new UDPLogMsgClient();
+			app.addApplicationComponent(logMsgClient);
 
-            return context;
-        } catch (ConnectException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ConnectException(
-                    "Error connecting to Polopoly server with connection URL "
-                            + connectionUrl + ": " + e, e);
-        }
-    }
+			try {
+				CommunityClient communityClient = new CommunityClient(cmClient);
+				app.addApplicationComponent(communityClient);
+			} catch (Throwable t) {
+				// Community JAR not present in class path. Skip it.
+			}
 
-    /**
-     * Intended for overriding.
-     */
-    protected void setUpCmClient(EjbCmClient cmClient) {
-    }
+			// Read connection properties.
+			app.readConnectionProperties(connectionProperties);
 
-    /**
-     * Intended for overriding for clients needing to wrap the CM server.
-     */
-    protected PolicyCMServer createPolicyCMServer(
-            PolicyCMServer originalServer, EjbCmClient cmClient,
-            StandardApplication app, CMServer legacyWrapper) {
-        return originalServer;
-    }
+			// Init.
+			app.init();
+			PolopolyContext context = new PolopolyContext(app);
 
-    private List<String> toNames(List<? extends Class<?>> klasses) {
-        List<String> result = new ArrayList<String>();
+			login(context);
 
-        for (Class<?> klass : klasses) {
-            result.add(klass.getName());
-        }
+			return context;
+		} catch (ConnectException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new ConnectException(
+					"Error connecting to Polopoly server with connection URL "
+							+ connectionUrl + ": " + e, e);
+		}
+	}
 
-        return result;
-    }
+	/**
+	 * Intended for overriding.
+	 */
+	protected void setUpCmClient(EjbCmClient cmClient) {
+	}
 
-    public void addContentFilter(
-            Class<? extends ContentFilter> contentFilterClass) {
-        contentFilterClasses.add(contentFilterClass);
-    }
+	/**
+	 * Intended for overriding for clients needing to wrap the CM server.
+	 */
+	protected PolicyCMServer createPolicyCMServer(
+			PolicyCMServer originalServer, EjbCmClient cmClient,
+			StandardApplication app, CMServer legacyWrapper) {
+		return originalServer;
+	}
 
-    private void loginUserWithoutPassword(PolopolyContext context)
-            throws Exception {
-        User user = context.getUserServer().getUserByLoginName(userName);
-        UserId userId = user.getUserId();
-        context.getPolicyCMServer().setCurrentCaller(
-                new NonLoggedInCaller(userId, null, null, userName));
+	private List<String> toNames(List<? extends Class<?>> klasses) {
+		List<String> result = new ArrayList<String>();
 
-        logger.info("No password provided. Set caller to user \"" + userName
-                + "\" but did not log in.");
-    }
+		for (Class<?> klass : klasses) {
+			result.add(klass.getName());
+		}
 
-    private void loginUserWithPassword(PolopolyContext context)
-            throws Exception {
-        Caller caller = context.getUserServer().loginAndMerge(userName,
-                password, context.getPolicyCMServer().getCurrentCaller());
+		return result;
+	}
 
-        context.getPolicyCMServer().setCurrentCaller(caller);
+	public void addContentFilter(
+			Class<? extends ContentFilter> contentFilterClass) {
+		contentFilterClasses.add(contentFilterClass);
+	}
 
-        logger.info("Logged in user \"" + userName + "\".");
-    }
+	private void loginUserWithoutPassword(PolopolyContext context)
+			throws Exception {
+		User user = context.getUserServer().getUserByLoginName(userName);
+		UserId userId = user.getUserId();
+		context.getPolicyCMServer().setCurrentCaller(
+				new NonLoggedInCaller(userId, null, null, userName));
 
-    private void login(PolopolyContext context) throws ConnectException {
-        try {
-            if (password != null) {
-                loginUserWithPassword(context);
-            } else {
-                loginUserWithoutPassword(context);
-            }
-        } catch (FinderException e) {
-            throw new ConnectException("The user " + userName
-                    + " to log in could not be found.");
-        } catch (AuthenticationFailureException e) {
-            throw new ConnectException("The password supplied for user "
-                    + userName + " was incorrect.");
-        } catch (Exception e) {
-            throw new ConnectException(
-                    "An error occurred while trying to log in user " + userName
-                            + ": " + e.getMessage(), e);
-        }
-    }
+		logger.info("No password provided. Set caller to user \"" + userName
+				+ "\" but did not log in.");
+	}
 
-    public void setAttachStatisticsService(boolean attachStatisticsService) {
-        this.attachStatisticsService = attachStatisticsService;
-    }
+	private void loginUserWithPassword(PolopolyContext context)
+			throws Exception {
+		Caller caller = context.getUserServer().loginAndMerge(userName,
+				password, context.getPolicyCMServer().getCurrentCaller());
 
-    public boolean isAttachStatisticsService() {
-        return attachStatisticsService;
-    }
+		context.getPolicyCMServer().setCurrentCaller(caller);
 
-    public void setAttachPollService(boolean attachPollService) {
-        this.attachPollService = attachPollService;
-    }
+		logger.info("Logged in user \"" + userName + "\".");
+	}
 
-    public boolean isAttachPollService() {
-        return this.attachPollService;
-    }
+	private void login(PolopolyContext context) throws ConnectException {
+		try {
+			if (password != null) {
+				loginUserWithPassword(context);
+			} else {
+				loginUserWithoutPassword(context);
+			}
+		} catch (FinderException e) {
+			throw new ConnectException("The user " + userName
+					+ " to log in could not be found.");
+		} catch (AuthenticationFailureException e) {
+			throw new ConnectException("The password supplied for user "
+					+ userName + " was incorrect.");
+		} catch (Exception e) {
+			throw new ConnectException(
+					"An error occurred while trying to log in user " + userName
+							+ ": " + e.getMessage(), e);
+		}
+	}
 
-    public void setAttachSearchService(boolean attachSearchService) {
-        this.attachSearchService = attachSearchService;
-    }
+	public void setAttachStatisticsService(boolean attachStatisticsService) {
+		this.attachStatisticsService = attachStatisticsService;
+	}
 
-    public boolean isAttachSearchService() {
-        return attachSearchService;
-    }
+	public boolean isAttachStatisticsService() {
+		return attachStatisticsService;
+	}
 
+	public void setAttachPollService(boolean attachPollService) {
+		this.attachPollService = attachPollService;
+	}
+
+	public boolean isAttachPollService() {
+		return this.attachPollService;
+	}
+
+	public void setAttachSearchService(boolean attachSearchService) {
+		this.attachSearchService = attachSearchService;
+	}
+
+	public boolean isAttachSearchService() {
+		return attachSearchService;
+	}
+
+	public void setAttachLRUSynchronizedUpdateCache(
+			boolean attachLRUSynchronizedUpdateCache) {
+		this.attachLRUSynchronizedUpdateCache = attachLRUSynchronizedUpdateCache;
+	}
+
+	public boolean isAttachLRUSynchronizedUpdateCache() {
+		return attachLRUSynchronizedUpdateCache;
+	}
+
+	/**
+	 * Intended for overriding.
+	 */
+	protected void setUpLRUSynchronizedUpdateCache(
+			LRUSynchronizedUpdateCache cache) {
+	}
 }
