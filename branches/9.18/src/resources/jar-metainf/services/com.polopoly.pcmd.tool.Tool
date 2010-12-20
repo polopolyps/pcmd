@@ -12,6 +12,7 @@ com.polopoly.pcmd.tool.ListTool
 com.polopoly.pcmd.tool.LockTool
 com.polopoly.pcmd.tool.LuceneInspectTool
 com.polopoly.pcmd.tool.LuceneTool
+com.polopoly.pcmd.tool.ModelInspectTool
 com.polopoly.pcmd.tool.ParentsTool
 com.polopoly.pcmd.tool.PolicyTreeTool
 com.polopoly.pcmd.tool.ResolveTool
