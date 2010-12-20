@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<project name="pcmdcaller" default="call" basedir=".">
+  <target name="call">
+    <taskdef name="pcmd" classname="com.polopoly.pcmd.ant.PcmdTask">
+      <classpath>
+        <pathelement location="tools/pcmd-9.13.0-DP4.0.jar"/>
+      </classpath>
+    </taskdef>
+
+    <pcmd tool="${tool}">
+      <parameter value="${param1}"/>
+      <parameter value="${param2}"/>
+      <parameter value="${param3}"/>
+      <parameter value="${param4}"/>
+      <parameter value="${param5}"/>
+      <parameter value="${param6}"/>
+      <parameter value="${param7}"/>
+    </pcmd>
+  </target>
+</project>
