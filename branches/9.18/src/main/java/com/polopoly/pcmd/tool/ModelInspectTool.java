@@ -2,8 +2,6 @@ package com.polopoly.pcmd.tool;
 
 import static com.polopoly.util.policy.Util.util;
 
-import java.util.List;
-
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.ContentRead;
@@ -17,7 +15,11 @@ import com.polopoly.util.content.ContentUtil;
 
 public class ModelInspectTool implements Tool<ContentIdListParameters> {
 
-    public ContentIdListParameters createParameters() {
+    private static final int MAX_MODEL_DEPTH = 4;
+	private int modelDepth;
+
+
+	public ContentIdListParameters createParameters() {
         return new ContentIdListParameters();
     }
 
@@ -35,6 +37,8 @@ public class ModelInspectTool implements Tool<ContentIdListParameters> {
             try {
                 Model model = modelDomain.getModel(contentUtil.getContentId());
                 
+                modelDepth = 0; 
+                
                 printModel("", model);
 
             } catch (CMException e) {
@@ -49,36 +53,44 @@ public class ModelInspectTool implements Tool<ContentIdListParameters> {
         it.printInfo(System.err);
     }
 
-    private void printModel(String parentPath, Object attribute) {
+    @SuppressWarnings("unchecked")
+	private void printModel(String parentPath, Object attribute) {
     	if (attribute instanceof Model) {
     		Model model = (Model) attribute;
-    		
-    		if ( model.getModelType() != null)
-    		    System.out.print("[" + model.getModelType().getName() + "]");
-    		 System.out.println();
+    		if ( model.getModelType() != null) {
+    		    System.out.print("[T:" + model.getModelType().getName() + "]");
+    		}
+    		System.out.println();
     		//System.out.println(" #" + attribute.getClass().getSimpleName() + "#");
+    		if (modelDepth >= MAX_MODEL_DEPTH) {
+    			return;
+    		}
         	for (String attributeName : model.getAttributeNames()) {
         		System.out.print(parentPath + attributeName + "=");
+        		modelDepth++;
         		printModel(parentPath + attributeName + ".", model.getAttribute(attributeName));
+        		modelDepth--;
         	}
-    	} else if (attribute instanceof List<?>) {
-    	    List<Model> modelList = (List<Model>) attribute;
+    	} else if (attribute instanceof Iterable<?>) {
+    	    Iterable<Model> modelList = (Iterable<Model>) attribute;
+    	    System.out.print("[C:" + modelList.getClass().getName() + "]");
     	    int i = 0;
     		for (Model model : modelList) {
-    		    
+    			modelDepth++;
     		    printModel(parentPath + "[" + i + "]" + ".", model);
+    		    modelDepth--;
     		    i++;
-				//for (String attributeName : model.getAttributeNames()) {
-	            //    System.out.print(attributeName + "=" + model.getAttribute(attributeName));
-				//}
     		}
+    	} else if (attribute instanceof String) {
+    		// Print attribute value
+    		System.out.println("\"" + attribute + "\"");
     	} else {
     		// Print attribute value
     		System.out.print(attribute);
     		// TODO: Should this be checked before recursion instead?
     		if (attribute != null) {
     			// Print attribute class/type
-    			System.out.print(" [" + attribute.getClass().getName() + "]");
+    			System.out.print(" [C:" + attribute.getClass().getName() + "]");
     		}
     		System.out.println();
     	}

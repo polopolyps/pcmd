@@ -59,14 +59,12 @@ public class UnlockTool implements Tool<UnlockParameters> {
 
     private void unlockAll(PolopolyContext context) {
         System.err.println("Unlocking all locked content.");
-        // TODO: Method seems to have disappeared from search expression in 9.17, but new method in cm server.
 
-//        SearchExpression searchExpr = null;
-//            DBSearchUtil.getLockedContentExpr(ContentId.UNDEFINED_MAJOR, null);
+        // Method seems to have disappeared from search expression in 9.17, but new method in cm server.
+//      SearchExpression searchExpr = DBSearchUtil.getLockedContentExpr(ContentId.UNDEFINED_MAJOR, null);
 
         try {
-//            ContentId[] locked =
-//                context.getPolicyCMServer().findContentIdsBySearchExpression(searchExpr);
+        	//ContentId[] locked = context.getPolicyCMServer().findContentIdsBySearchExpression(searchExpr);
         	
         	LockInfo[] locked = context.getPolicyCMServer().findAllLocks();
 
