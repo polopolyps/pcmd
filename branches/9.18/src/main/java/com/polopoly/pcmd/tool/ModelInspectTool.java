@@ -52,16 +52,26 @@ public class ModelInspectTool implements Tool<ContentIdListParameters> {
     private void printModel(String parentPath, Object attribute) {
     	if (attribute instanceof Model) {
     		Model model = (Model) attribute;
-    		System.out.print("[" + model.getModelType().getName() + "]");
-    		System.out.println(" #" + attribute.getClass().getSimpleName() + "#");
+    		
+    		if ( model.getModelType() != null)
+    		    System.out.print("[" + model.getModelType().getName() + "]");
+    		 System.out.println();
+    		//System.out.println(" #" + attribute.getClass().getSimpleName() + "#");
         	for (String attributeName : model.getAttributeNames()) {
         		System.out.print(parentPath + attributeName + "=");
-        		printModel(attributeName + ".", model.getAttribute(attributeName));
+        		printModel(parentPath + attributeName + ".", model.getAttribute(attributeName));
         	}
     	} else if (attribute instanceof List<?>) {
-    		for (Model model : (List<Model>)attribute) {
-				System.out.println("hej");
-			}
+    	    List<Model> modelList = (List<Model>) attribute;
+    	    int i = 0;
+    		for (Model model : modelList) {
+    		    
+    		    printModel(parentPath + "[" + i + "]" + ".", model);
+    		    i++;
+				//for (String attributeName : model.getAttributeNames()) {
+	            //    System.out.print(attributeName + "=" + model.getAttribute(attributeName));
+				//}
+    		}
     	} else {
     		// Print attribute value
     		System.out.print(attribute);
