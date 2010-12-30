@@ -4,6 +4,7 @@ com.polopoly.pcmd.tool.CheckPermissionTool
 com.polopoly.pcmd.tool.CreateGroupTool
 com.polopoly.pcmd.tool.DeleteTool
 com.polopoly.pcmd.tool.DeleteVersionTool
+com.polopoly.pcmd.tool.GraphContentTool
 com.polopoly.pcmd.tool.GroovyTool
 com.polopoly.pcmd.tool.GroupTool
 com.polopoly.pcmd.tool.HelpTool
