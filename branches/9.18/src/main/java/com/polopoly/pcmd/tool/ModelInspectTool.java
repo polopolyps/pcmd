@@ -8,25 +8,26 @@ import com.polopoly.cm.client.ContentRead;
 import com.polopoly.cm.policymvc.PolicyCMServerModelDomain;
 import com.polopoly.cm.policymvc.PolicyModelDomain;
 import com.polopoly.model.Model;
-import com.polopoly.pcmd.argument.ContentIdListParameters;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.ContentIdToContentIterator;
 import com.polopoly.util.content.ContentUtil;
 
-public class ModelInspectTool implements Tool<ContentIdListParameters> {
+public class ModelInspectTool implements Tool<ModelInspectParameters> {
 
-    private static final int MAX_MODEL_DEPTH = 4;
+    private int maxDepth = 4;
 	private int modelDepth;
 
 
-	public ContentIdListParameters createParameters() {
-        return new ContentIdListParameters();
+	public ModelInspectParameters createParameters() {
+        return new ModelInspectParameters();
     }
 
-    public void execute(PolopolyContext context, ContentIdListParameters parameters) {
+    public void execute(PolopolyContext context, ModelInspectParameters parameters) {
         ContentIdToContentIterator it = new ContentIdToContentIterator(context,
                 parameters.getContentIds(), parameters.isStopOnException());
 
+        this.maxDepth = parameters.getDepth();
+        
         while (it.hasNext()) {
             ContentRead content = it.next();
 
@@ -62,7 +63,7 @@ public class ModelInspectTool implements Tool<ContentIdListParameters> {
     		}
     		System.out.println();
     		//System.out.println(" #" + attribute.getClass().getSimpleName() + "#");
-    		if (modelDepth >= MAX_MODEL_DEPTH) {
+    		if (modelDepth >= maxDepth) {
     			return;
     		}
         	for (String attributeName : model.getAttributeNames()) {
@@ -75,9 +76,9 @@ public class ModelInspectTool implements Tool<ContentIdListParameters> {
     	    Iterable<Model> modelList = (Iterable<Model>) attribute;
     	    System.out.print("[C:" + modelList.getClass().getName() + "]");
     	    int i = 0;
-    		for (Model model : modelList) {
+    		for (Object entry : modelList) {
     			modelDepth++;
-    		    printModel(parentPath + "[" + i + "]" + ".", model);
+    		    printModel(parentPath + "[" + i + "]" + ".", entry);
     		    modelDepth--;
     		    i++;
     		}
