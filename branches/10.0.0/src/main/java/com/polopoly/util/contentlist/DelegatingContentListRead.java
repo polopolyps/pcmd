@@ -50,7 +50,7 @@ public class DelegatingContentListRead {
 
     @SuppressWarnings("unchecked")
     @Deprecated
-    public List<ContentReference> getTocEntryIds() throws CMException {
+    public List<ContentId> getTocEntryIds() throws CMException {
         return delegate.getTocEntryIds();
     }
 
