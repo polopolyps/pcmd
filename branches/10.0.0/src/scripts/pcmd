@@ -2,9 +2,10 @@
 
 dir=`dirname $0`
 
-version=9.16-SNAPSHOT
-polopolyversion=9.16
+version=10.0.0-SNAPSHOT
+polopolyversion=10.0.0
 luceneversion=2.3.1
+solrversion=1.4.1
 
 # if the JAR doesn't exist in the current directory, this is probably
 # a symlink to the script
@@ -64,6 +65,11 @@ then
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
       <version>1.9.1</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.solr</groupId>
+    	<artifactId>solr-solrj</artifactId>
+    	<version>1.4.1</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
@@ -178,6 +184,25 @@ then
     classpath=$classpath:$lucenejar
 else
     echo "Could not find Lucene JAR, neither in $peardir/../install, nor in $bin nor in $lucenejar.";
+    exit;
+fi
+
+if [ ! -f "$solrjar" ]
+then
+    solrjar=~/.m2/repository/org/apache/solr/solr-solrj/$solrversion/solr-solrj-$solrversion.jar
+fi
+
+if [ ! -f "$solrjar" ] 
+then 
+    cd $dir
+    mvn dependency:resolve
+fi
+
+if [ -f "$solrjar" ]
+then
+    classpath=$classpath:$solrjar
+else
+    echo "Could not find SOLR JAR, neither in maven repository";
     exit;
 fi
 
