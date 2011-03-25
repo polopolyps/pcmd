@@ -10,7 +10,7 @@
      <pcmd.version>0-SNAPSHOT</pcmd.version>
   </properties>
   
-  <version>${polopoly.version}${pcmd.version}</version>
+  <version>${polopoly.version}.${pcmd.version}</version>
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <plugins>
