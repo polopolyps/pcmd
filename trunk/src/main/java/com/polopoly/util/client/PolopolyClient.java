@@ -22,6 +22,8 @@ import com.polopoly.community.client.CommunityClient;
 import com.polopoly.management.ManagedBeanRegistry;
 import com.polopoly.management.jmx.JMXManagedBeanRegistry;
 import com.polopoly.poll.client.PollClient;
+import com.polopoly.search.solr.SolrIndexName;
+import com.polopoly.search.solr.SolrSearchClient;
 import com.polopoly.statistics.client.StatisticsClient;
 import com.polopoly.statistics.message.logging.UDPLogMsgClient;
 import com.polopoly.user.server.AuthenticationFailureException;
@@ -59,7 +61,13 @@ public class PolopolyClient {
 
 	private boolean attachLRUSynchronizedUpdateCache;
 
-	public String getApplicationName() {
+	private boolean attachSolrSearchClient = true;
+
+	public boolean isAttachSolrSearchClient() {
+        return attachSolrSearchClient;
+    }
+
+    public String getApplicationName() {
 		return applicationName;
 	}
 
@@ -112,6 +120,7 @@ public class PolopolyClient {
 		RmiSearchClient searchClient = null;
 		StatisticsClient statisticsClient = null;
 		UDPLogMsgClient logMsgClient = null;
+		SolrSearchClient solrSearchClient = null;
 
 		try {
 			// Create connection properties from an URL.
@@ -158,6 +167,12 @@ public class PolopolyClient {
 			if (isAttachSearchService()) {
 				searchClient = new RmiSearchClient();
 				app.addApplicationComponent(searchClient);
+			}
+			
+			if (isAttachSolrSearchClient()) {
+			    solrSearchClient = new SolrSearchClient(cmClient);
+			    solrSearchClient.setIndexName(new SolrIndexName("public"));
+			    app.addApplicationComponent(solrSearchClient);
 			}
 
 			if (isAttachPollService()) {
@@ -317,4 +332,8 @@ public class PolopolyClient {
 	protected void setUpLRUSynchronizedUpdateCache(
 			LRUSynchronizedUpdateCache cache) {
 	}
+
+    public void setAttachSolrSearchClient(boolean attachSolrSearchClient) {
+        this.attachSolrSearchClient = attachSolrSearchClient;
+    }
 }
