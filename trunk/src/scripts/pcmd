@@ -3,7 +3,7 @@
 dir=`dirname $0`
 
 version=10.0.0-SNAPSHOT
-polopolyversion=10.0.0
+polopolyversion=10.0
 luceneversion=2.3.1
 solrversion=1.4.1
 
@@ -67,15 +67,9 @@ then
       <version>1.9.1</version>
     </dependency>
     <dependency>
-<<<<<<< HEAD
     	<groupId>org.apache.solr</groupId>
     	<artifactId>solr-solrj</artifactId>
     	<version>1.4.1</version>
-=======
-      <groupId>org.apache.solr</groupId>
-      <artifactId>solr-core</artifactId>
-      <version>1.4.0</version>
->>>>>>> Included solr jar lookup in pcmd run script.
     </dependency>
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
@@ -194,29 +188,20 @@ else
     exit;
 fi
 
-<<<<<<< HEAD
-if [ ! -f "$solrjar" ]
-then
+if [ ! -f "$solrjar" ]; then
     solrjar=~/.m2/repository/org/apache/solr/solr-solrj/$solrversion/solr-solrj-$solrversion.jar
 fi
 
-if [ ! -f "$solrjar" ] 
-then 
+if [ ! -f "$solrjar" ]; then 
     cd $dir
     mvn dependency:resolve
 fi
 
-=======
->>>>>>> Included solr jar lookup in pcmd run script.
 if [ -f "$solrjar" ]
 then
     classpath=$classpath:$solrjar
 else
-<<<<<<< HEAD
     echo "Could not find SOLR JAR, neither in maven repository";
-=======
-    echo "Could not find Solr JAR in $peardir/../install"
->>>>>>> Included solr jar lookup in pcmd run script.
     exit;
 fi
 
