@@ -67,9 +67,15 @@ then
       <version>1.9.1</version>
     </dependency>
     <dependency>
+<<<<<<< HEAD
     	<groupId>org.apache.solr</groupId>
     	<artifactId>solr-solrj</artifactId>
     	<version>1.4.1</version>
+=======
+      <groupId>org.apache.solr</groupId>
+      <artifactId>solr-core</artifactId>
+      <version>1.4.0</version>
+>>>>>>> Included solr jar lookup in pcmd run script.
     </dependency>
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
@@ -121,6 +127,7 @@ if [ "" != "$peardir" ]
 then
     polopolyjar=$peardir/../install/lib/polopoly.jar
     lucenejar=$peardir/../install/lib/lucene-core-2.3.1.jar
+    solrjar=$peardir/../install/lib/solr-solrj-1.4.0.jar
     classpath=$classpath:$peardir/../install/lib/metadata-extractor-2.3.1.jar
     
     if [ ! -f "$lucenejar" ]
@@ -187,6 +194,7 @@ else
     exit;
 fi
 
+<<<<<<< HEAD
 if [ ! -f "$solrjar" ]
 then
     solrjar=~/.m2/repository/org/apache/solr/solr-solrj/$solrversion/solr-solrj-$solrversion.jar
@@ -198,11 +206,17 @@ then
     mvn dependency:resolve
 fi
 
+=======
+>>>>>>> Included solr jar lookup in pcmd run script.
 if [ -f "$solrjar" ]
 then
     classpath=$classpath:$solrjar
 else
+<<<<<<< HEAD
     echo "Could not find SOLR JAR, neither in maven repository";
+=======
+    echo "Could not find Solr JAR in $peardir/../install"
+>>>>>>> Included solr jar lookup in pcmd run script.
     exit;
 fi
 
