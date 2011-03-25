@@ -3,6 +3,7 @@ package com.polopoly.pcmd.tool;
 import static com.polopoly.pcmd.util.Plural.count;
 
 import com.polopoly.cm.ContentId;
+import com.polopoly.cm.LockInfo;
 import com.polopoly.cm.app.util.impl.DBSearchUtil;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
@@ -59,18 +60,19 @@ public class UnlockTool implements Tool<UnlockParameters> {
     private void unlockAll(PolopolyContext context) {
         System.err.println("Unlocking all locked content.");
 
-        SearchExpression searchExpr =
-            DBSearchUtil.getLockedContentExpr(ContentId.UNDEFINED_MAJOR, null);
+//        SearchExpression searchExpr =
+//            DBSearchUtil.getLockedContentExpr(ContentId.UNDEFINED_MAJOR, null);
 
         try {
-            ContentId[] locked =
-                context.getPolicyCMServer().findContentIdsBySearchExpression(searchExpr);
+            LockInfo[] allLocks = context.getPolicyCMServer().findAllLocks();
+            
+//            ContentId[] locked =
+//                context.getPolicyCMServer().findContentIdsBySearchExpression(searchExpr);
 
-            System.out.println(count(locked.length, "object") + " are locked.");
+            System.out.println(count(allLocks.length, "object") + " are locked.");
 
-            for (int i = 0; i < locked.length;i++) {
-                ContentId id = locked[i];
-
+            for (int i = 0; i < allLocks.length;i++) {
+                ContentId id = allLocks[i].getLocked();
                 unlock(id, context);
             }
         } catch (CMException e) {

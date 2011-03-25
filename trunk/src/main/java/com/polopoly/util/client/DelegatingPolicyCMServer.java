@@ -308,4 +308,8 @@ public class DelegatingPolicyCMServer implements PolicyCMServer {
         return delegate;
     }
 
+    public LockInfo[] findAllLocks() throws CMException {
+        return delegate.findAllLocks();
+    }
+
 }
