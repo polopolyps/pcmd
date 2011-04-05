@@ -5,7 +5,7 @@
   <packaging>jar</packaging>
   <name>Polopoly Command Tool</name>
   <properties>
-     <polopoly.version>9-16-1-fp4-r57513</polopoly.version>
+     <polopoly.version>9.16.1-fp11-r58495</polopoly.version>
      <pcmd.version>-SNAPSHOT</pcmd.version>
   </properties>
   
@@ -80,11 +80,16 @@
       <name>Polopoly solutions repository</name>
       <url>http://prodtest00.polopoly.com/solutions/maven2</url>
     </repository>
+    <repository>
+      <id>polopoly-public</id>
+      <name>Polopoly Public</name>
+      <url>http://maven.polopoly.com/nexus/content/groups/polopoly-public</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>com.polopoly</groupId>
-      <artifactId>polopoly</artifactId>
+      <groupId>com.polopoly.assemblies</groupId>
+      <artifactId>polopoly-client-jar</artifactId>
       <version>${polopoly.version}</version>
     </dependency>
     <dependency>

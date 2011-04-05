@@ -2,8 +2,8 @@
 
 dir=`dirname $0`
 
-version=9.16-SNAPSHOT
-polopolyversion=9.16
+version=9.16.1-fp11-r58495-SNAPSHOT
+polopolyversion=9.16.1-fp11-r58495
 luceneversion=2.3.1
 
 # if the JAR doesn't exist in the current directory, this is probably
@@ -33,11 +33,16 @@ then
       <name>Polopoly solutions repository</name>
       <url>http://prodtest00.polopoly.com/solutions/maven2</url>
     </repository>
+    <repository>
+      <id>polopoly-public</id>
+      <name>Polopoly Public</name>
+      <url>http://maven.polopoly.com/nexus/content/groups/polopoly-public</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>com.polopoly</groupId>
-      <artifactId>polopoly</artifactId>
+      <groupId>com.polopoly.assemblies</groupId>
+      <artifactId>polopoly-client-jar</artifactId>
       <version>$polopolyversion</version>
     </dependency>
     <dependency>
