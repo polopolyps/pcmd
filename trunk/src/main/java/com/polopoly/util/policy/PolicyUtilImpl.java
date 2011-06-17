@@ -218,10 +218,11 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
 			ContentId result = getChildPolicy(field, SingleReference.class)
 					.getReference();
 
-			if (result == null)
-				return null;
-			else
+			if (result != null) {
 				return util(result, getContext());
+			} else {
+				return null;
+			}
 		} catch (CMException e) {
 			throw new PolicyGetException("Could not get field " + field
 					+ " in " + this + ": " + e.getMessage(), e);

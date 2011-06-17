@@ -6,8 +6,8 @@
   <packaging>jar</packaging>
   <name>Polopoly Command Tool</name>
   <properties>
-     <polopoly.version>10.0</polopoly.version>
-     <pcmd.version>0-SNAPSHOT</pcmd.version>
+    <polopoly.version>10-1-DR1-r58876</polopoly.version>
+    <pcmd.version>-SNAPSHOT</pcmd.version>
   </properties>
   <version>${polopoly.version}.${pcmd.version}</version>
   <build>

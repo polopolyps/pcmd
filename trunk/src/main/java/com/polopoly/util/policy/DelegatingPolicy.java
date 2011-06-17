@@ -13,109 +13,119 @@ import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.cm.policy.PrepareResult;
 
 public class DelegatingPolicy implements Policy {
-    private Policy delegate;
+	private Policy delegate;
 
-    public DelegatingPolicy(Policy delegate) {
-        this.delegate = delegate;
-    }
+	public DelegatingPolicy(Policy delegate) {
+		if (delegate == null) {
+			throw new IllegalArgumentException("Null delegate supplied.");
+		}
 
-    public Policy getChildPolicy(String name) throws CMException {
-        return delegate.getChildPolicy(name);
-    }
+		this.delegate = delegate;
+	}
 
-    @SuppressWarnings("unchecked")
-    public List<String> getChildPolicyNames() throws CMException {
-        return delegate.getChildPolicyNames();
-    }
+	public Policy getChildPolicy(String name) throws CMException {
+		return delegate.getChildPolicy(name);
+	}
 
-    public PolicyCMServer getCMServer() throws CMException {
-        return delegate.getCMServer();
-    }
+	@SuppressWarnings("unchecked")
+	public List<String> getChildPolicyNames() throws CMException {
+		return delegate.getChildPolicyNames();
+	}
 
-    public String getComponent(String name) throws CMException {
-        return delegate.getComponent(name);
-    }
+	public PolicyCMServer getCMServer() throws CMException {
+		return delegate.getCMServer();
+	}
 
-    public String[] getComponentNames() throws CMException {
-        return delegate.getComponentNames();
-    }
+	public String getComponent(String name) throws CMException {
+		return delegate.getComponent(name);
+	}
 
-    public Content getContent() {
-        return delegate.getContent();
-    }
+	public String[] getComponentNames() throws CMException {
+		return delegate.getComponentNames();
+	}
 
-    public VersionedContentId getContentId() {
-        return delegate.getContentId();
-    }
+	public Content getContent() {
+		return delegate.getContent();
+	}
 
-    public ContentId getContentReference(String name) throws CMException {
-        return delegate.getContentReference(name);
-    }
+	public VersionedContentId getContentId() {
+		return delegate.getContentId();
+	}
 
-    public String[] getContentReferenceNames() throws CMException {
-        return delegate.getContentReferenceNames();
-    }
+	public ContentId getContentReference(String name) throws CMException {
+		return delegate.getContentReference(name);
+	}
 
-    public InputTemplate getInputTemplate() throws CMException {
-        return delegate.getInputTemplate();
-    }
+	public String[] getContentReferenceNames() throws CMException {
+		return delegate.getContentReferenceNames();
+	}
 
-    public OutputTemplate getOutputTemplate(String mode) throws CMException {
-        return delegate.getOutputTemplate(mode);
-    }
+	public InputTemplate getInputTemplate() throws CMException {
+		return delegate.getInputTemplate();
+	}
 
-    public Policy getParentPolicy() throws CMException {
-        return delegate.getParentPolicy();
-    }
+	public OutputTemplate getOutputTemplate(String mode) throws CMException {
+		return delegate.getOutputTemplate(mode);
+	}
 
-    public String getPolicyName() throws CMException {
-        return delegate.getPolicyName();
-    }
+	public Policy getParentPolicy() throws CMException {
+		return delegate.getParentPolicy();
+	}
 
-    public void init(String name, Content[] contents,
-            InputTemplate inputTemplate, Policy parentPolicy,
-            PolicyCMServer cmServer) {
-        delegate.init(name, contents, inputTemplate, parentPolicy, cmServer);
-    }
+	public String getPolicyName() throws CMException {
+		return delegate.getPolicyName();
+	}
 
-    public void postCommit() throws CMException {
-        throw new IllegalStateException("This method should never be called in a delegating policy.");
-    }
+	public void init(String name, Content[] contents,
+			InputTemplate inputTemplate, Policy parentPolicy,
+			PolicyCMServer cmServer) {
+		delegate.init(name, contents, inputTemplate, parentPolicy, cmServer);
+	}
 
-    public void postCreate() throws CMException {
-        throw new IllegalStateException("This method should never be called in a delegating policy.");
-    }
+	public void postCommit() throws CMException {
+		throw new IllegalStateException(
+				"This method should never be called in a delegating policy.");
+	}
 
-    public void postCreateNewVersion() throws CMException {
-        throw new IllegalStateException("This method should never be called in a delegating policy.");
-    }
+	public void postCreate() throws CMException {
+		throw new IllegalStateException(
+				"This method should never be called in a delegating policy.");
+	}
 
-    public void preAbort() throws CMException {
-        throw new IllegalStateException("This method should never be called in a delegating policy.");
-    }
+	public void postCreateNewVersion() throws CMException {
+		throw new IllegalStateException(
+				"This method should never be called in a delegating policy.");
+	}
 
-    public void preCommit() throws CMException {
-        throw new IllegalStateException("This method should never be called in a delegating policy.");
-    }
+	public void preAbort() throws CMException {
+		throw new IllegalStateException(
+				"This method should never be called in a delegating policy.");
+	}
 
-    public PrepareResult prepare() throws CMException {
-        return delegate.prepare();
-    }
+	public void preCommit() throws CMException {
+		throw new IllegalStateException(
+				"This method should never be called in a delegating policy.");
+	}
 
-    public void removePolicyData() throws CMException {
-        throw new IllegalStateException("This method should never be called in a delegating policy.");
-    }
+	public PrepareResult prepare() throws CMException {
+		return delegate.prepare();
+	}
 
-    public void setComponent(String name, String value) throws CMException {
-        delegate.setComponent(name, value);
-    }
+	public void removePolicyData() throws CMException {
+		throw new IllegalStateException(
+				"This method should never be called in a delegating policy.");
+	}
 
-    public void setContentReference(String name, ContentId ref)
-            throws CMException {
-        delegate.setContentReference(name, ref);
-    }
+	public void setComponent(String name, String value) throws CMException {
+		delegate.setComponent(name, value);
+	}
 
-    public void setPolicyName(String newName) throws CMException {
-        delegate.setPolicyName(newName);
-    }
+	public void setContentReference(String name, ContentId ref)
+			throws CMException {
+		delegate.setContentReference(name, ref);
+	}
+
+	public void setPolicyName(String newName) throws CMException {
+		delegate.setPolicyName(newName);
+	}
 }
