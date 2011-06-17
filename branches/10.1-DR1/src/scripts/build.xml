@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project name="pcmd" default="pcmd" basedir="." xmlns:polopoly="http://www.polopoly.com/ANT1.6">
+  <!-- Overrides location of polopoly installation root. -->
+  <property name="polopoly.dir" location="/projects/myproject/dist/polopoly" />
+
+  <target name="pcmd">
+    <path id="client.classpath">
+      <fileset dir="${polopoly.dir}/custom/client-lib">
+        <include name="**/*.jar" />
+        <include name="**/*.zip" />
+      </fileset>
+      <fileset file="${polopoly.dir}/install/lib">
+        <include name="**/*.jar" />
+      </fileset>
+      <fileset dir="${polopoly.dir}/pear/jar-repository">
+        <include name="**/*.jar" />
+        <include name="**/*.zip" />
+      </fileset>
+    </path>
+
+    <path id="pcmd.classpath">
+      <path refid="client.classpath"/>
+      <fileset dir="${polopoly.dir}/ant/lib">
+        <include name="**/*.jar" />
+      </fileset>
+    </path>
+    <java fork="true" clonevm="true" classname="org.apache.tools.ant.launch.Launcher" classpathref="pcmd.classpath">
+      <arg value="-f"/>
+      <arg value="pcmd.xml"/>
+    </java>
+  </target>
+</project>
+
