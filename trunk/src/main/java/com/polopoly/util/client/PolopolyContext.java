@@ -21,6 +21,7 @@ import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.cm.search.index.RmiSearchClient;
 import com.polopoly.poll.client.PollClient;
 import com.polopoly.poll.client.PollManager;
+import com.polopoly.search.solr.SolrSearchClient;
 import com.polopoly.user.server.Caller;
 import com.polopoly.user.server.UserId;
 import com.polopoly.user.server.UserServer;
@@ -37,6 +38,7 @@ import com.polopoly.util.exception.NotAcceptedByFilterException;
 import com.polopoly.util.exception.PolicyCreateException;
 import com.polopoly.util.exception.PolicyGetException;
 import com.polopoly.util.exception.PolicyModificationException;
+import com.polopoly.util.exception.ServiceUnattachedException;
 import com.polopoly.util.exception.UserNotFoundException;
 import com.polopoly.util.exception.UserNotLoggedInException;
 import com.polopoly.util.policy.PolicyModification;
@@ -52,6 +54,9 @@ public class PolopolyContext {
     private RmiSearchClient searchClient;
 
     private PollClient pollClient;
+    
+    private SolrSearchClient solrSearchClientPublic;
+    private SolrSearchClient solrSearchClientInternal;
 
     private CmClient client;
 
@@ -64,13 +69,17 @@ public class PolopolyContext {
                 (RmiSearchClient) application
                         .getApplicationComponent(RmiSearchClient.DEFAULT_COMPOUND_NAME),
                 (PollClient) application
-                        .getApplicationComponent(PollClient.DEFAULT_COMPOUND_NAME));
+                        .getApplicationComponent(PollClient.DEFAULT_COMPOUND_NAME),
+                (SolrSearchClient) application
+                		.getApplicationComponent(SolrSearchClient.DEFAULT_COMPOUND_NAME),
+                (SolrSearchClient) application
+                		.getApplicationComponent("solrClientInternal"));
 
         this.application = application;
     }
 
     public PolopolyContext(CmClient cmClient, RmiSearchClient searchClient,
-            PollClient pollClient) {
+            PollClient pollClient, SolrSearchClient solrSearchClientPublic, SolrSearchClient solrSearchClientInternal) {
         this.client = cmClient;
 
         if (cmClient != null) {
@@ -78,8 +87,9 @@ public class PolopolyContext {
         }
 
         this.pollClient = pollClient;
-
         this.searchClient = searchClient;
+        this.solrSearchClientPublic = solrSearchClientPublic;
+        this.solrSearchClientInternal = solrSearchClientInternal;
     }
 
     public PolopolyContext(PolicyCMServer server) {
@@ -92,6 +102,8 @@ public class PolopolyContext {
         this.client = context.client;
         this.server = context.server;
         this.pollClient = context.pollClient;
+        this.solrSearchClientPublic = context.solrSearchClientPublic;
+        this.solrSearchClientInternal = context.solrSearchClientInternal;
     }
 
     public PolicyCMServer getPolicyCMServer() {
@@ -116,25 +128,41 @@ public class PolopolyContext {
         return client.getUserServer();
     }
 
-    public PollManager getPollManager() {
+    public PollManager getPollManager() throws ServiceUnattachedException {
         return getPollClient().getPollManager();
     }
 
-    public PollClient getPollClient() {
+    public PollClient getPollClient() throws ServiceUnattachedException {
         if (pollClient == null) {
-            throw new CMRuntimeException("Poll client is not attached.");
+            throw new ServiceUnattachedException("Poll client");
         }
 
         return pollClient;
     }
 
+    public SolrSearchClient getSolrSearchClientPublic() throws ServiceUnattachedException {
+    	if (solrSearchClientPublic == null) {
+    		throw new ServiceUnattachedException("SOLR client");
+    	}
+    	
+    	return solrSearchClientPublic;
+    }
+
+    public SolrSearchClient getSolrSearchClientInternal() throws ServiceUnattachedException {
+    	if (solrSearchClientPublic == null) {
+    		throw new ServiceUnattachedException("SOLR client");
+    	}
+    	
+    	return solrSearchClientInternal;
+    }
+    
     public CmClient getCmClient() {
         return client;
     }
 
-    public RmiSearchClient getSearchClient() {
+    public RmiSearchClient getSearchClient() throws ServiceUnattachedException {
         if (searchClient == null) {
-            throw new CMRuntimeException("Search service is not attached.");
+            throw new ServiceUnattachedException("Search service");
         }
 
         return searchClient;

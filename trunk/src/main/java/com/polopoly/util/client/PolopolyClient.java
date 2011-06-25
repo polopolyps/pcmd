@@ -43,8 +43,12 @@ public class PolopolyClient {
 	private boolean attachSearchService = true;
 
 	private boolean attachStatisticsService = true;
+	
+	private boolean attachSolrSearchClient = true;
 
 	private boolean attachPollService = false;
+
+	private boolean attachLRUSynchronizedUpdateCache = false;
 
 	private List<Class<? extends ContentFilter>> contentFilterClasses = new ArrayList<Class<? extends ContentFilter>>();
 
@@ -56,12 +60,6 @@ public class PolopolyClient {
 			javaUtilLogger.log(Level.INFO, logMessage);
 		}
 	};
-
-	private PollClient pollClient;
-
-	private boolean attachLRUSynchronizedUpdateCache;
-
-	private boolean attachSolrSearchClient = true;
 
 	public boolean isAttachSolrSearchClient() {
         return attachSolrSearchClient;
@@ -121,6 +119,7 @@ public class PolopolyClient {
 		StatisticsClient statisticsClient = null;
 		UDPLogMsgClient logMsgClient = null;
 		SolrSearchClient solrSearchClient = null;
+		PollClient pollClient = null;
 
 		try {
 			// Create connection properties from an URL.

@@ -14,6 +14,7 @@ import com.polopoly.pcmd.argument.Parameters;
 import com.polopoly.pcmd.tool.HelpParameters;
 import com.polopoly.pcmd.tool.HelpTool;
 import com.polopoly.pcmd.tool.RequiresIndexServer;
+import com.polopoly.pcmd.tool.RequiresSolr;
 import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.pcmd.util.ToolRetriever;
 import com.polopoly.pcmd.util.ToolRetriever.NoSuchToolException;
@@ -49,6 +50,7 @@ public class Main {
             PcmdPolopolyClient client = new PcmdPolopolyClient();
             client.setAttachStatisticsService(false);
             client.setAttachSearchService(tool instanceof RequiresIndexServer);
+            client.setAttachSolrSearchClient(tool instanceof RequiresSolr);
 
             new ClientFromArgumentsConfigurator(client, arguments).configure();
             context = client.connect();
