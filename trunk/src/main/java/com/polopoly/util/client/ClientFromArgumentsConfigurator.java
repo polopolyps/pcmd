@@ -1,13 +1,13 @@
 package com.polopoly.util.client;
 
 
-import com.polopoly.pcmd.PcmdPolopolyClient;
-import com.polopoly.pcmd.argument.ArgumentException;
-import com.polopoly.pcmd.argument.Arguments;
-import com.polopoly.pcmd.argument.NotProvidedException;
-import com.polopoly.pcmd.argument.ParameterHelp;
-import com.polopoly.pcmd.parser.CreatingDirectoryParser;
-import com.polopoly.pcmd.parser.IntegerParser;
+import com.polopoly.ps.pcmd.PcmdPolopolyClient;
+import com.polopoly.ps.pcmd.argument.ArgumentException;
+import com.polopoly.ps.pcmd.argument.Arguments;
+import com.polopoly.ps.pcmd.argument.NotProvidedException;
+import com.polopoly.ps.pcmd.argument.ParameterHelp;
+import com.polopoly.ps.pcmd.parser.CreatingDirectoryParser;
+import com.polopoly.ps.pcmd.parser.IntegerParser;
 
 public class ClientFromArgumentsConfigurator {
     private PcmdPolopolyClient client;

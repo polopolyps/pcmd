@@ -30,7 +30,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.polopoly.pcmd.Main</mainClass>
+                            <mainClass>com.polopoly.ps.pcmd.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
