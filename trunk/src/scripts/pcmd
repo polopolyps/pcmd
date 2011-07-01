@@ -23,7 +23,7 @@ then
     cat > $dir/pom.xml <<-EOF
 <?xml version="1.0" encoding="UTF-8"?><project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.polopoly</groupId>
+  <groupId>com.polopoly.ps</groupId>
   <artifactId>pcmd-client</artifactId>
   <packaging>pom</packaging>
   <name>Polopoly Command Tool</name>
@@ -33,14 +33,18 @@ then
       <id>solutions</id>
       <name>Polopoly solutions repository</name>
       <url>http://prodtest00.polopoly.com/solutions/maven2</url>
+      <snapshots>
+				<enabled>false</enabled>
+	  </snapshots>
     </repository>
   </repositories>
   <dependencies>
-    <dependency>
-      <groupId>com.polopoly</groupId>
-      <artifactId>polopoly</artifactId>
-      <version>$polopolyversion</version>
-    </dependency>
+  
+	<dependency>
+	  <groupId>com.polopoly.assemblies</groupId>
+	  <artifactId>polopoly-jar</artifactId>
+	  <version>$polopolyversion</version>
+	</dependency>
     <dependency>
       <groupId>com.polopoly.ps</groupId>
       <artifactId>pcmd</artifactId>
@@ -137,7 +141,7 @@ fi
 
 if [ ! -f "$polopolyjar" ] 
 then
-    polopolyjar=~/.m2/repository/com/polopoly/polopoly/$polopolyversion/polopoly-$polopolyversion.jar 
+    polopolyjar=~/.m2/repository/com/polopoly/assemblies/polopoly-jar/$polopolyversion/polopoly-jar-$polopolyversion.jar 
 fi
 
 if [ ! -f "$polopolyjar" ] 
@@ -257,7 +261,7 @@ jar=$dir/pcmd-$version.jar
 if [ ! -f "$jar" ]
 then
     # check if we can use JAR from MVN repository rather than current dir
-    jar=~/.m2/repository/com/polopoly/pcmd/$version/pcmd-$version.jar
+    jar=~/.m2/repository/com/polopoly/ps/pcmd/$version/pcmd-$version.jar
 
     if [ ! -f $jar ]
     then
