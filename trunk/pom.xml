@@ -7,9 +7,9 @@
     <name>Polopoly Command Tool</name>
     <properties>
         <polopoly.version>10.2.0-fp1-r59173</polopoly.version>
-        <pcmd.version>-SNAPSHOT</pcmd.version>
+        <tool.version>-SNAPSHOT</tool.version>
     </properties>
-    <version>${polopoly.version}${pcmd.version}</version>
+    <version>${polopoly.version}${tool.version}</version>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
