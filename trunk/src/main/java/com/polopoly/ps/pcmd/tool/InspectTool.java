@@ -17,6 +17,7 @@ import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.ContentRead;
 import com.polopoly.cm.client.UserData;
 import com.polopoly.cm.client.WorkflowAware;
+import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.ps.pcmd.argument.ContentIdListParameters;
 import com.polopoly.ps.pcmd.field.content.AbstractContentIdField;
 import com.polopoly.ps.pcmd.field.content.ContentRefField;

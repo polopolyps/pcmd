@@ -2,6 +2,7 @@ package com.polopoly.ps.pcmd.tool;
 
 import java.rmi.RemoteException;
 
+import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.ps.pcmd.FatalToolException;
 import com.polopoly.ps.pcmd.field.content.AbstractPrincipalIdField;
 import com.polopoly.user.server.Caller;

@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.ejb.FinderException;
 
+import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.ps.pcmd.FatalToolException;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.Arguments;

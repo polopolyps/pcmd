@@ -1,6 +1,7 @@
 package com.polopoly.ps.pcmd.tool;
 
 import com.polopoly.cm.client.Content;
+import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.ps.pcmd.field.content.AbstractContentIdField;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.ContentIdToContentIterator;

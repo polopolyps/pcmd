@@ -1,9 +1,7 @@
 package com.polopoly.ps.pcmd;
 
-import com.polopoly.ps.pcmd.tool.Tool;
-
 /**
- * Throw in {@link Tool#execute(com.polopoly.util.client.PolopolyContext, com.polopoly.ps.pcmd.argument.Parameters)}
+ * Throw in {@link com.polopoly.pcmd.tool.Tool#execute(com.polopoly.util.client.PolopolyContext, com.polopoly.ps.pcmd.argument.Parameters)}
  * when a fatal error occurs that should interrupt execution.
  */
 public class FatalToolException extends RuntimeException {

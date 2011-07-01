@@ -2,8 +2,8 @@
 
 dir=`dirname $0`
 
-version=10.1-DR1-r58876-SNAPSHOT
-polopolyversion=10.1-DR1-r58876
+version=10.2.0-fp1-r59173-SNAPSHOT
+polopolyversion=10.2.0-fp1-r59173
 luceneversion=2.3.1
 solrversion=1.4.1
 
@@ -42,7 +42,7 @@ then
       <version>$polopolyversion</version>
     </dependency>
     <dependency>
-      <groupId>com.polopoly</groupId>
+      <groupId>com.polopoly.ps</groupId>
       <artifactId>pcmd</artifactId>
       <version>$version</version>
     </dependency>

@@ -3,6 +3,7 @@ package com.polopoly.ps.pcmd.tool;
 import java.util.Iterator;
 
 import com.polopoly.cm.ContentId;
+import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.Arguments;
 import com.polopoly.ps.pcmd.argument.ContentIdListParameters;

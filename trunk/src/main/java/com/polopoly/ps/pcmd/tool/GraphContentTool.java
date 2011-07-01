@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.ps.pcmd.tool.graphcontent.DefaultGraphStyler;
 import com.polopoly.ps.pcmd.tool.graphcontent.DotGraphRenderer;
 import com.polopoly.ps.pcmd.tool.graphcontent.GraphBuilder;

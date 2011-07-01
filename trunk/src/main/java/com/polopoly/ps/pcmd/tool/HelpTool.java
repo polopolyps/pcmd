@@ -2,6 +2,7 @@ package com.polopoly.ps.pcmd.tool;
 
 import java.util.ServiceLoader;
 
+import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.ps.pcmd.argument.ParameterHelp;
 import com.polopoly.ps.pcmd.util.ToolRetriever;
 import com.polopoly.ps.pcmd.util.ToolRetriever.NoSuchToolException;

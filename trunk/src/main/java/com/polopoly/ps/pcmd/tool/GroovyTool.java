@@ -1,6 +1,8 @@
 package com.polopoly.ps.pcmd.tool;
 
 import static com.polopoly.util.policy.Util.util;
+
+import com.polopoly.pcmd.tool.Tool;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 

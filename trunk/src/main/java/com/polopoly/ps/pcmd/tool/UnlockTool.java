@@ -4,12 +4,11 @@ import static com.polopoly.ps.pcmd.util.Plural.count;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.LockInfo;
-import com.polopoly.cm.app.util.impl.DBSearchUtil;
 import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.Content;
 import com.polopoly.cm.client.ContentRead;
-import com.polopoly.cm.search.db.SearchExpression;
+import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.ps.pcmd.FatalToolException;
 import com.polopoly.ps.pcmd.field.content.AbstractContentIdField;
 import com.polopoly.util.client.PolopolyContext;

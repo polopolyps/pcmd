@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.polopoly.cm.client.CMRuntimeException;
+import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.Arguments;
 import com.polopoly.ps.pcmd.argument.CommandLineArgumentParser;
@@ -15,7 +16,6 @@ import com.polopoly.ps.pcmd.tool.HelpParameters;
 import com.polopoly.ps.pcmd.tool.HelpTool;
 import com.polopoly.ps.pcmd.tool.RequiresIndexServer;
 import com.polopoly.ps.pcmd.tool.RequiresSolr;
-import com.polopoly.ps.pcmd.tool.Tool;
 import com.polopoly.ps.pcmd.util.ToolRetriever;
 import com.polopoly.ps.pcmd.util.ToolRetriever.NoSuchToolException;
 import com.polopoly.util.client.ClientFromArgumentsConfigurator;

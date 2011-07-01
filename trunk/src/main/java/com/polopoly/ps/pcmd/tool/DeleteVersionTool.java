@@ -7,6 +7,7 @@ import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.Content;
 import com.polopoly.cm.client.ContentRead;
+import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.ps.pcmd.argument.ContentIdListParameters;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.ContentIdToContentIterator;

@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 
 import javax.ejb.CreateException;
 
+import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.ps.pcmd.parser.ContentFieldListParser;
 import com.polopoly.user.server.Caller;
 import com.polopoly.user.server.InvalidSessionKeyException;

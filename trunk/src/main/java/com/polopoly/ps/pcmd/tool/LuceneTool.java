@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.List;
 
+import com.polopoly.pcmd.tool.Tool;
 import org.apache.lucene.search.Sort;
 
 import com.polopoly.cm.ContentId;

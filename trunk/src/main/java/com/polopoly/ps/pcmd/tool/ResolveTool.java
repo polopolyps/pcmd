@@ -3,6 +3,7 @@ package com.polopoly.ps.pcmd.tool;
 import java.util.Iterator;
 
 import com.polopoly.cm.ContentId;
+import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.ps.pcmd.argument.ContentIdListParameters;
 import com.polopoly.util.client.PolopolyContext;
 
