@@ -2,7 +2,7 @@
 
 dir=`dirname $0`
 
-version=10.2.0-fp1-r59173-1
+version=10.2.0-fp1-r59173-2
 polopolyversion=10.2.0-fp1-r59173
 luceneversion=2.3.1
 solrversion=1.4.1
@@ -80,6 +80,11 @@ then
       <artifactId>groovy-all</artifactId> 
       <version>1.6.1</version>
     </dependency>
+    <dependency>
+            <groupId>com.polopoly.ps</groupId>
+            <artifactId>hotdeploy-pcmd-tools</artifactId>
+            <version>10.2.0-fp1-r59173-2</version>
+    </dependency>
   </dependencies>
 </project>
 EOF
@@ -112,6 +117,9 @@ then
 fi
 
 classpath=$CLASSPATH
+
+classpath=$classpath:/projects/hotdeploy/target/hotdeploy-10.2.0-fp1-r59173-1.jar
+classpath=$classpath:/projects/hotdeploy-pcmd-tools/target/hotdeploy-pcmd-tools-10.2.0-fp1-r59173-1.jar
 
 if [ ! -f "$jbossjar" ] 
 then

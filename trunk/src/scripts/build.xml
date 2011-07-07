@@ -2,7 +2,7 @@
 
 <project name="pcmd" default="pcmd" basedir="." xmlns:polopoly="http://www.polopoly.com/ANT1.6">
   <!-- Overrides location of polopoly installation root. -->
-  <property name="polopoly.dir" location="/projects/myproject/dist/polopoly" />
+  <property name="polopoly.dir" location="/projects/mvntemplate/install/polopoly" />
 
   <target name="pcmd">
     <path id="client.classpath">
