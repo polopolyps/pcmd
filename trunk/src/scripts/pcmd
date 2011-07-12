@@ -2,8 +2,9 @@
 
 dir=`dirname $0`
 
-version=10.2.0-fp1-r59173-2
+toolversion=-2
 polopolyversion=10.2.0-fp1-r59173
+version=$polopolyversion$toolversion
 luceneversion=2.3.1
 solrversion=1.4.1
 
@@ -30,12 +31,19 @@ then
   <version>$version</version>
   <repositories>
     <repository>
-      <id>solutions</id>
-      <name>Polopoly solutions repository</name>
-      <url>http://prodtest00.polopoly.com/solutions/maven2</url>
-      <snapshots>
-      <enabled>false</enabled>
-      </snapshots>
+        <id>maven</id>
+        <name>Maven central repository</name>
+        <url>http://repo1.maven.org/maven2</url>
+    </repository>
+    <repository>
+        <id>polopoly-product</id>
+        <name>Polopoly repository</name>
+        <url>http://maven.polopoly.com/nexus/content/repositories/polopoly-product</url>
+    </repository>
+    <repository>
+        <id>professional-services</id>
+        <name>Professional Services</name>
+        <url>http://maven.polopoly.com/nexus/content/repositories/professional-services</url>
     </repository>
   </repositories>
   <dependencies>
@@ -45,6 +53,10 @@ then
       <version>$polopolyversion</version>
     </dependency>
     <dependency>
+      <groupId>com.polopoly.ps</groupId>
+      <artifactId>hotdeploy-pcmd-tools</artifactId>
+      <version>$version</version>
+    </dependency>
     <dependency>
       <groupId>com.polopoly.ps</groupId>
       <artifactId>pcmd</artifactId>
@@ -80,11 +92,6 @@ then
       <artifactId>groovy-all</artifactId> 
       <version>1.6.1</version>
     </dependency>
-    <dependency>
-            <groupId>com.polopoly.ps</groupId>
-            <artifactId>hotdeploy-pcmd-tools</artifactId>
-            <version>10.2.0-fp1-r59173-2</version>
-    </dependency>
   </dependencies>
 </project>
 EOF
@@ -118,8 +125,8 @@ fi
 
 classpath=$CLASSPATH
 
-classpath=$classpath:/projects/hotdeploy/target/hotdeploy-10.2.0-fp1-r59173-1.jar
-classpath=$classpath:/projects/hotdeploy-pcmd-tools/target/hotdeploy-pcmd-tools-10.2.0-fp1-r59173-1.jar
+classpath=$classpath:~/.m2/repository/com/polopoly/ps/hotdeploy/$version/hotdeploy-$version.jar
+classpath=$classpath:~/.m2/repository/com/polopoly/ps/hotdeploy-pcmd-tools/$version/hotdeploy-pcmd-tools-$version.jar
 
 if [ ! -f "$jbossjar" ] 
 then
