@@ -118,6 +118,12 @@
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-core</artifactId>
             <version>1.4.0</version>
+	    <exclusions>
+	      <exclusion>
+		<groupId>woodstox</groupId>
+		<artifactId>wstx-asl</artifactId>
+	      </exclusion>
+	    </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
@@ -148,6 +154,12 @@
             <version>1.4.1</version>
             <type>jar</type>
             <scope>compile</scope>
+	    <exclusions>
+	      <exclusion>
+		<groupId>org.codehaus.woodstox</groupId>
+		<artifactId>wstx-asl</artifactId>
+	      </exclusion>
+	    </exclusions>
         </dependency>
     </dependencies>
 </project>
