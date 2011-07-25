@@ -58,6 +58,20 @@
                     </execution>
                 </executions>
             </plugin>
+	    <plugin>
+	      <artifactId>maven-clean-plugin</artifactId>
+	      <configuration>
+		<filesets>
+		  <fileset>
+		    <directory>src/scripts</directory>
+		    <includes>
+		      <include>pom.xml</include>
+		    </includes>
+		    <followSymlinks>false</followSymlinks>
+		  </fileset>
+		</filesets>
+	      </configuration>
+	    </plugin>
         </plugins>
         <resources>
             <resource>
