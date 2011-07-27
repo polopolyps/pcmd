@@ -332,7 +332,7 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
 			policyModification.modify(result);
 
 			try {
-				getContent().commit();
+				getCMServer().commitContent((Policy) result);
 			} catch (CMException e) {
 				abort(server, createNewVersion);
 
