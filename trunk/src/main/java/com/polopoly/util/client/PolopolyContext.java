@@ -73,7 +73,7 @@ public class PolopolyContext {
                 (SolrSearchClient) application
                 		.getApplicationComponent(SolrSearchClient.DEFAULT_COMPOUND_NAME),
                 (SolrSearchClient) application
-                		.getApplicationComponent("solrClientInternal"));
+                		.getApplicationComponent("search_solrClientInternal"));
 
         this.application = application;
     }
@@ -142,15 +142,15 @@ public class PolopolyContext {
 
     public SolrSearchClient getSolrSearchClientPublic() throws ServiceUnattachedException {
     	if (solrSearchClientPublic == null) {
-    		throw new ServiceUnattachedException("SOLR client");
+    		throw new ServiceUnattachedException("SOLR client (public index)");
     	}
     	
     	return solrSearchClientPublic;
     }
 
     public SolrSearchClient getSolrSearchClientInternal() throws ServiceUnattachedException {
-    	if (solrSearchClientPublic == null) {
-    		throw new ServiceUnattachedException("SOLR client");
+    	if (solrSearchClientInternal == null) {
+    		throw new ServiceUnattachedException("SOLR client (internal index)");
     	}
     	
     	return solrSearchClientInternal;

@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.ejb.FinderException;
 
 import com.polopoly.application.ConnectionProperties;
+import com.polopoly.application.IllegalApplicationStateException;
 import com.polopoly.application.StandardApplication;
 import com.polopoly.cache.LRUSynchronizedUpdateCache;
 import com.polopoly.cm.client.CMServer;
@@ -118,7 +119,8 @@ public class PolopolyClient {
 		RmiSearchClient searchClient = null;
 		StatisticsClient statisticsClient = null;
 		UDPLogMsgClient logMsgClient = null;
-		SolrSearchClient solrSearchClient = null;
+		SolrSearchClient publicSolrSearchClient = null;
+		SolrSearchClient internalSolrSearchClient = null;
 		PollClient pollClient = null;
 
 		try {
@@ -169,9 +171,8 @@ public class PolopolyClient {
 			}
 			
 			if (isAttachSolrSearchClient()) {
-			    solrSearchClient = new SolrSearchClient(cmClient);
-			    solrSearchClient.setIndexName(new SolrIndexName("public"));
-			    app.addApplicationComponent(solrSearchClient);
+				publicSolrSearchClient = createSolrSearchClient(cmClient, app, "public");
+			    internalSolrSearchClient = createSolrSearchClient(cmClient, app, "internal");
 			}
 
 			if (isAttachPollService()) {
@@ -219,6 +220,24 @@ public class PolopolyClient {
 					"Error connecting to Polopoly server with connection URL "
 							+ connectionUrl + ": " + e, e);
 		}
+	}
+
+	private SolrSearchClient createSolrSearchClient(EjbCmClient cmClient,
+			final StandardApplication app, String indexName)
+			throws IllegalApplicationStateException {
+		SolrSearchClient result = new SolrSearchClient(SolrSearchClient.DEFAULT_MODULE_NAME, 
+				"solrClient" + firstCharacterUppercase(indexName),
+				cmClient);
+		
+		result.setIndexName(new SolrIndexName(indexName));
+		
+		app.addApplicationComponent(result);
+		
+		return result;
+	}
+
+	private String firstCharacterUppercase(String indexName) {
+		return Character.toUpperCase(indexName.charAt(0)) + indexName.substring(1);
 	}
 
 	/**
