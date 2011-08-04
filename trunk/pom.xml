@@ -7,7 +7,7 @@
     <name>Polopoly Command Tool</name>
     <properties>
         <polopoly.version>10.2.0-fp1-r59173</polopoly.version>
-        <tool.version>-3-SNAPSHOT</tool.version>
+        <tool.version>-3</tool.version>
     </properties>
     <version>${polopoly.version}${tool.version}</version>
     <distributionManagement>
