@@ -2,8 +2,8 @@
 
 dir=`dirname $0`
 
-toolversion=-1-SNAPSHOT
-polopolyversion=10.2.0-fp2-r59227
+toolversion=-$(echo pcmd-*.jar | grep -oE "[0-9]+\.jar" | grep -oE "[0-9]+")
+polopolyversion=$(echo pcmd-*.jar | grep -oE "([0-9]*\.[0-9]*\.[0-9]*)(-fp[0-9]+)?(-r[0-9]+)?")
 version=$polopolyversion$toolversion
 luceneversion=2.3.1
 solrversion=1.4.1
@@ -78,14 +78,9 @@ then
       <version>2.3.1</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-core</artifactId>
-      <version>1.9.1</version>
-    </dependency>
-    <dependency>
-    	<groupId>org.apache.solr</groupId>
-    	<artifactId>solr-solrj</artifactId>
-    	<version>1.4.1</version>
+     <groupId>org.apache.solr</groupId>
+     <artifactId>solr-solrj</artifactId>
+     <version>1.4.1</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
@@ -286,8 +281,8 @@ then
     
     if [ ! -f $jar ]
     then
-	echo "The JAR for PCMD did not exist either in $dir, nor in Maven repository $jar.";
-	exit;
+ echo "The JAR for PCMD did not exist either in $dir, nor in Maven repository $jar.";
+ exit;
     fi
 fi
 
