@@ -2,8 +2,8 @@
 
 dir=`dirname $0`
 
-toolversion=-3
-polopolyversion=10.2.0-fp1-r59173
+toolversion=-4
+polopolyversion=10.2.0-fp2-r59227
 version=$polopolyversion$toolversion
 luceneversion=2.3.1
 solrversion=1.4.1

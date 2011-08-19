@@ -6,8 +6,9 @@
     <packaging>jar</packaging>
     <name>Polopoly Command Tool</name>
     <properties>
-        <polopoly.version>10.2.0-fp1-r59173</polopoly.version>
-        <tool.version>-4-SNAPSHOT</tool.version>
+        <polopoly.version>10.2.0-fp2-r59227</polopoly.version>
+        <tool.version>-4</tool.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <version>${polopoly.version}${tool.version}</version>
     <distributionManagement>
