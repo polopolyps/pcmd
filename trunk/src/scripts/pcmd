@@ -2,7 +2,7 @@
 
 dir=`dirname $0`
 
-toolversion=-1
+toolversion=-1-SNAPSHOT
 polopolyversion=10.2.0-fp2-r59227
 version=$polopolyversion$toolversion
 luceneversion=2.3.1
