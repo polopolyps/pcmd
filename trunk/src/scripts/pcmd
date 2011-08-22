@@ -2,7 +2,7 @@
 
 dir=`dirname $0`
 
-toolversion=-$(echo pcmd-*.jar | grep -oE "[0-9]+\.jar" | grep -oE "[0-9]+")
+toolversion=-$(echo pcmd-*.jar | grep -oE "[0-9]+(\-SNAPSHOT)?\.jar" | grep -oE "[0-9]+(\-SNAPSHOT)?")
 polopolyversion=$(echo pcmd-*.jar | grep -oE "([0-9]*\.[0-9]*\.[0-9]*)(-fp[0-9]+)?(-r[0-9]+)?")
 version=$polopolyversion$toolversion
 luceneversion=2.3.1
