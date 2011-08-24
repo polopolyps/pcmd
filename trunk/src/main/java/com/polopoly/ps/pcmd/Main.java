@@ -55,7 +55,7 @@ public class Main {
 			client.setAttachSearchService(tool instanceof RequiresIndexServer);
 			client.setAttachSolrSearchClient(tool instanceof RequiresSolr);
 
-			if (!(tool instanceof DoesNotRequireRunningPolopoly) {
+			if (!(tool instanceof DoesNotRequireRunningPolopoly)) {
 				new ClientFromArgumentsConfigurator(client, arguments)
 						.configure();
 				context = client.connect();
