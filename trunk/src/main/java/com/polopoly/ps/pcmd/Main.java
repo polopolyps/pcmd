@@ -26,8 +26,6 @@ import com.polopoly.util.client.PolopolyContext;
 
 public class Main {
 	public static void main(String[] args) {
-		Logger.getLogger("").setLevel(Level.WARNING);
-
 		DefaultArguments arguments = null;
 
 		try {
@@ -37,6 +35,11 @@ public class Main {
 			System.exit(1);
 		}
 
+		main(arguments);
+	}
+
+	public static void main(DefaultArguments arguments) {
+		Logger.getLogger("").setLevel(Level.WARNING);
 		String toolName = null;
 
 		try {
