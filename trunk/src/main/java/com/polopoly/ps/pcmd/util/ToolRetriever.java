@@ -1,105 +1,136 @@
 package com.polopoly.ps.pcmd.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.util.CheckedCast;
 import com.polopoly.util.CheckedClassCastException;
 
 public class ToolRetriever {
-    public static class NoSuchToolException extends Exception {
-        public NoSuchToolException(String message) {
-            super(message);
-        }
-    }
+	public static class NoSuchToolException extends Exception {
+		public NoSuchToolException(String message) {
+			super(message);
+		}
+	}
 
-    private static final String TOOLS_PACKAGE = "com.polopoly.ps.pcmd.tool";
-    private static final String LEGACY_TOOLS_PACKAGE = "com.polopoly.pcmd.tool";
+	private static List<String> TOOLS_PACKAGES = new ArrayList<String>();
 
-    public   static Tool<?> getTool(String toolShortName) throws NoSuchToolException {
-        String toolClassName = toCamelCase(toolShortName) + "Tool";
+	static {
+		TOOLS_PACKAGES.add("com.polopoly.ps.pcmd.tool");
+		TOOLS_PACKAGES.add("com.polopoly.pcmd.tool");
+	}
 
-        Tool<?> tool;
+	public static Tool<?> getTool(String toolShortName)
+			throws NoSuchToolException {
+		String toolClassName = toCamelCase(toolShortName) + "Tool";
 
-        try {
-            try {
-                tool = CheckedCast.cast(Class.forName(TOOLS_PACKAGE + "." + toolClassName).newInstance(), Tool.class);
-            } catch (NoClassDefFoundError e) {
-                try {
-                    tool = CheckedCast.cast(Class.forName(LEGACY_TOOLS_PACKAGE + "." + toolClassName).newInstance(), Tool.class);
-                } catch (NoClassDefFoundError legacyException) {
-                    throw new NoSuchToolException("The tool " + toolClassName + " could not be instantiated: " + e);
-                }
-            }
-        } catch (CheckedClassCastException e) {
-            throw new NoSuchToolException("The tool " + toolClassName + " did not implement the Tool interface.");
-        } catch (InstantiationException e) {
-            throw new NoSuchToolException("The tool " + toolClassName + " could not be instantiated: " + e);
-        } catch (IllegalAccessException e) {
-            throw new NoSuchToolException("The tool " + toolClassName + " could not be instantiated: " + e);
-        } catch (ClassNotFoundException e) {
-            throw new NoSuchToolException("Tool \"" + toolShortName + "\" not found. Looked for implement in class " + toolClassName + ".");
-        }
+		Tool<?> tool = null;
 
-        return tool;
-    }
+		try {
+			for (String packageName : TOOLS_PACKAGES) {
+				try {
+					tool = CheckedCast.cast(
+							Class.forName(packageName + "." + toolClassName)
+									.newInstance(), Tool.class);
 
-    private static String toCamelCase(String tool) {
-        if (tool.length() == 0) {
-            return "";
-        }
+					break;
+				} catch (ClassNotFoundException e) {
+					// try next package;
+				}
+			}
 
-        StringBuffer result = new StringBuffer(tool.length());
+			if (tool == null) {
+				throw new NoSuchToolException(
+						"Tool \""
+								+ toolShortName
+								+ "\" not found. Looked for implementation in a class called "
+								+ toolClassName + " in packages "
+								+ TOOLS_PACKAGES + ".");
+			}
+		} catch (CheckedClassCastException e) {
+			throw new NoSuchToolException("The tool " + toolClassName
+					+ " did not implement the Tool interface.");
+		} catch (InstantiationException e) {
+			throw new NoSuchToolException("The tool " + toolClassName
+					+ " could not be instantiated: " + e);
+		} catch (IllegalAccessException e) {
+			throw new NoSuchToolException("The tool " + toolClassName
+					+ " could not be instantiated: " + e);
+		} catch (NoClassDefFoundError e) {
+			throw new NoSuchToolException("The tool " + toolClassName
+					+ " could not be instantiated: " + e);
+		}
 
-        boolean nextUppercase = true;
+		return tool;
+	}
 
-        for (int i = 0; i < tool.length(); i++) {
-            char ch = tool.charAt(i);
+	private static String toCamelCase(String tool) {
+		if (tool.length() == 0) {
+			return "";
+		}
 
-            if (ch == '-') {
-                nextUppercase = true;
-                continue;
-            }
+		StringBuffer result = new StringBuffer(tool.length());
 
-            if (nextUppercase) {
-                result.append(Character.toUpperCase(ch));
-                nextUppercase = false;
-            } else {
-                result.append(ch);
-            }
-        }
+		boolean nextUppercase = true;
 
-        return result.toString();
-    }
+		for (int i = 0; i < tool.length(); i++) {
+			char ch = tool.charAt(i);
 
-    private static String fromCamelCase(String name) {
-        if (name.length() == 0) {
-            return "";
-        }
+			if (ch == '-') {
+				nextUppercase = true;
+				continue;
+			}
 
-        StringBuffer result = new StringBuffer(name.length());
+			if (nextUppercase) {
+				result.append(Character.toUpperCase(ch));
+				nextUppercase = false;
+			} else {
+				result.append(ch);
+			}
+		}
 
-        for (int i = 0; i < name.length(); i++) {
-            char ch = name.charAt(i);
+		return result.toString();
+	}
 
-            if (Character.isUpperCase(ch)) {
-                if (result.length() > 0) {
-                    result.append('-');
-                }
-                result.append(Character.toLowerCase(ch));
-            } else {
-                result.append(ch);
-            }
-        }
+	private static String fromCamelCase(String name) {
+		if (name.length() == 0) {
+			return "";
+		}
 
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(name.length());
 
-    public static String getToolName(Class<?> toolClass) {
-        String name = toolClass.getSimpleName();
+		for (int i = 0; i < name.length(); i++) {
+			char ch = name.charAt(i);
 
-        if (name.endsWith("Tool")) {
-            name = name.substring(0, name.length() - 4);
-        }
+			if (Character.isUpperCase(ch)) {
+				if (result.length() > 0) {
+					result.append('-');
+				}
+				result.append(Character.toLowerCase(ch));
+			} else {
+				result.append(ch);
+			}
+		}
 
-        return fromCamelCase(name);
-    }
+		return result.toString();
+	}
+
+	public static String getToolName(Class<?> toolClass) {
+		String name = toolClass.getSimpleName();
+
+		if (name.endsWith("Tool")) {
+			name = name.substring(0, name.length() - 4);
+		}
+
+		return fromCamelCase(name);
+	}
+
+	public static void addToolsPackage(String packageName) {
+		TOOLS_PACKAGES.add(packageName);
+	}
+
+	public static void clearToolsPackages() {
+		TOOLS_PACKAGES.clear();
+	}
 }

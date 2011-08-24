@@ -12,6 +12,7 @@ import com.polopoly.ps.pcmd.argument.CommandLineArgumentParser;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.argument.NotProvidedException;
 import com.polopoly.ps.pcmd.argument.Parameters;
+import com.polopoly.ps.pcmd.tool.DoesNotRequireRunningPolopoly;
 import com.polopoly.ps.pcmd.tool.HelpParameters;
 import com.polopoly.ps.pcmd.tool.HelpTool;
 import com.polopoly.ps.pcmd.tool.RequiresIndexServer;
@@ -20,110 +21,118 @@ import com.polopoly.ps.pcmd.util.ToolRetriever;
 import com.polopoly.ps.pcmd.util.ToolRetriever.NoSuchToolException;
 import com.polopoly.util.client.ClientFromArgumentsConfigurator;
 import com.polopoly.util.client.ConnectException;
+import com.polopoly.util.client.DisconnectedPolopolyContext;
 import com.polopoly.util.client.PolopolyContext;
 
 public class Main {
-    public static void main(String[] args) {
-        Logger.getLogger("").setLevel(Level.WARNING);
+	public static void main(String[] args) {
+		Logger.getLogger("").setLevel(Level.WARNING);
 
-        DefaultArguments arguments = null;
-        try {
-            arguments = new CommandLineArgumentParser().parse(args);
-        } catch (ArgumentException e) {
-            System.err.println("Invalid parameters: " + e);
-            System.exit(1);
-        }
+		DefaultArguments arguments = null;
 
-        String toolName = null;
+		try {
+			arguments = new CommandLineArgumentParser().parse(args);
+		} catch (ArgumentException e) {
+			System.err.println("Invalid parameters: " + e);
+			System.exit(1);
+		}
 
-        try {
-            toolName = arguments.getToolName();
-        } catch (NotProvidedException e1) {
-            printToolList(arguments);
-        }
+		String toolName = null;
 
-        PolopolyContext context = null;
+		try {
+			toolName = arguments.getToolName();
+		} catch (NotProvidedException e1) {
+			printToolList(arguments);
+		}
 
-        try {
-            Tool<?> tool = ToolRetriever.getTool(toolName);
+		PolopolyContext context = null;
 
-            PcmdPolopolyClient client = new PcmdPolopolyClient();
-            client.setAttachStatisticsService(false);
-            client.setAttachSearchService(tool instanceof RequiresIndexServer);
-            client.setAttachSolrSearchClient(tool instanceof RequiresSolr);
+		try {
+			Tool<?> tool = ToolRetriever.getTool(toolName);
 
-            new ClientFromArgumentsConfigurator(client, arguments).configure();
-            context = client.connect();
-            arguments.setContext(context);
+			PcmdPolopolyClient client = new PcmdPolopolyClient();
+			client.setAttachStatisticsService(false);
+			client.setAttachSearchService(tool instanceof RequiresIndexServer);
+			client.setAttachSolrSearchClient(tool instanceof RequiresSolr);
 
-            try {
-                execute(tool, context, arguments);
-            } catch (FatalToolException e) {
-                System.err.println(e.getMessage());
-                System.exit(1);
-            } catch (CMRuntimeException e) {
-                if (e.getCause() instanceof Exception) {
-                    throw (Exception) e.getCause();
-                }
+			if (!(tool instanceof DoesNotRequireRunningPolopoly) {
+				new ClientFromArgumentsConfigurator(client, arguments)
+						.configure();
+				context = client.connect();
+			} else {
+				context = new DisconnectedPolopolyContext();
+			}
 
-                e.printStackTrace(System.err);
-                System.exit(1);
-            }
-        } catch (NoSuchToolException e) {
-            System.err.println(e.getMessage());
-            System.err
-                    .println("Call with \"help\" as argument to see a list of tools.");
-        } catch (ArgumentException e) {
-            System.err.println("Invalid parameters: " + e.getMessage());
+			arguments.setContext(context);
 
-            if (toolName != null) {
-                HelpParameters helpParameters = new HelpParameters();
-                helpParameters.setTool(toolName);
-                new HelpTool().execute(context, helpParameters);
-            }
-            System.exit(1);
-        } catch (ConnectException e) {
-            System.err.println(e.getMessage());
-            System.exit(1);
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-            System.exit(1);
-        }
+			try {
+				execute(tool, context, arguments);
+			} catch (FatalToolException e) {
+				System.err.println(e.getMessage());
+				System.exit(1);
+			} catch (CMRuntimeException e) {
+				if (e.getCause() instanceof Exception) {
+					throw (Exception) e.getCause();
+				}
 
-        System.exit(0);
-    }
+				e.printStackTrace(System.err);
+				System.exit(1);
+			}
+		} catch (NoSuchToolException e) {
+			System.err.println(e.getMessage());
+			System.err
+					.println("Call with \"help\" as argument to see a list of tools.");
+		} catch (ArgumentException e) {
+			System.err.println("Invalid parameters: " + e.getMessage());
 
-    private static void printToolList(Arguments arguments) {
-        HelpTool tool = new HelpTool();
-        HelpParameters parameters = tool.createParameters();
+			if (toolName != null) {
+				HelpParameters helpParameters = new HelpParameters();
+				helpParameters.setTool(toolName);
+				new HelpTool().execute(context, helpParameters);
+			}
+			System.exit(1);
+		} catch (ConnectException e) {
+			System.err.println(e.getMessage());
+			System.exit(1);
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+			System.exit(1);
+		}
 
-        try {
-            parameters.parseParameters(arguments, null);
-        } catch (ArgumentException e) {
-            e.printStackTrace(System.err);
-        }
+		System.exit(0);
+	}
 
-        tool.execute(null, new HelpParameters());
+	private static void printToolList(Arguments arguments) {
+		HelpTool tool = new HelpTool();
+		HelpParameters parameters = tool.createParameters();
 
-        System.exit(1);
-    }
+		try {
+			parameters.parseParameters(arguments, null);
+		} catch (ArgumentException e) {
+			e.printStackTrace(System.err);
+		}
 
-    public static <T extends Parameters> void execute(Tool<T> tool,
-            PolopolyContext context, Arguments arguments)
-            throws ArgumentException, FatalToolException {
-        T parameters = tool.createParameters();
+		tool.execute(null, new HelpParameters());
 
-        parameters.parseParameters(arguments, context);
+		System.exit(1);
+	}
 
-        Set<String> unusedParameters = arguments.getUnusedParameters();
+	public static <T extends Parameters> void execute(Tool<T> tool,
+			PolopolyContext context, Arguments arguments)
+			throws ArgumentException, FatalToolException {
+		T parameters = tool.createParameters();
 
-        if (!unusedParameters.isEmpty()) {
-            throw new ArgumentException(
-                    "The following specified parameters were not recognized: "
-                            + unusedParameters);
-        }
+		parameters.parseParameters(arguments, context);
 
-        tool.execute(context, parameters);
-    }
+		Set<String> unusedParameters = arguments.getUnusedParameters();
+
+		if (!unusedParameters.isEmpty()) {
+			throw new ArgumentException(
+					"The following specified parameters were not recognized: "
+							+ unusedParameters);
+		}
+
+		tool.execute(context, parameters);
+	}
 
 }
