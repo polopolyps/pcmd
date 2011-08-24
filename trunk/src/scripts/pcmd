@@ -2,15 +2,15 @@
 
 dir=`dirname $0`
 
-toolversion=-1-SNAPSHOT
 polopolyversion=10.2.0-fp2-r59227
-version=$polopolyversion$toolversion
+pcmdversion=$polopolyversion-2-SNAPSHOT
+toolversion=$polopolyversion-1
 luceneversion=2.3.1
 solrversion=1.4.1
 
 # if the JAR doesn't exist in the current directory, this is probably
 # a symlink to the script
-if [ ! -f $dir/pcmd-$version.jar ] 
+if [ ! -f $dir/pcmd-$pcmdversion.jar ] 
 then
     realscript=`readlink $0`
     if [ "" != "$realscript" ]
@@ -28,7 +28,7 @@ then
   <artifactId>pcmd-client</artifactId>
   <packaging>pom</packaging>
   <name>Polopoly Command Tool</name>
-  <version>$version</version>
+  <version>$pcmdversion</version>
   <repositories>
     <repository>
         <id>maven</id>
@@ -36,14 +36,9 @@ then
         <url>http://repo1.maven.org/maven2</url>
     </repository>
     <repository>
-        <id>polopoly-product</id>
-        <name>Polopoly repository</name>
-        <url>http://maven.polopoly.com/nexus/content/repositories/polopoly-product</url>
-    </repository>
-    <repository>
-        <id>professional-services</id>
-        <name>Professional Services</name>
-        <url>http://maven.polopoly.com/nexus/content/repositories/professional-services</url>
+      <id>polopoly-public</id>
+      <name>Polopoly public repository</name>
+      <url>http://maven.polopoly.com/nexus/content/groups/polopoly-public/</url>
     </repository>
   </repositories>
   <dependencies>
@@ -55,12 +50,12 @@ then
     <dependency>
       <groupId>com.polopoly.ps</groupId>
       <artifactId>hotdeploy-pcmd-tools</artifactId>
-      <version>$version</version>
+      <version>$toolversion</version>
     </dependency>
     <dependency>
       <groupId>com.polopoly.ps</groupId>
       <artifactId>pcmd</artifactId>
-      <version>$version</version>
+      <version>$pcmdversion</version>
     </dependency>
     <dependency>
       <groupId>jboss</groupId>
@@ -125,8 +120,8 @@ fi
 
 classpath=$CLASSPATH
 
-classpath=$classpath:~/.m2/repository/com/polopoly/ps/hotdeploy/$version/hotdeploy-$version.jar
-classpath=$classpath:~/.m2/repository/com/polopoly/ps/hotdeploy-pcmd-tools/$version/hotdeploy-pcmd-tools-$version.jar
+classpath=$classpath:~/.m2/repository/com/polopoly/ps/hotdeploy/$toolversion/hotdeploy-$toolversion.jar
+classpath=$classpath:~/.m2/repository/com/polopoly/ps/hotdeploy-pcmd-tools/$toolversion/hotdeploy-pcmd-tools-$toolversion.jar
 
 if [ ! -f "$jbossjar" ] 
 then
@@ -271,12 +266,12 @@ then
     classpath=$classpath:$jaxenjar
 fi
 
-jar=$dir/pcmd-$version.jar
+jar=$dir/pcmd-$pcmdversion.jar
 
 if [ ! -f "$jar" ]
 then
     # check if we can use JAR from MVN repository rather than current dir
-    jar=~/.m2/repository/com/polopoly/ps/pcmd/$version/pcmd-$version.jar
+    jar=~/.m2/repository/com/polopoly/ps/pcmd/$pcmdversion/pcmd-$pcmdversion.jar
 
     if [ ! -f $jar ]
     then
