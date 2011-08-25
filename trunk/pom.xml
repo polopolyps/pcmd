@@ -4,7 +4,7 @@
 
   <groupId>com.polopoly.ps</groupId>
   <artifactId>pcmd</artifactId>
-  <version>10.2.0-fp2-r59227-2</version>
+  <version>10.2.0-fp2-r59227-3-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Polopoly Command Tool</name>
