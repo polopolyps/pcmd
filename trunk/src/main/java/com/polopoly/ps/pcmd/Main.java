@@ -85,6 +85,8 @@ public class Main {
 			System.err.println(e.getMessage());
 			System.err
 					.println("Call with \"help\" as argument to see a list of tools.");
+
+			System.exit(1);
 		} catch (ArgumentException e) {
 			System.err.println("Invalid parameters: " + e.getMessage());
 
