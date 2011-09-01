@@ -1,41 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
-  <groupId>com.polopoly.ps</groupId>
-  <artifactId>pcmd</artifactId>
-  <version>10.2.0-fp2-r59227-3-SNAPSHOT</version>
-  <packaging>jar</packaging>
-
   <name>Polopoly Command Tool</name>
-
-  <properties>
-    <polopoly.version>10.2.0-fp2-r59227</polopoly.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
-  <distributionManagement>
-    <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>professional-services</id>
-      <name>Professional Services</name>
-      <url>http://maven.polopoly.com/nexus/content/repositories/professional-services</url>
-      <layout>default</layout>
-    </repository>
-  </distributionManagement>
-
+  <artifactId>pcmd</artifactId>
+  <groupId>com.polopoly.ps</groupId>
+  <version>${polopoly.version}${tool.version}</version>
+  <packaging>jar</packaging>
+  <parent>
+    <artifactId>pstools</artifactId>
+    <groupId>com.polopoly.ps</groupId>
+    <version>${polopoly.version}${tool.version}</version>
+    <relativePath>../parent-pom/pom.xml</relativePath>
+  </parent>
   <build>
-    <sourceDirectory>src/main/java</sourceDirectory>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -48,20 +28,6 @@
             </manifest>
           </archive>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.1.2</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
@@ -86,25 +52,7 @@
     </resources>
   </build>
 
-  <repositories>
-    <repository>
-      <id>maven</id>
-      <name>Maven central repository</name>
-      <url>http://repo1.maven.org/maven2</url>
-    </repository>
-    <repository>
-      <id>polopoly-public</id>
-      <name>Polopoly public repository</name>
-      <url>http://maven.polopoly.com/nexus/content/groups/polopoly-public/</url>
-    </repository>
-  </repositories>
-
   <dependencies>
-    <dependency>
-      <groupId>com.polopoly.assemblies</groupId>
-      <artifactId>polopoly-jar</artifactId>
-      <version>${polopoly.version}</version>
-    </dependency>
     <dependency>
       <groupId>org.apache.geronimo.specs</groupId>
       <artifactId>geronimo-j2ee_1.4_spec</artifactId>
