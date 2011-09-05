@@ -3,17 +3,18 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  
   <name>Polopoly Command Tool</name>
   <artifactId>pcmd</artifactId>
-  <groupId>com.polopoly.ps.pstools</groupId>
-  <version>${pstools.version}</version>
   <packaging>jar</packaging>
+  
   <parent>
-    <artifactId>pstools</artifactId>
+    <artifactId>pstools-parent</artifactId>
     <groupId>com.polopoly.ps.pstools</groupId>
-    <version>${pstools.version}</version>
-    <relativePath>../parent-pom/pom.xml</relativePath>
+    <version>10.2.0-fp3-r59278-1-SNAPSHOT</version>
+    <relativePath>../pstools-parent/pom.xml</relativePath>
   </parent>
+  
   <build>
     <plugins>
       <plugin>
@@ -69,7 +70,6 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-      <version>${project.servlet-api.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.solr</groupId>
@@ -102,7 +102,6 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>${project.junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
