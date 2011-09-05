@@ -5,12 +5,12 @@
   <modelVersion>4.0.0</modelVersion>
   <name>Polopoly Command Tool</name>
   <artifactId>pcmd</artifactId>
-  <groupId>com.polopoly.ps</groupId>
+  <groupId>com.polopoly.ps.pstools</groupId>
   <version>${pstools.version}</version>
   <packaging>jar</packaging>
   <parent>
     <artifactId>pstools</artifactId>
-    <groupId>com.polopoly.ps</groupId>
+    <groupId>com.polopoly.ps.pstools</groupId>
     <version>${pstools.version}</version>
     <relativePath>../parent-pom/pom.xml</relativePath>
   </parent>
@@ -60,7 +60,7 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.polopoly.ps</groupId>
       <artifactId>polopoly-jboss-deps</artifactId>
       <version>1.0.1</version>
       <type>pom</type>
