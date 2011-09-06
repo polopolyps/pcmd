@@ -23,7 +23,7 @@ then
     cat > $dir/pom.xml <<-EOF
 <?xml version="1.0" encoding="UTF-8"?><project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.polopoly.ps</groupId>
+  <groupId>com.polopoly.ps.pstools</groupId>
   <artifactId>pcmd-client</artifactId>
   <packaging>pom</packaging>
   <name>Polopoly Command Tool</name>
@@ -47,12 +47,12 @@ then
       <version>$polopolyversion</version>
     </dependency>
     <dependency>
-      <groupId>com.polopoly.ps</groupId>
+      <groupId>com.polopoly.ps.pstools</groupId>
       <artifactId>hotdeploy-pcmd-tools</artifactId>
       <version>$toolversion</version>
     </dependency>
     <dependency>
-      <groupId>com.polopoly.ps</groupId>
+      <groupId>com.polopoly.ps.pstools</groupId>
       <artifactId>pcmd</artifactId>
       <version>$toolversion</version>
     </dependency>
@@ -70,11 +70,6 @@ then
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
       <version>2.3.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-core</artifactId>
-      <version>1.9.1</version>
     </dependency>
     <dependency>
     	<groupId>org.apache.solr</groupId>
@@ -119,8 +114,8 @@ fi
 
 classpath=$CLASSPATH
 
-classpath=$classpath:~/.m2/repository/com/polopoly/ps/hotdeploy/$toolversion/hotdeploy-$toolversion.jar
-classpath=$classpath:~/.m2/repository/com/polopoly/ps/hotdeploy-pcmd-tools/$toolversion/hotdeploy-pcmd-tools-$toolversion.jar
+classpath=$classpath:~/.m2/repository/com/polopoly/ps/pstools/hotdeploy/$toolversion/hotdeploy-$toolversion.jar
+classpath=$classpath:~/.m2/repository/com/polopoly/ps/pstools/hotdeploy-pcmd-tools/$toolversion/hotdeploy-pcmd-tools-$toolversion.jar
 
 if [ ! -f "$jbossjar" ] 
 then
@@ -270,7 +265,7 @@ jar=$dir/pcmd-$toolversion.jar
 if [ ! -f "$jar" ]
 then
     # check if we can use JAR from MVN repository rather than current dir
-    jar=~/.m2/repository/com/polopoly/ps/pcmd/$toolversion/pcmd-$toolversion.jar
+    jar=~/.m2/repository/com/polopoly/ps/pstools/pcmd/$toolversion/pcmd-$toolversion.jar
 
     if [ ! -f $jar ]
     then
