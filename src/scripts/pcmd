@@ -2,15 +2,14 @@
 
 dir=`dirname $0`
 
-polopolyversion=10.2.0-fp2-r59227
-pcmdversion=$polopolyversion-2
-toolversion=$polopolyversion-2
+polopolyversion=10.2.0-fp3-r59278
+toolversion=$polopolyversion-1
 luceneversion=2.3.1
 solrversion=1.4.1
 
 # if the JAR doesn't exist in the current directory, this is probably
 # a symlink to the script
-if [ ! -f $dir/pcmd-$pcmdversion.jar ] 
+if [ ! -f $dir/pcmd-$toolversion.jar ] 
 then
     realscript=`readlink $0`
     if [ "" != "$realscript" ]
@@ -28,7 +27,7 @@ then
   <artifactId>pcmd-client</artifactId>
   <packaging>pom</packaging>
   <name>Polopoly Command Tool</name>
-  <version>$pcmdversion</version>
+  <version>$toolversion</version>
   <repositories>
     <repository>
         <id>maven</id>
@@ -55,7 +54,7 @@ then
     <dependency>
       <groupId>com.polopoly.ps</groupId>
       <artifactId>pcmd</artifactId>
-      <version>$pcmdversion</version>
+      <version>$toolversion</version>
     </dependency>
     <dependency>
       <groupId>jboss</groupId>
@@ -266,12 +265,12 @@ then
     classpath=$classpath:$jaxenjar
 fi
 
-jar=$dir/pcmd-$pcmdversion.jar
+jar=$dir/pcmd-$toolversion.jar
 
 if [ ! -f "$jar" ]
 then
     # check if we can use JAR from MVN repository rather than current dir
-    jar=~/.m2/repository/com/polopoly/ps/pcmd/$pcmdversion/pcmd-$pcmdversion.jar
+    jar=~/.m2/repository/com/polopoly/ps/pcmd/$toolversion/pcmd-$toolversion.jar
 
     if [ ! -f $jar ]
     then
