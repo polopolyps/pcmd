@@ -3,7 +3,7 @@
 dir=`dirname $0`
 
 polopolyversion=10.2.0-fp3-r59278
-toolversion=$polopolyversion-2-SNAPSHOT
+toolversion=$polopolyversion-0
 luceneversion=2.3.1
 solrversion=1.4.1
 
@@ -23,7 +23,7 @@ then
     cat > $dir/pom.xml <<-EOF
 <?xml version="1.0" encoding="UTF-8"?><project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.polopoly.ps.pstools</groupId>
+  <groupId>com.polopoly.ps.tools</groupId>
   <artifactId>pcmd-client</artifactId>
   <packaging>pom</packaging>
   <name>Polopoly Command Tool</name>
@@ -47,12 +47,12 @@ then
       <version>$polopolyversion</version>
     </dependency>
     <dependency>
-      <groupId>com.polopoly.ps.pstools</groupId>
+      <groupId>com.polopoly.ps.tools</groupId>
       <artifactId>hotdeploy-pcmd-tools</artifactId>
       <version>$toolversion</version>
     </dependency>
     <dependency>
-      <groupId>com.polopoly.ps.pstools</groupId>
+      <groupId>com.polopoly.ps.tools</groupId>
       <artifactId>pcmd</artifactId>
       <version>$toolversion</version>
     </dependency>

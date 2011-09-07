@@ -9,8 +9,8 @@
 
   <parent>
     <artifactId>pstools-parent</artifactId>
-    <groupId>com.polopoly.ps.pstools</groupId>
-    <version>10.2.0-fp3-r59278-2-SNAPSHOT</version>
+    <groupId>com.polopoly.ps.tools</groupId>
+    <version>10.2.0-fp3-r59278-0</version>
     <relativePath>../pstools-parent/pom.xml</relativePath>
   </parent>
   
