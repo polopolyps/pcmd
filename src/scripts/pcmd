@@ -69,12 +69,12 @@ then
     <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
-      <version>2.3.1</version>
+      <version>$luceneversion</version>
     </dependency>
     <dependency>
     	<groupId>org.apache.solr</groupId>
     	<artifactId>solr-solrj</artifactId>
-    	<version>1.4.1</version>
+    	<version>$solrversion</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
@@ -114,8 +114,8 @@ fi
 
 classpath=$CLASSPATH
 
-classpath=$classpath:~/.m2/repository/com/polopoly/ps/pstools/hotdeploy/$toolversion/hotdeploy-$toolversion.jar
-classpath=$classpath:~/.m2/repository/com/polopoly/ps/pstools/hotdeploy-pcmd-tools/$toolversion/hotdeploy-pcmd-tools-$toolversion.jar
+classpath=$classpath:~/.m2/repository/com/polopoly/ps/tools/hotdeploy/$toolversion/hotdeploy-$toolversion.jar
+classpath=$classpath:~/.m2/repository/com/polopoly/ps/tools/hotdeploy-pcmd-tools/$toolversion/hotdeploy-pcmd-tools-$toolversion.jar
 
 if [ ! -f "$jbossjar" ] 
 then
@@ -265,7 +265,7 @@ jar=$dir/pcmd-$toolversion.jar
 if [ ! -f "$jar" ]
 then
     # check if we can use JAR from MVN repository rather than current dir
-    jar=~/.m2/repository/com/polopoly/ps/pstools/pcmd/$toolversion/pcmd-$toolversion.jar
+    jar=~/.m2/repository/com/polopoly/ps/tools/pcmd/$toolversion/pcmd-$toolversion.jar
 
     if [ ! -f $jar ]
     then
