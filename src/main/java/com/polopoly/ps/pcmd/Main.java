@@ -72,7 +72,7 @@ public class Main {
 				execute(tool, context, arguments);
 			} catch (FatalToolException e) {
 				System.err.println(e.getMessage());
-				System.exit(1);
+				System.exit(e.getExitCode());
 			} catch (CMRuntimeException e) {
 				if (e.getCause() instanceof Exception) {
 					throw (Exception) e.getCause();
