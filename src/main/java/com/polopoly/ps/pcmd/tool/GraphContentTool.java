@@ -9,17 +9,19 @@ import com.polopoly.ps.pcmd.tool.graphcontent.DefaultGraphStyler;
 import com.polopoly.ps.pcmd.tool.graphcontent.DotGraphRenderer;
 import com.polopoly.ps.pcmd.tool.graphcontent.GraphBuilder;
 import com.polopoly.ps.pcmd.tool.graphcontent.GraphContentParameters;
+import com.polopoly.ps.pcmd.tool.graphcontent.GraphContentParameters.FORMAT;
 import com.polopoly.ps.pcmd.tool.graphcontent.GraphRenderer;
 import com.polopoly.ps.pcmd.tool.graphcontent.TextGraphRenderer;
-import com.polopoly.ps.pcmd.tool.graphcontent.GraphContentParameters.FORMAT;
 import com.polopoly.ps.pcmd.tool.graphcontent.model.ContentGraph;
 import com.polopoly.util.client.PolopolyContext;
 
 public class GraphContentTool implements Tool<GraphContentParameters> {
+    @Override
     public GraphContentParameters createParameters() {
         return new GraphContentParameters();
     }
 
+    @Override
     public void execute(PolopolyContext context, GraphContentParameters parameters) {
         if (!parameters.isForce()) {
             if (!ensureContentSafety(parameters)) {
@@ -72,8 +74,9 @@ public class GraphContentTool implements Tool<GraphContentParameters> {
         }
     }
 
+    @Override
     public String getHelp() {
         return "Prints a text or GraphViz \"dot\" representation on stdout with a graph of content and content references. " +
-                "You can provide specific content ids on the command line or stdin.\n";
+                "You can provide specific content ids on the command line or stdin.";
     }
 }
