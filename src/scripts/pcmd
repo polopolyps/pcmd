@@ -35,9 +35,9 @@ then
         <url>http://repo1.maven.org/maven2</url>
     </repository>
     <repository>
-      <id>polopoly-public</id>
-      <name>Polopoly public repository</name>
-      <url>http://maven.polopoly.com/nexus/content/groups/polopoly-public/</url>
+      <id>polopoly-ps</id>
+      <name>Polopoly Professional Services Repository Group</name>
+      <url>http://maven.polopoly.com/nexus/content/groups/polopoly-ps/</url>
     </repository>
   </repositories>
   <dependencies>
