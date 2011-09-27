@@ -14,11 +14,14 @@ import com.polopoly.util.client.ClientFromArgumentsConfigurator;
 import com.polopoly.util.client.PolopolyContext;
 
 public class HelpTool implements Tool<HelpParameters> {
-	public HelpParameters createParameters() {
+
+	@Override
+    public HelpParameters createParameters() {
 		return new HelpParameters();
 	}
 
-	@SuppressWarnings({ "rawtypes" })
+	@Override
+    @SuppressWarnings({ "rawtypes" })
 	public void execute(PolopolyContext context, HelpParameters parameters) {
 		if (parameters.getTool() != null) {
 			try {
@@ -26,7 +29,9 @@ public class HelpTool implements Tool<HelpParameters> {
 
 				ParameterHelp help = new ParameterHelp();
 
-				ClientFromArgumentsConfigurator.getHelp(help);
+                if (!(tool instanceof DoesNotRequireRunningPolopoly)) {
+                    ClientFromArgumentsConfigurator.getHelp(help);
+                }
 
 				tool.createParameters().getHelp(help);
 
@@ -79,7 +84,8 @@ public class HelpTool implements Tool<HelpParameters> {
 		}
 	}
 
-	public String getHelp() {
+	@Override
+    public String getHelp() {
 		return "Returns help on a tool";
 	}
 }
