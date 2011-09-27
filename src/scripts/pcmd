@@ -3,7 +3,7 @@
 dir=`dirname $0`
 
 polopolyversion=10.2.0-fp3-r59278
-toolversion=$polopolyversion-2-SNAPSHOT
+toolversion=$polopolyversion-2
 luceneversion=2.3.1
 solrversion=1.4.1
 
