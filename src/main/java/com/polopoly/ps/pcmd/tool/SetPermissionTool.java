@@ -17,75 +17,79 @@ import com.polopoly.util.collection.ContentIdToContentIterator;
 
 public class SetPermissionTool implements Tool<SetPermissionParameters> {
 
-    public SetPermissionParameters createParameters() {
-        return new SetPermissionParameters();
-    }
+	public SetPermissionParameters createParameters() {
+		return new SetPermissionParameters();
+	}
 
-    public void execute(PolopolyContext context,
-            SetPermissionParameters parameters) {
-        Caller currentCaller = context.getPolicyCMServer().getCurrentCaller();
+	public void execute(PolopolyContext context,
+			SetPermissionParameters parameters) {
+		Caller currentCaller = context.getPolicyCMServer().getCurrentCaller();
 
-        if (currentCaller instanceof NonLoggedInCaller) {
-            throw new FatalToolException(
-                "You must log a user to be able to set an ACL. Specify the " +
-                ClientFromArgumentsConfigurator.PASSWORD + " parameter to log in.");
-        }
+		if (currentCaller instanceof NonLoggedInCaller) {
+			throw new FatalToolException(
+					"You must log a user to be able to set an ACL. Specify the "
+							+ ClientFromArgumentsConfigurator.PASSWORD
+							+ " parameter to log in.");
+		}
 
-        ContentIdToContentIterator it =
-            new ContentIdToContentIterator(context, parameters.getContentIds(), parameters.isStopOnException());
+		ContentIdToContentIterator it = new ContentIdToContentIterator(context,
+				parameters.getContentIds(), parameters.isStopOnException());
 
-        while (it.hasNext()) {
-            Content content = (Content) it.next();
+		while (it.hasNext()) {
+			Content content = (Content) it.next();
 
-            String contentIdString = AbstractContentIdField.get(content.getContentId(), context);
+			String contentIdString = AbstractContentIdField.get(
+					content.getContentId(), context);
 
-            System.out.println(contentIdString);
+			System.out.println(contentIdString);
 
-            try {
+			try {
+				AclId aclId = content.getAclId();
 
-                AclId aclId = content.getAclId();
+				if (aclId == null) {
+					content.lock();
+					aclId = content.createAcl();
 
-                if (aclId == null) {
-                    content.lock();
-                    aclId = content.createAcl();
+					System.out.println(contentIdString
+							+ ": no ACL existed. Created one.");
+				}
 
-                    System.out.println(contentIdString + ": no ACL existed. Created one.");
-                }
+				Acl acl = context.getUserServer().findAcl(aclId);
 
-                Acl acl = context.getUserServer().findAcl(aclId);
+				System.out.print("aclId:" + aclId.getAclIdInt() + " ");
 
-                System.out.print("aclId:" + aclId.getAclIdInt() + " ");
+				PrincipalId principalId = parameters.getPrincipalId(context);
 
-                PrincipalId principalId = parameters.getPrincipalId(context);
+				AclEntry entry = acl.getEntry(principalId);
 
-                AclEntry entry = acl.getEntry(principalId);
+				if (entry == null) {
+					entry = new AclEntry(principalId);
+					System.out.println("principal "
+							+ principalId.getPrincipalIdString() + " in "
+							+ contentIdString
+							+ ": no ACL entry existed. Created one.");
+				}
 
-                if (entry == null) {
-                    entry = new AclEntry(principalId);
-                    System.out.println("principal " + principalId.getPrincipalIdString() + " in " +
-                        contentIdString + ": no ACL entry existed. Created one.");
-                }
+				for (String permission : parameters.getPermissions()) {
+					entry.addPermission(permission);
+				}
 
-                for (String permission : parameters.getPermissions()) {
-                    entry.addPermission(permission);
-                }
+				acl.addEntry(entry, currentCaller);
+			} catch (Exception e) {
+				System.err.println(e.toString());
+				e.printStackTrace();
+			} finally {
+				try {
+					content.unlock();
+				} catch (CMException e) {
+					System.err.println("While unlocking " + contentIdString
+							+ ": " + e);
+				}
+			}
+		}
+	}
 
-                acl.addEntry(entry, currentCaller);
-            } catch (Exception e) {
-                System.err.println(e.toString());
-                e.printStackTrace();
-            } finally {
-                try {
-                    content.unlock();
-                } catch (CMException e) {
-                    System.err.println("While unlocking " + contentIdString + ": " + e);
-                }
-            }
-        }
-    }
-
-    public String getHelp() {
-        return "Adds a permission to an ACL of an object for a certain principal.";
-    }
+	public String getHelp() {
+		return "Adds a permission to an ACL of an object for a certain principal.";
+	}
 }
-

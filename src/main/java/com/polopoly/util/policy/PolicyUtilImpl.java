@@ -288,7 +288,9 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
 
 	public <T> T modify(PolicyModification<T> policyModification, Class<T> klass)
 			throws PolicyModificationException {
-		return modify(policyModification, klass, true);
+		LockInfo lockInfo = policy.getContent().getLockInfo();
+
+		return modify(policyModification, klass, lockInfo == null);
 	}
 
 	public <T> T modify(PolicyModification<T> policyModification,
@@ -296,6 +298,15 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
 			throws PolicyModificationException {
 		LockInfo lockInfo = policy.getContent().getLockInfo();
 
+		return modify(policyModification, klass, createNewVersion, lockInfo);
+	}
+
+	/**
+	 * Passing lockInfo so the default modify doesn't need to fetch it twice.
+	 */
+	private <T> T modify(PolicyModification<T> policyModification,
+			Class<T> klass, boolean createNewVersion, LockInfo lockInfo)
+			throws PolicyModificationException {
 		PolicyCMServer server = getCMServer();
 
 		if (createNewVersion) {

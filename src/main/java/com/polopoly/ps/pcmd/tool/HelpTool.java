@@ -1,10 +1,6 @@
 package com.polopoly.ps.pcmd.tool;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.ServiceLoader;
 
 import com.polopoly.pcmd.tool.Tool;
 import com.polopoly.ps.pcmd.argument.ParameterHelp;
@@ -13,15 +9,14 @@ import com.polopoly.ps.pcmd.util.ToolRetriever.NoSuchToolException;
 import com.polopoly.util.client.ClientFromArgumentsConfigurator;
 import com.polopoly.util.client.PolopolyContext;
 
-public class HelpTool implements Tool<HelpParameters> {
+public class HelpTool implements Tool<HelpParameters>,
+		DoesNotRequireRunningPolopoly {
 
 	@Override
-    public HelpParameters createParameters() {
+	public HelpParameters createParameters() {
 		return new HelpParameters();
 	}
 
-	@Override
-    @SuppressWarnings({ "rawtypes" })
 	public void execute(PolopolyContext context, HelpParameters parameters) {
 		if (parameters.getTool() != null) {
 			try {
@@ -29,9 +24,9 @@ public class HelpTool implements Tool<HelpParameters> {
 
 				ParameterHelp help = new ParameterHelp();
 
-                if (!(tool instanceof DoesNotRequireRunningPolopoly)) {
-                    ClientFromArgumentsConfigurator.getHelp(help);
-                }
+				if (!(tool instanceof DoesNotRequireRunningPolopoly)) {
+					ClientFromArgumentsConfigurator.getHelp(help);
+				}
 
 				tool.createParameters().getHelp(help);
 
@@ -47,45 +42,27 @@ public class HelpTool implements Tool<HelpParameters> {
 			System.err
 					.println("Use pcmd help <tool> to get help on a specific tool");
 
-			try {
-				System.err.println("Available tools: ");
-				ServiceLoader<Tool> toolLoader = ServiceLoader.load(Tool.class);
+			System.err.println("Available tools: ");
 
-				List<Tool> tools = new ArrayList<Tool>();
+			List<Tool<?>> tools = ToolRetriever.getAllTools();
 
-				for (Tool tool : toolLoader) {
-					tools.add(tool);
+			for (Tool<?> tool : tools) {
+				StringBuffer sb = new StringBuffer(80);
+
+				sb.append(ToolRetriever.getToolName(tool.getClass()));
+
+				while (sb.length() < 20) {
+					sb.append(' ');
 				}
 
-				Collections.sort(tools, new Comparator<Tool>() {
-					@Override
-					public int compare(Tool t1, Tool t2) {
-						return t1.getClass().getName()
-								.compareTo(t2.getClass().getName());
-					}
-				});
-
-				for (Tool tool : tools) {
-					StringBuffer sb = new StringBuffer(80);
-
-					sb.append(ToolRetriever.getToolName(tool.getClass()));
-
-					while (sb.length() < 20) {
-						sb.append(' ');
-					}
-
-					sb.append(tool.getHelp());
-					System.err.println(sb);
-				}
-			} catch (NoClassDefFoundError e) {
-				System.err
-						.println("You need JDK 1.6+ to retrieve information on available tools.");
+				sb.append(tool.getHelp());
+				System.err.println(sb);
 			}
 		}
 	}
 
 	@Override
-    public String getHelp() {
+	public String getHelp() {
 		return "Returns help on a tool";
 	}
 }

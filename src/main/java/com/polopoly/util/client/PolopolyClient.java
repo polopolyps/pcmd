@@ -3,7 +3,10 @@ package com.polopoly.util.client;
 import java.lang.management.ManagementFactory;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,7 +47,7 @@ public class PolopolyClient {
 	private boolean attachSearchService = true;
 
 	private boolean attachStatisticsService = true;
-	
+
 	private boolean attachSolrSearchClient = true;
 
 	private boolean attachPollService = false;
@@ -63,10 +66,10 @@ public class PolopolyClient {
 	};
 
 	public boolean isAttachSolrSearchClient() {
-        return attachSolrSearchClient;
-    }
+		return attachSolrSearchClient;
+	}
 
-    public String getApplicationName() {
+	public String getApplicationName() {
 		return applicationName;
 	}
 
@@ -115,12 +118,14 @@ public class PolopolyClient {
 					+ ":8040/connection.properties";
 		}
 
+		for (ConnectListener listener : getConnectListeners()) {
+			listener.willConnectToPolopoly(this);
+		}
+
 		EjbCmClient cmClient = null;
 		RmiSearchClient searchClient = null;
 		StatisticsClient statisticsClient = null;
 		UDPLogMsgClient logMsgClient = null;
-		SolrSearchClient publicSolrSearchClient = null;
-		SolrSearchClient internalSolrSearchClient = null;
 		PollClient pollClient = null;
 
 		try {
@@ -169,10 +174,10 @@ public class PolopolyClient {
 				searchClient = new RmiSearchClient();
 				app.addApplicationComponent(searchClient);
 			}
-			
+
 			if (isAttachSolrSearchClient()) {
-				publicSolrSearchClient = createSolrSearchClient(cmClient, app, "public");
-			    internalSolrSearchClient = createSolrSearchClient(cmClient, app, "internal");
+				createSolrSearchClient(cmClient, app, "public");
+				createSolrSearchClient(cmClient, app, "internal");
 			}
 
 			if (isAttachPollService()) {
@@ -212,6 +217,10 @@ public class PolopolyClient {
 
 			login(context);
 
+			for (ConnectListener listener : getConnectListeners()) {
+				listener.connectedToPolopoly(context);
+			}
+
 			return context;
 		} catch (ConnectException e) {
 			throw e;
@@ -222,22 +231,43 @@ public class PolopolyClient {
 		}
 	}
 
+	public static Iterable<ConnectListener> getConnectListeners() {
+		Collection<ConnectListener> result = new ArrayList<ConnectListener>();
+
+		try {
+			ServiceLoader<ConnectListener> services = ServiceLoader
+					.load(ConnectListener.class);
+
+			Iterator<ConnectListener> serviceIterator = services.iterator();
+
+			while (serviceIterator.hasNext()) {
+				result.add(serviceIterator.next());
+			}
+		} catch (Throwable t) {
+			javaUtilLogger.log(Level.WARNING,
+					"While loading connect listeners: " + t.getMessage(), t);
+		}
+
+		return result;
+	}
+
 	private SolrSearchClient createSolrSearchClient(EjbCmClient cmClient,
 			final StandardApplication app, String indexName)
 			throws IllegalApplicationStateException {
-		SolrSearchClient result = new SolrSearchClient(SolrSearchClient.DEFAULT_MODULE_NAME, 
-				"solrClient" + firstCharacterUppercase(indexName),
-				cmClient);
-		
+		SolrSearchClient result = new SolrSearchClient(
+				SolrSearchClient.DEFAULT_MODULE_NAME, "solrClient"
+						+ firstCharacterUppercase(indexName), cmClient);
+
 		result.setIndexName(new SolrIndexName(indexName));
-		
+
 		app.addApplicationComponent(result);
-		
+
 		return result;
 	}
 
 	private String firstCharacterUppercase(String indexName) {
-		return Character.toUpperCase(indexName.charAt(0)) + indexName.substring(1);
+		return Character.toUpperCase(indexName.charAt(0))
+				+ indexName.substring(1);
 	}
 
 	/**
@@ -351,7 +381,7 @@ public class PolopolyClient {
 			LRUSynchronizedUpdateCache cache) {
 	}
 
-    public void setAttachSolrSearchClient(boolean attachSolrSearchClient) {
-        this.attachSolrSearchClient = attachSolrSearchClient;
-    }
+	public void setAttachSolrSearchClient(boolean attachSolrSearchClient) {
+		this.attachSolrSearchClient = attachSolrSearchClient;
+	}
 }
