@@ -39,7 +39,11 @@ public class Main {
 	}
 
 	public static void main(DefaultArguments arguments) {
-		Logger.getLogger("").setLevel(Level.WARNING);
+	    
+	    if (System.getProperty("java.util.logging.config.file") == null) {
+	        Logger.getLogger("").setLevel(Level.WARNING);
+	    }
+	    
 		String toolName = null;
 
 		try {
