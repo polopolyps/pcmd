@@ -84,7 +84,7 @@ public class ToolRetriever {
 
 	private static Tool<?> warnMultipleTools(String toolShortName,
 			Tool<?> tool, Tool<?> potentialTool) {
-		if (tool == null || tool.equals(potentialTool)) {
+		if (tool == null || tool.getClass().equals(potentialTool.getClass())) {
 			return tool;
 		}
 
