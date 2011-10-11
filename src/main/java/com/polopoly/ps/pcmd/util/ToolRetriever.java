@@ -127,7 +127,6 @@ public class ToolRetriever {
 		List<Tool<?>> tools = new ArrayList<Tool<?>>();
 
 		try {
-			System.err.println("Available tools: ");
 			@SuppressWarnings("rawtypes")
 			ServiceLoader<Tool> toolLoader = ServiceLoader.load(Tool.class);
 			
