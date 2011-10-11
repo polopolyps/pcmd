@@ -3,7 +3,9 @@ package com.polopoly.ps.pcmd.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
 import com.polopoly.pcmd.tool.OverridingTool;
@@ -128,9 +130,18 @@ public class ToolRetriever {
 			System.err.println("Available tools: ");
 			@SuppressWarnings("rawtypes")
 			ServiceLoader<Tool> toolLoader = ServiceLoader.load(Tool.class);
-
-			for (Tool<?> tool : toolLoader) {
-				tools.add(tool);
+			
+			@SuppressWarnings("rawtypes")
+			Iterator<Tool> it = toolLoader.iterator();
+			
+			for (; it.hasNext(); ) {
+				try {
+					tools.add(it.next());
+				}
+				catch (ServiceConfigurationError e) {
+					// this happens when a tool is declared that does not exist.
+					System.err.println(e.toString());
+				}
 			}
 
 			Collections.sort(tools, new Comparator<Tool<?>>() {
