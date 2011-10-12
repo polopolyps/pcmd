@@ -378,10 +378,10 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements
 		}
 	}
 
-	private void abort(PolicyCMServer server, boolean createNewVersion) {
+	private void abort(PolicyCMServer server, boolean removeContentVersion) {
 		try {
-			server.abortContent(policy, createNewVersion);
-		} catch (CMException e1) {
+			server.abortContent(policy, removeContentVersion);
+		} catch (CMException e) {
 		}
 	}
 

@@ -269,8 +269,10 @@ public class PolopolyContext {
 	public <T> T createPolicy(int major, ContentId inputTemplate,
 			ContentId securityParent, Class<T> klass,
 			PolicyModification<T> modification) throws PolicyCreateException {
+		T result = null;
+		
 		try {
-			T result = CheckedCast.cast(
+			result = CheckedCast.cast(
 					server.createContent(major, securityParent, inputTemplate),
 					klass);
 
@@ -284,18 +286,31 @@ public class PolopolyContext {
 
 			return result;
 		} catch (PolicyModificationException e) {
+			abort((Policy) result, true);
+			
 			throw new PolicyCreateException("New object with template "
 					+ toString(inputTemplate) + ": " + e.getMessage(),
 					e.getCause());
 		} catch (CMException e) {
+			abort((Policy) result, true);
+
 			throw new PolicyCreateException(
 					"Could not create content with template "
 							+ toString(inputTemplate) + ": " + e.getMessage(),
 					e);
 		} catch (CheckedClassCastException e) {
+			abort((Policy) result, true);
+
 			throw new PolicyCreateException("The template "
 					+ toString(inputTemplate)
 					+ " had an unexpected policy type: " + e.getMessage(), e);
+		}
+	}
+
+	private void abort(Policy policy, boolean removeContentVersion) {
+		try {
+			server.abortContent(policy, true);
+		} catch (CMException e1) {
 		}
 	}
 
