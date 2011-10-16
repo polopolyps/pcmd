@@ -9,8 +9,7 @@ import com.polopoly.ps.pcmd.util.ToolRetriever.NoSuchToolException;
 import com.polopoly.util.client.ClientFromArgumentsConfigurator;
 import com.polopoly.util.client.PolopolyContext;
 
-public class HelpTool implements Tool<HelpParameters>,
-		DoesNotRequireRunningPolopoly {
+public class HelpTool implements Tool<HelpParameters>, DoesNotRequireRunningPolopoly {
 
 	@Override
 	public HelpParameters createParameters() {
@@ -30,8 +29,7 @@ public class HelpTool implements Tool<HelpParameters>,
 
 				tool.createParameters().getHelp(help);
 
-				System.err
-						.println(parameters.getTool() + ": " + tool.getHelp());
+				System.err.println(parameters.getTool() + ": " + tool.getHelp());
 				help.print(System.err);
 			} catch (NoSuchToolException e) {
 				System.err.println(e.getMessage());
@@ -39,12 +37,11 @@ public class HelpTool implements Tool<HelpParameters>,
 			}
 		} else {
 			System.err.println("Usage: pcmd <tool> [--option=value]*");
-			System.err
-					.println("Use pcmd help <tool> to get help on a specific tool");
+			System.err.println("Use pcmd help <tool> to get help on a specific tool");
 
 			System.err.println("Available tools: ");
 
-			List<Tool<?>> tools = ToolRetriever.getAllTools();
+			List<Tool<?>> tools = ToolRetriever.getAllTools(true);
 
 			for (Tool<?> tool : tools) {
 				StringBuffer sb = new StringBuffer(80);
