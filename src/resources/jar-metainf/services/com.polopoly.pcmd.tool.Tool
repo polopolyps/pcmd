@@ -25,3 +25,5 @@ com.polopoly.ps.pcmd.tool.UnlockTool
 com.polopoly.ps.pcmd.tool.UnversionedTool
 com.polopoly.ps.pcmd.tool.VersionsTool
 com.polopoly.ps.pcmd.tool.WorkflowActionsTool
+com.polopoly.ps.pcmd.tool.PollVoteTool
+com.polopoly.ps.pcmd.tool.PollResultTool
