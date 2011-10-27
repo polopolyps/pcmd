@@ -7,6 +7,7 @@ package com.polopoly.ps.pcmd;
  */
 public class FatalToolException extends RuntimeException {
 	private int exitCode = 1;
+	private boolean printStackTrace = false;
 
 	public FatalToolException(Throwable cause) {
 		super(cause);
@@ -30,5 +31,13 @@ public class FatalToolException extends RuntimeException {
 
 	public int getExitCode() {
 		return exitCode;
+	}
+
+	public boolean isPrintStackTrace() {
+		return printStackTrace;
+	}
+
+	public void setPrintStackTrace(boolean printStackTrace) {
+		this.printStackTrace = printStackTrace;
 	}
 }

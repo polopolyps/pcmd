@@ -35,13 +35,15 @@ public class Main {
 			System.exit(1);
 		}
 
-		main(arguments);
+		new Main().execute(arguments);
 	}
 
 	public static void main(DefaultArguments arguments) {
-		if (System.getProperty("java.util.logging.config.file") == null) {
-			Logger.getLogger("").setLevel(Level.WARNING);
-		}
+		new Main().execute(arguments);
+	}
+	
+	public void execute(DefaultArguments arguments) {
+		configureLogging();
 
 		String toolName = null;
 
@@ -74,6 +76,11 @@ public class Main {
 				execute(tool, context, arguments);
 			} catch (FatalToolException e) {
 				System.err.println(e.getMessage());
+				
+				if (e.isPrintStackTrace()) {
+					e.printStackTrace();
+				}
+				
 				System.exit(e.getExitCode());
 			} catch (CMRuntimeException e) {
 				if (e.getCause() instanceof Exception) {
@@ -106,6 +113,12 @@ public class Main {
 		}
 
 		System.exit(0);
+	}
+
+	protected void configureLogging() {
+		if (System.getProperty("java.util.logging.config.file") == null) {
+			Logger.getLogger("").setLevel(Level.WARNING);
+		}
 	}
 
 	private static void printToolList(Arguments arguments) {
