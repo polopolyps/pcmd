@@ -101,7 +101,7 @@ public class ToolRetriever {
 			result = tool;
 		}
 
-		System.out
+		System.err
 				.println("There are multiple tools with the name "
 						+ toolShortName
 						+ ": "
