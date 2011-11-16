@@ -28,7 +28,7 @@ public class ToolRetriever {
 	}
 
 	public static Tool<?> getTool(String toolShortName) throws NoSuchToolException {
-		String toolClassName = toCamelCase(toolShortName) + "Tool";
+		String toolClassName = new CamelCase().toCamelCase(toolShortName) + "Tool";
 
 		Tool<?> tool = null;
 
@@ -155,65 +155,14 @@ public class ToolRetriever {
 		return tools;
 	}
 
-	private static String toCamelCase(String tool) {
-		if (tool.length() == 0) {
-			return "";
-		}
-
-		StringBuffer result = new StringBuffer(tool.length());
-
-		boolean nextUppercase = true;
-
-		for (int i = 0; i < tool.length(); i++) {
-			char ch = tool.charAt(i);
-
-			if (ch == '-') {
-				nextUppercase = true;
-				continue;
-			}
-
-			if (nextUppercase) {
-				result.append(Character.toUpperCase(ch));
-				nextUppercase = false;
-			} else {
-				result.append(ch);
-			}
-		}
-
-		return result.toString();
-	}
-
-	private static String fromCamelCase(String name) {
-		if (name.length() == 0) {
-			return "";
-		}
-
-		StringBuffer result = new StringBuffer(name.length());
-
-		for (int i = 0; i < name.length(); i++) {
-			char ch = name.charAt(i);
-
-			if (Character.isUpperCase(ch)) {
-				if (result.length() > 0) {
-					result.append('-');
-				}
-				result.append(Character.toLowerCase(ch));
-			} else {
-				result.append(ch);
-			}
-		}
-
-		return result.toString();
-	}
-
 	public static String getToolName(Class<?> toolClass) {
 		String name = toolClass.getSimpleName();
 
 		if (name.endsWith("Tool")) {
 			name = name.substring(0, name.length() - 4);
 		}
-
-		return fromCamelCase(name);
+ 
+		return new CamelCase().fromCamelCase(name);
 	}
 
 	public static void addToolsPackage(String packageName) {

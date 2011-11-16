@@ -14,7 +14,7 @@ public class PrefixContentFilter implements ContentFilter {
     }
 
     public boolean accepts(ContentUtil content) {
-        String name = content.getExternalIdString();
+        String name = content.getContentIdString();
         if (name == null)
             name = content.getComponent(ServerNames.CONTENT_ATTRG_SYSTEM, ServerNames.CONTENT_ATTR_NAME);
         if (name == null)

@@ -129,19 +129,14 @@ public class PolopolyClient {
 		PollClient pollClient = null;
 
 		try {
-			// Create connection properties from an URL.
 			ConnectionProperties connectionProperties = new ConnectionProperties(
 					new URL(connectionUrl));
 
-			// Create a ManagedBeanRegistry from the standard MBeanServer.
 			ManagedBeanRegistry registry = new JMXManagedBeanRegistry(
 					ManagementFactory.getPlatformMBeanServer());
 
-			// Create the Application.
 			final StandardApplication app = new StandardApplication(
 					applicationName);
-
-			// Create a CM client ApplicationComponent.
 
 			cmClient = new EjbCmClient() {
 				@Override
@@ -164,10 +159,8 @@ public class PolopolyClient {
 				cmClient.setContentFilterSettings(contentFilterSettings);
 			}
 
-			// Set the registry.
 			app.setManagedBeanRegistry(registry);
 
-			// Add the CM client.
 			app.addApplicationComponent(cmClient);
 
 			if (isAttachSearchService()) {

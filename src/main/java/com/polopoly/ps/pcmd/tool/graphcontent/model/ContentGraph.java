@@ -36,7 +36,7 @@ public class ContentGraph {
     
     public ContentNode addNodeAndAutoTag(ContentUtil content) {
         ContentNode node = addNode(content.getContentId());
-        node.tag("inputtemplate:" + content.getInputTemplate().getExternalIdString());
+        node.tag("inputtemplate:" + content.getInputTemplate().getContentIdString());
         if (content.getLockInfo() != null) node.tag("locked");
         node.tag("major:" + content.getContentId().getMajor());
         return node;

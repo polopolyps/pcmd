@@ -120,7 +120,7 @@ public class GraphBuilder {
                 if (realRef != null) {
                     realRef.tag("rmd");
                     realRef.tag("rmdId:" + refId.getContentId());
-                    realRef.tag("rmdInputTemplate:" + rmdContent.getInputTemplate().getExternalIdString());
+                    realRef.tag("rmdInputTemplate:" + rmdContent.getInputTemplate().getContentIdString());
                     return realRef;
                 }
             }
@@ -190,7 +190,7 @@ public class GraphBuilder {
                 if (realRef != null) {
                     realRef.tag("rmd");
                     realRef.tag("rmdId:" + refId.getContentId());
-                    realRef.tag("rmdInputTemplate:" + rmdContent.getInputTemplate().getExternalIdString());
+                    realRef.tag("rmdInputTemplate:" + rmdContent.getInputTemplate().getContentIdString());
                     return realRef;
                 }
             }

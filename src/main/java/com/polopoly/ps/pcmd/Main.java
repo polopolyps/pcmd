@@ -63,6 +63,7 @@ public class Main {
 				PcmdPolopolyClient client = new PcmdPolopolyClient();
 				client.setAttachStatisticsService(false);
 				client.setAttachSearchService(tool instanceof RequiresIndexServer);
+				client.setAttachPollService(tool instanceof RequiresPollServer);
 				client.setAttachSolrSearchClient(tool instanceof RequiresSolr);
 				client.setAttachPollService(tool instanceof RequiresPollServer);
 

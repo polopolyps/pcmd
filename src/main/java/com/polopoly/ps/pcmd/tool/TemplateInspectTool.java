@@ -40,7 +40,7 @@ public class TemplateInspectTool implements Tool<ContentIdListParameters> {
     private void printTemplate(PolopolyContext context, ContentUtil templateContent, int level) {
         String indent = getIndent(level * TAB_SIZE);
 
-        printIndented(indent, "Template: " + templateContent.getExternalIdString());
+        printIndented(indent, "Template: " + templateContent.getContentIdString());
 
         printIndented(indent, "Policy class: " + templateContent.getComponent(ServerNames.IT_ATTRG_SYSTEM, ServerNames.IT_ATTR_POLICY));
 
