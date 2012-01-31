@@ -2,6 +2,7 @@ package com.polopoly.util.policy;
 
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.client.CMException;
+import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.InputTemplate;
 import com.polopoly.cm.collections.ContentList;
 import com.polopoly.util.client.PolopolyContext;
@@ -33,8 +34,12 @@ public class InputTemplateUtilImpl extends ContentUtilImpl implements InputTempl
         return inputTemplate.getOutputTemplates(mode);
     }
 
-    public String getPolicyClassName() throws CMException {
-        return inputTemplate.getPolicyClassName();
+    public String getPolicyClassName() {
+	try {
+	    return inputTemplate.getPolicyClassName();
+	} catch (CMException e) {
+	    throw new CMRuntimeException("While getting policy class name of " + this + ": " + e.getMessage(), e);
+	}
     }
 
     public ContentList getSubTemplates() throws CMException {
