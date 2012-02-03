@@ -1,7 +1,10 @@
 package com.polopoly.util.client;
 
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -109,13 +112,44 @@ public class PolopolyClient {
 		return logger;
 	}
 
+	private boolean testConnection(String url) {
+		try {
+			URLConnection connection = new URL(url).openConnection();
+			connection.connect();
+			return true;
+		} catch (MalformedURLException e) {
+			javaUtilLogger.log(Level.WARNING, "URL(" + url + ") is invalid: "
+					+ e.getMessage(), e);
+		} catch (IOException e) {
+			javaUtilLogger.log(Level.WARNING, "Could not connect to " + url
+					+ " : " + e.getMessage());
+		}
+		return false;
+	}
+
+	private String getConnectionPropertiesUrl(String serverName)
+			throws ConnectException {
+		String newUrl = "http://" + serverName
+				+ ":8081/connection-properties/connection.properties";
+		if (testConnection(newUrl)) {
+			return newUrl;
+		}
+		String oldUrl = "http://" + serverName + ":8040/connection.properties";
+		if (testConnection(oldUrl)) {
+			return oldUrl;
+		}
+		throw new ConnectException(
+				String.format(
+						"Could not get connection properties, both %s and %s are invalid.",
+						oldUrl, newUrl));
+	}
+	
 	public PolopolyContext connect() throws ConnectException {
 		if (connectionUrl.indexOf('/') == -1
 				&& connectionUrl.indexOf(':') == -1) {
 			// if the URL does not contain a slash or colon, it's not a URL but
-			// just the server name. Assume default URL on it.
-			connectionUrl = "http://" + connectionUrl
-					+ ":8040/connection.properties";
+			// just the server name
+			connectionUrl = getConnectionPropertiesUrl(connectionUrl);
 		}
 
 		for (ConnectListener listener : getConnectListeners()) {
