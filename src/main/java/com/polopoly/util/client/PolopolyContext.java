@@ -2,8 +2,11 @@ package com.polopoly.util.client;
 
 import static com.polopoly.util.policy.Util.util;
 
+import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.ejb.CreateException;
 
 import com.polopoly.application.Application;
 import com.polopoly.cm.ContentId;
@@ -27,6 +30,7 @@ import com.polopoly.poll.client.PollClient;
 import com.polopoly.poll.client.PollManager;
 import com.polopoly.search.solr.SolrSearchClient;
 import com.polopoly.user.server.Caller;
+import com.polopoly.user.server.User;
 import com.polopoly.user.server.UserId;
 import com.polopoly.user.server.UserServer;
 import com.polopoly.util.CheckedCast;
@@ -270,7 +274,7 @@ public class PolopolyContext {
 			ContentId securityParent, Class<T> klass,
 			PolicyModification<T> modification) throws PolicyCreateException {
 		T result = null;
-		
+
 		try {
 			result = CheckedCast.cast(
 					server.createContent(major, securityParent, inputTemplate),
@@ -287,7 +291,7 @@ public class PolopolyContext {
 			return result;
 		} catch (PolicyModificationException e) {
 			abort((Policy) result, true);
-			
+
 			throw new PolicyCreateException("New object with template "
 					+ toString(inputTemplate) + ": " + e.getMessage(),
 					e.getCause());
@@ -394,6 +398,32 @@ public class PolopolyContext {
 	public ContentReadUtil getContent(String externalId)
 			throws ContentGetException {
 		return getContent(new ExternalContentId(externalId));
+	}
+
+	public User getCurrentUserServerUser() throws UserNotLoggedInException {
+		Caller caller = getPolicyCMServer().getCurrentCaller();
+
+		if (caller == null) {
+			throw new UserNotLoggedInException();
+		}
+
+		UserId userId = caller.getUserId();
+
+		if (userId == null) {
+			throw new UserNotLoggedInException();
+		}
+
+		try {
+			return getUserServer().getUserByUserId(userId);
+		} catch (RemoteException e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
+
+			throw new UserNotLoggedInException(e);
+		} catch (CreateException e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
+
+			throw new UserNotLoggedInException(e);
+		}
 	}
 
 	public UserData getCurrentUser() throws UserNotLoggedInException {
