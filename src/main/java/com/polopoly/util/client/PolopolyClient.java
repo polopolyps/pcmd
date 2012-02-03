@@ -115,6 +115,8 @@ public class PolopolyClient {
 	private boolean testConnection(String url) {
 		try {
 			URLConnection connection = new URL(url).openConnection();
+			connection.setConnectTimeout(100);
+			connection.setReadTimeout(100);
 			connection.connect();
 			return true;
 		} catch (MalformedURLException e) {
@@ -129,22 +131,30 @@ public class PolopolyClient {
 
 	private String getConnectionPropertiesUrl(String serverName)
 			throws ConnectException {
-		String newUrl = "http://" + serverName
+		// from 10.3 using mvn p:run
+		String mavenJbossUrl = "http://" + serverName
 				+ ":8081/connection-properties/connection.properties";
-		if (testConnection(newUrl)) {
-			return newUrl;
+
+		if (testConnection(mavenJbossUrl)) {
+			return mavenJbossUrl;
 		}
-		String oldUrl = "http://" + serverName + ":8040/connection.properties";
-		if (testConnection(oldUrl)) {
-			return oldUrl;
+		
+		// before 10.3 or not started using mvn p:run
+		String j2eeContainerUrl = "http://" + serverName + ":8040/connection.properties";
+		
+		if (testConnection(j2eeContainerUrl)) {
+			return j2eeContainerUrl;
 		}
+		
 		throw new ConnectException(
 				String.format(
 						"Could not get connection properties, both %s and %s are invalid.",
-						oldUrl, newUrl));
+						j2eeContainerUrl, mavenJbossUrl));
 	}
 	
 	public PolopolyContext connect() throws ConnectException {
+		// If connection URL had not been set at all or it had been set to only
+		// a host name, deduce the connection properties URL.
 		if (connectionUrl.indexOf('/') == -1
 				&& connectionUrl.indexOf(':') == -1) {
 			// if the URL does not contain a slash or colon, it's not a URL but
