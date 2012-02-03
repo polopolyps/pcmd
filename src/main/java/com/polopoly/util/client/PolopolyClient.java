@@ -1,7 +1,10 @@
 package com.polopoly.util.client;
 
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -109,13 +112,54 @@ public class PolopolyClient {
 		return logger;
 	}
 
+	private boolean testConnection(String url) {
+		try {
+			URLConnection connection = new URL(url).openConnection();
+			connection.setConnectTimeout(100);
+			connection.setReadTimeout(100);
+			connection.connect();
+			return true;
+		} catch (MalformedURLException e) {
+			javaUtilLogger.log(Level.WARNING, "URL(" + url + ") is invalid: "
+					+ e.getMessage(), e);
+		} catch (IOException e) {
+			javaUtilLogger.log(Level.WARNING, "Could not connect to " + url
+					+ " : " + e.getMessage());
+		}
+		return false;
+	}
+
+	private String getConnectionPropertiesUrl(String serverName)
+			throws ConnectException {
+		// from 10.3 using mvn p:run
+		String mavenJbossUrl = "http://" + serverName
+				+ ":8081/connection-properties/connection.properties";
+
+		if (testConnection(mavenJbossUrl)) {
+			return mavenJbossUrl;
+		}
+		
+		// before 10.3 or not started using mvn p:run
+		String j2eeContainerUrl = "http://" + serverName + ":8040/connection.properties";
+		
+		if (testConnection(j2eeContainerUrl)) {
+			return j2eeContainerUrl;
+		}
+		
+		throw new ConnectException(
+				String.format(
+						"Could not get connection properties, both %s and %s are invalid.",
+						j2eeContainerUrl, mavenJbossUrl));
+	}
+	
 	public PolopolyContext connect() throws ConnectException {
+		// If connection URL had not been set at all or it had been set to only
+		// a host name, deduce the connection properties URL.
 		if (connectionUrl.indexOf('/') == -1
 				&& connectionUrl.indexOf(':') == -1) {
 			// if the URL does not contain a slash or colon, it's not a URL but
-			// just the server name. Assume default URL on it.
-			connectionUrl = "http://" + connectionUrl
-					+ ":8040/connection.properties";
+			// just the server name
+			connectionUrl = getConnectionPropertiesUrl(connectionUrl);
 		}
 
 		for (ConnectListener listener : getConnectListeners()) {
