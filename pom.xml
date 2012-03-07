@@ -10,7 +10,7 @@
   <parent>
     <artifactId>pstools-parent</artifactId>
     <groupId>com.polopoly.ps.tools</groupId>
-    <version>10.4.0-0e345d8-1</version>
+    <version>10.4.0-0e345d8-2</version>
     <relativePath>../pstools-parent/pom.xml</relativePath>
   </parent>
   
