@@ -42,7 +42,7 @@ public class Main {
 	public static void main(DefaultArguments arguments) {
 		new Main().execute(arguments);
 	}
-	
+
 	public void execute(DefaultArguments arguments) {
 		configureLogging();
 
@@ -79,11 +79,11 @@ public class Main {
 				execute(tool, context, arguments);
 			} catch (FatalToolException e) {
 				System.err.println(e.getMessage());
-				
-				if (e.isPrintStackTrace()) {
+
+				if (e.isPrintStackTrace() || arguments.getFlag(ClientFromArgumentsConfigurator.VERBOSE, false)) {
 					e.printStackTrace();
 				}
-				
+
 				System.exit(e.getExitCode());
 			} catch (CMRuntimeException e) {
 				if (e.getCause() instanceof Exception) {
@@ -139,8 +139,8 @@ public class Main {
 		System.exit(1);
 	}
 
-	public static <T extends Parameters> void execute(Tool<T> tool, PolopolyContext context,
-			Arguments arguments) throws ArgumentException, FatalToolException {
+	public static <T extends Parameters> void execute(Tool<T> tool, PolopolyContext context, Arguments arguments)
+			throws ArgumentException, FatalToolException {
 		T parameters = tool.createParameters();
 
 		parameters.parseParameters(arguments, context);
@@ -148,8 +148,7 @@ public class Main {
 		Set<String> unusedParameters = arguments.getUnusedParameters();
 
 		if (!unusedParameters.isEmpty()) {
-			throw new ArgumentException("The following specified parameters were not recognized: "
-					+ unusedParameters);
+			throw new ArgumentException("The following specified parameters were not recognized: " + unusedParameters);
 		}
 
 		tool.execute(context, parameters);

@@ -23,12 +23,11 @@ public class ClientFromArgumentsConfigurator {
 
 	public static final String PASSWORD = "loginpassword";
 
-	private static final String VERBOSE = "verbose";
+	public static final String VERBOSE = "verbose";
 
 	private static final String PERSISTENCE_CACHE_DIR = "persistencecachedir";
 
-	public ClientFromArgumentsConfigurator(PcmdPolopolyClient client,
-			Arguments arguments) {
+	public ClientFromArgumentsConfigurator(PcmdPolopolyClient client, Arguments arguments) {
 		this.client = client;
 		this.arguments = arguments;
 	}
@@ -39,14 +38,12 @@ public class ClientFromArgumentsConfigurator {
 		client.setUserName(arguments.getOptionString(USER, "sysadmin"));
 
 		try {
-			client.setPolicyCacheSize(arguments.getOption(POLICY_CACHE,
-					new IntegerParser()));
+			client.setPolicyCacheSize(arguments.getOption(POLICY_CACHE, new IntegerParser()));
 		} catch (NotProvidedException e) {
 		}
 
 		try {
-			client.setContentCacheSize(arguments.getOption(CONTENT_CACHE,
-					new IntegerParser()));
+			client.setContentCacheSize(arguments.getOption(CONTENT_CACHE, new IntegerParser()));
 		} catch (NotProvidedException e) {
 		}
 
@@ -56,10 +53,8 @@ public class ClientFromArgumentsConfigurator {
 		}
 
 		try {
-			String persistenceCacheDir = arguments
-					.getOptionString(PERSISTENCE_CACHE_DIR);
-			client.setPersistenceCacheDir((new CreatingDirectoryParser())
-					.parse(persistenceCacheDir));
+			String persistenceCacheDir = arguments.getOptionString(PERSISTENCE_CACHE_DIR);
+			client.setPersistenceCacheDir((new CreatingDirectoryParser()).parse(persistenceCacheDir));
 		} catch (NotProvidedException e) {
 		}
 
@@ -73,23 +68,14 @@ public class ClientFromArgumentsConfigurator {
 	}
 
 	public static void getHelp(ParameterHelp help) {
-		help.addOption(
-				SERVER,
-				null,
+		help.addOption(SERVER, null,
 				"The server name or the connection URL to use to connect to Polopoly. Defaults to localhost.");
-		help.addOption(USER, null,
-				"The Polopoly user to log in. Defaults to \"sysadmin\".");
-		help.addOption(
-				PASSWORD,
-				null,
-				"The password of the Polopoly "
-						+ "user to log in. If not specified, no user will be logged in "
-						+ "(which is fine for most operations).");
-		help.addOption(POLICY_CACHE, new IntegerParser(),
-				"The size of the policy cache of the client.");
-		help.addOption(CONTENT_CACHE, new IntegerParser(),
-				"The size of the content cache of the client.");
-		help.addOption(PERSISTENCE_CACHE_DIR, new CreatingDirectoryParser(),
-				"Enable persistence cache.");
+		help.addOption(USER, null, "The Polopoly user to log in. Defaults to \"sysadmin\".");
+		help.addOption(PASSWORD, null, "The password of the Polopoly "
+				+ "user to log in. If not specified, no user will be logged in "
+				+ "(which is fine for most operations).");
+		help.addOption(POLICY_CACHE, new IntegerParser(), "The size of the policy cache of the client.");
+		help.addOption(CONTENT_CACHE, new IntegerParser(), "The size of the content cache of the client.");
+		help.addOption(PERSISTENCE_CACHE_DIR, new CreatingDirectoryParser(), "Enable persistence cache.");
 	}
 }
