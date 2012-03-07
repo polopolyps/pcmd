@@ -28,3 +28,4 @@ com.polopoly.ps.pcmd.tool.VersionsTool
 com.polopoly.ps.pcmd.tool.WorkflowActionsTool
 com.polopoly.ps.pcmd.tool.PollVoteTool
 com.polopoly.ps.pcmd.tool.PollResultTool
+com.polopoly.ps.pcmd.tool.MonitorTool
