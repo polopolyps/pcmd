@@ -1,0 +1,346 @@
+#!/bin/bash
+
+dir=`dirname $0`
+
+polopolyversion=10.3-DR5-r59718
+pcmdversion=$polopolyversion-1
+toolversion=$polopolyversion-2
+luceneversion=2.3.1
+solrversion=1.4.1
+
+# if the JAR doesn't exist in the current directory, this is probably
+# a symlink to the script
+if [ ! -f $dir/pcmd-$pcmdversion.jar ] 
+then
+    realscript=`readlink $0`
+    if [ "" != "$realscript" ]
+    then
+	dir=`dirname $realscript`
+    fi
+fi
+
+if [ ! -f $dir/pom.xml ] 
+then
+    cat > $dir/pom.xml <<-EOF
+<?xml version="1.0" encoding="UTF-8"?><project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.polopoly.ps.tools</groupId>
+  <artifactId>pcmd-client</artifactId>
+  <packaging>pom</packaging>
+  <name>Polopoly Command Tool</name>
+  <version>$pcmdversion</version>
+  <repositories>
+    <repository>
+        <id>maven</id>
+        <name>Maven central repository</name>
+        <url>http://repo1.maven.org/maven2</url>
+    </repository>
+    <repository>
+      <id>polopoly-public</id>
+      <name>Polopoly public repository</name>
+      <url>http://maven.polopoly.com/nexus/content/groups/polopoly-public/</url>
+    </repository>
+  </repositories>
+  <dependencies>
+    <dependency>
+      <groupId>br.com.ojc</groupId>
+      <artifactId>tablet</artifactId>
+      <version>$polopolyversion</version>
+    </dependency>
+    <dependency>
+      <groupId>br.com.ojc.online</groupId>
+      <artifactId>ojc</artifactId>
+      <version>$polopolyversion</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>com.polopoly</groupId>
+      <artifactId>polopoly</artifactId>
+      <version>$polopolyversion</version>
+    </dependency>
+    <dependency>
+      <groupId>com.polopoly.ps.tools</groupId>
+      <artifactId>hotdeploy-pcmd-tools</artifactId>
+      <version>$toolversion</version>
+    </dependency>
+    <dependency>
+      <groupId>com.polopoly.ps.tools</groupId>
+      <artifactId>pcmd</artifactId>
+      <version>$pcmdversion</version>
+    </dependency>
+    <dependency>
+      <groupId>jboss</groupId>
+      <artifactId>jbossall-client</artifactId>
+      <version>4.0.5.GA</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-core</artifactId>
+      <version>2.3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-core</artifactId>
+      <version>1.9.1</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.solr</groupId>
+    	<artifactId>solr-solrj</artifactId>
+    	<version>1.4.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all</artifactId> 
+      <version>1.6.1</version>
+    </dependency>
+  </dependencies>
+</project>
+EOF
+fi
+
+# try to find a running jboss and use it's jbossall-client
+# External JBoss:
+jbossmain=`ps aux | grep org.jboss.Main | grep -o "[^ ]*/bin/run.jar" | grep -v ]`
+
+if [ "" != "$jbossmain" ]
+then
+    jbossdir=`dirname $jbossmain`
+    jbossjar=$jbossdir/../client/jbossall-client.jar
+fi
+
+if [ ! -f "$jbossjar" ] 
+then
+    jbossjar=$dir/jbossall-client.jar
+fi
+
+if [ ! -f "$jbossjar" ] 
+then
+    jbossjar=~/.m2/repository/jboss/jbossall-client/4.0.5.GA/jbossall-client-4.0.5.GA.jar
+fi
+
+if [ ! -f "$jbossjar" ] 
+then 
+    cd $dir
+    mvn dependency:resolve
+fi
+
+classpath=$CLASSPATH
+
+classpath=$classpath:~/.m2/repository/com/polopoly/ps/tools/hotdeploy/$toolversion/hotdeploy-$toolversion.jar
+classpath=$classpath:~/.m2/repository/com/polopoly/ps/tools/hotdeploy-pcmd-tools/$toolversion/hotdeploy-pcmd-tools-$toolversion.jar
+
+if [ ! -f "$jbossjar" ] 
+then
+    echo "Could not find jbossall-client.jar, neither in $dir, nor in $jbossjar and JBoss doesn't seem to be running locally."
+    exit;
+fi
+
+peardir=`ps aux | grep java | grep -v grep | grep -m 1 -o '[^: =]*/pear' | head -n 1`
+
+if [ "" != "$peardir" ]
+then
+    polopolyjar=$peardir/../install/lib/polopoly.jar
+    lucenejar=$peardir/../install/lib/lucene-core-2.3.1.jar
+    solrjar=$peardir/../install/lib/solr-solrj-1.4.0.jar
+    classpath=$classpath:$peardir/../install/lib/metadata-extractor-2.3.1.jar
+    
+    if [ ! -f "$lucenejar" ]
+    then
+        lucenejar=$peardir/../install/lib/lucene-core-1.9.1.jar
+    fi
+fi
+
+if [ ! -f "$polopolyjar" ] 
+then
+    polopolyjar=$dir/polopoly-$polopolyversion.jar
+fi
+
+if [ ! -f "$polopolyjar" ] 
+then
+    polopolyjar=~/.m2/repository/com/polopoly/polopoly/$polopolyversion/polopoly-$polopolyversion.jar 
+fi
+
+if [ ! -f "$polopolyjar" ] 
+then 
+    cd $dir
+    mvn dependency:resolve
+fi
+
+if [ -f "$polopolyjar" ]
+then
+    classpath=$classpath:$polopolyjar
+else
+    echo "Could not find Polopoly JAR, neither in $peardir/../install, nor in $dir nor in $polopolyjar.";
+    exit;
+fi
+
+if [ ! -f "$lucenejar" ]
+then
+    lucenejar=$dir/lucene-core-$luceneversion.jar
+fi
+
+if [ ! -f "$lucenejar" ]
+then
+    lucenejar=$dir/lucene-core-1.9.1.jar
+fi
+
+if [ ! -f "$lucenejar" ]
+then
+    lucenejar=$dir/lucene-core-2.3.1.jar
+fi
+
+if [ ! -f "$lucenejar" ]
+then
+    lucenejar=~/.m2/repository/org/apache/lucene/lucene-core/$luceneversion/lucene-core-$luceneversion.jar
+fi
+
+if [ ! -f "$lucenejar" ] 
+then 
+    cd $dir
+    mvn dependency:resolve
+fi
+
+if [ -f "$lucenejar" ]
+then
+    classpath=$classpath:$lucenejar
+else
+    echo "Could not find Lucene JAR, neither in $peardir/../install, nor in $bin nor in $lucenejar.";
+    exit;
+fi
+
+if [ ! -f "$solrjar" ]; then
+    solrjar=~/.m2/repository/org/apache/solr/solr-solrj/$solrversion/solr-solrj-$solrversion.jar
+fi
+
+if [ ! -f "$solrjar" ]; then 
+    cd $dir
+    mvn dependency:resolve
+fi
+
+if [ -f "$solrjar" ]
+then
+    classpath=$classpath:$solrjar
+else
+    echo "Could not find SOLR JAR. Tools requiring SOLR will not work.";
+fi
+
+if [[ "$1"="groovy" ]]
+then 
+    groovyjar=$dir/groovy.jar
+
+    if [ ! -f "$groovyjar" ] 
+    then 
+        groovyjar=~/.m2/repository/org/codehaus/groovy/groovy-all/1.6.1/groovy-all-1.6.1.jar
+    fi
+
+    if [ ! -f "$groovyjar" ] 
+    then 
+        cd $dir
+        mvn dependency:resolve
+    fi
+
+    if [ ! -f "$groovyjar" ] 
+    then 
+        echo "Could not find Groovy JAR, neither in maven repository nor in $groovyjar."
+        exit;
+    fi
+    
+    classpath=$classpath:$groovyjar
+fi
+
+if [[ "$1" = "hotdeploy" ]]
+then 
+    jaxenjar=$dir/jaxen-core.jar
+
+    if [ ! -f "$jaxenjar" ] 
+    then 
+        jaxenjar=~/.m2/repository/jaxen/jaxen/1.1/jaxen-1.1.jar
+    fi
+
+    if [ ! -f "$jaxenjar" ] 
+    then 
+        cd $dir
+        mvn dependency:resolve
+    fi
+
+    if [ ! -f "$jaxenjar" ] 
+    then 
+        echo "Could not find Jaxen JAR, neither in maven repository nor in $jaxenjar."
+        exit;
+    fi
+    
+    classpath=$classpath:$jaxenjar
+fi
+
+jar=$dir/pcmd-$pcmdversion.jar
+
+if [ ! -f "$jar" ]
+then
+    # check if we can use JAR from MVN repository rather than current dir
+    jar=~/.m2/repository/com/polopoly/ps/tools/pcmd/$pcmdversion/pcmd-$pcmdversion.jar
+
+    if [ ! -f $jar ]
+    then
+        cd $dir
+        mvn dependency:resolve
+    fi
+    
+    if [ ! -f $jar ]
+    then
+	echo "The JAR for PCMD did not exist either in $dir, nor in Maven repository $jar.";
+	exit;
+    fi
+fi
+
+if [ "" != "$POLOPOLY_SERVER" ]
+then
+        options="$options --server=$POLOPOLY_SERVER"
+fi
+
+if [ "" != "$POLOPOLY_USER" ]
+then
+        options="$options --user=$POLOPOLY_USER"
+fi
+
+if [ "" != "$POLOPOLY_PASSWORD" ]
+then
+        options="$options --password=$POLOPOLY_USER"
+fi
+
+if [ -d $dir/client-lib ] 
+then
+    for file in $dir/client-lib/*.jar ; do
+        clientlibs=$clientlibs:$file
+    done
+fi
+
+if [ -d "$peardir/../custom/client-lib" ] 
+then
+    for file in $peardir/../custom/client-lib/*.jar ; do
+        clientlibs=$clientlibs:$file
+    done
+fi
+
+if [ -d "$peardir/jar-repository/policy-lib" ] 
+then
+    for file in $peardir/jar-repository/policy-lib/*.jar ; do
+        clientlibs=$clientlibs:$file
+    done
+fi
+
+if [ "$1" = "--verbose" ]
+then
+    echo "Full classpath consists of: $classpath"
+    echo "...followed by client libs: $clientlibs"
+    echo "...followed by PCMD JAR: $jar"
+    echo "...followed by the JBoss JAR: $jbossjar"
+fi
+
+java $JAVA_OPTS -cp $classpath$clientlibs:$jar:$jbossjar com.polopoly.ps.pcmd.Main$options "$@" 
+# --server=http://localhost:8081/connection-properties/connection.properties
