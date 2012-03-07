@@ -8,6 +8,7 @@ import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.Content;
 import com.polopoly.cm.client.ContentRead;
 import com.polopoly.cm.client.InputTemplate;
+import com.polopoly.cm.policy.Policy;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.FetchingIterator;
@@ -131,7 +132,8 @@ public class ContentUtilImpl extends RuntimeExceptionContentWrapper implements C
 		if (externalId != null) {
 			return externalId.getExternalId();
 		} else {
-			throw new NoExternalIdSetException("No external ID set in " + getContentId().unversioned().getContentIdString() + ".");
+			throw new NoExternalIdSetException("No external ID set in "
+					+ getContentId().unversioned().getContentIdString() + ".");
 		}
 	}
 
@@ -186,31 +188,41 @@ public class ContentUtilImpl extends RuntimeExceptionContentWrapper implements C
 	}
 
 	@Override
-	public void setExternalId(String externalId) throws ExternalIdAlreadySetException, ExternalIdAlreadyInUseException {
-		checkForExistingId(externalId);		
-		
+	public void setExternalId(String externalId) throws ExternalIdAlreadySetException,
+			ExternalIdAlreadyInUseException {
+		checkForExistingId(externalId);
+
 		checkThatIdIsUnused(externalId);
-		
+
 		try {
 			super.setExternalId(externalId);
 		} catch (CMException e) {
-			throw new CMRuntimeException("While assigning external ID " + externalId + " to " + this + ": " + e.getMessage(), e);
+			throw new CMRuntimeException("While assigning external ID " + externalId + " to " + this + ": "
+					+ e.getMessage(), e);
 		}
 	}
 
 	protected void checkThatIdIsUnused(String externalId) throws ExternalIdAlreadyInUseException {
 		try {
 			ContentIdUtil existingUserId = getContext().resolveExternalId(externalId);
-			
-			String existingUser;
+
+			String existingUserDescription;
 
 			try {
-				existingUser = getContext().getPolicy(existingUserId).toString();
+				Policy existingUser = getContext().getPolicy(existingUserId);
+
+				if (existingUser.getContentId().equalsIgnoreVersion(getContentId())) {
+					return;
+				}
+
+				existingUserDescription = existingUser.toString();
 			} catch (PolicyGetException e) {
-				existingUser = existingUserId.toString();
+				existingUserDescription = existingUserId.toString();
 			}
 
-			throw new ExternalIdAlreadyInUseException("The external ID " + externalId + " is already in use by " + existingUser + ". It cannot be assigned to " + this + ".");
+			throw new ExternalIdAlreadyInUseException("The external ID " + externalId
+					+ " is already in use by " + existingUserDescription + ". It cannot be assigned to "
+					+ this + ".");
 		} catch (NoSuchExternalIdException e) {
 			// no existing user.
 		}
@@ -219,9 +231,10 @@ public class ContentUtilImpl extends RuntimeExceptionContentWrapper implements C
 	protected void checkForExistingId(String externalId) throws ExternalIdAlreadySetException {
 		try {
 			String existingExternalId = getExternalIdString();
-			
+
 			if (!existingExternalId.equals(externalId)) {
-				throw new ExternalIdAlreadySetException(this + " had already been assigned the external ID " + existingExternalId + ". Cannot be reassigned to " + externalId + ".");
+				throw new ExternalIdAlreadySetException(this + " had already been assigned the external ID "
+						+ existingExternalId + ". Cannot be reassigned to " + externalId + ".");
 			}
 		} catch (NoExternalIdSetException e) {
 			// not already set
