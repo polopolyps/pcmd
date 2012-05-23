@@ -63,6 +63,8 @@ public class StatisticsInspectTool implements Tool<StatisticsInspectParameters>,
 				ThinTimeBinGroup group = context.getThinTimeBinGroup(sel);
 
 				if (group != null) {
+					System.out.println(sel);
+
 					if (key != null) {
 						System.out.println(key + ": " + toString(group.getThinTimeBin(key)));
 					} else {
