@@ -75,7 +75,13 @@
     <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-core</artifactId>
-      <version>3.6.0</version>
+      <version>1.4.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>woodstox</groupId>
+          <artifactId>wstx-asl</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.lucene</groupId>
