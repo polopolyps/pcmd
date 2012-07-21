@@ -465,7 +465,7 @@ public class PolicyUtilImpl extends RuntimeExceptionPolicyWrapper implements Pol
 	}
 
 	public Policy getTopPolicy() {
-		Policy result = this;
+		Policy result = policy;
 
 		try {
 			Policy parent;
