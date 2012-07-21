@@ -39,7 +39,7 @@ import com.polopoly.user.server.User;
 import com.polopoly.user.server.UserId;
 
 public class PolopolyClient {
-	private String applicationName = "polopolyclient";
+	private String applicationName = "polopolyPCMDclient";
 
 	private String connectionUrl = "localhost";
 
