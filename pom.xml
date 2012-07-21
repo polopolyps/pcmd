@@ -11,7 +11,7 @@
     <artifactId>pstools-parent</artifactId>
     <groupId>com.polopoly.ps.tools</groupId>
     <version>10.5-DR3-SNAPSHOT-1</version>
-    <relativePath>../pstools-parent/pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   
   <build>
