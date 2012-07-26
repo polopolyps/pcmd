@@ -132,7 +132,7 @@ public class PolopolyClient {
 		return false;
 	}
 
-	private String getConnectionPropertiesUrl(String serverName) throws ConnectException {
+	public String getConnectionPropertiesUrl(String serverName) throws ConnectException {
 		// from 10.3 using mvn p:run
 		String mavenJbossUrl = "http://" + serverName + ":8081/connection-properties/connection.properties";
 
