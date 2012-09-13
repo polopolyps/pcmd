@@ -35,6 +35,7 @@ import com.polopoly.user.server.UserId;
 import com.polopoly.user.server.UserServer;
 import com.polopoly.util.CheckedCast;
 import com.polopoly.util.CheckedClassCastException;
+import com.polopoly.util.Require;
 import com.polopoly.util.content.ContentReadUtil;
 import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.contentid.ContentIdUtil;
@@ -98,12 +99,12 @@ public class PolopolyContext {
 	}
 
 	public PolopolyContext(PolicyCMServer server) {
-		this.server = server;
+		this.server = Require.require(server);
 
 		// get the CM server from the policy CM server.
 		PolicyCMServer atServer = server;
 
-		while (cmServer == null) {
+		while (cmServer == null && atServer != null) {
 			if (atServer instanceof PolicyCMServerWrapper) {
 				cmServer = ((PolicyCMServerWrapper) atServer).getCMServer();
 			} else if (atServer instanceof PolicyCMServerBase) {
