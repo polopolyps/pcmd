@@ -18,6 +18,7 @@ com.polopoly.ps.pcmd.tool.ParentsTool
 com.polopoly.ps.pcmd.tool.PolicyTreeTool
 com.polopoly.ps.pcmd.tool.ResolveTool
 com.polopoly.ps.pcmd.tool.SearchTool
+com.polopoly.ps.pcmd.tool.SolrTool
 com.polopoly.ps.pcmd.tool.SetPermissionTool
 com.polopoly.ps.pcmd.tool.TemplateInspectTool
 com.polopoly.ps.pcmd.tool.TouchTool

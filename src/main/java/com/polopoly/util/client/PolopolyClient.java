@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.logging.Level;
@@ -25,7 +26,6 @@ import com.polopoly.cm.client.EjbCmClient;
 import com.polopoly.cm.client.filter.ContentFilter;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.cm.search.index.RmiSearchClient;
-import com.polopoly.community.client.CommunityClient;
 import com.polopoly.management.ManagedBeanRegistry;
 import com.polopoly.management.jmx.JMXManagedBeanRegistry;
 import com.polopoly.poll.client.PollClient;
@@ -59,7 +59,13 @@ public class PolopolyClient {
 
 	private List<Class<? extends ContentFilter>> contentFilterClasses = new ArrayList<Class<? extends ContentFilter>>();
 
+	// Additional indexes to configure.
+	private List<String> additionalIndexes = new LinkedList<String>();
+
 	private static final Logger javaUtilLogger = Logger.getLogger(PolopolyClient.class.getName());
+
+	private static final int SECONDS = 1000;
+	private static final int DEFAULT_CONNECTION_TIMEOUT = 30 * SECONDS;
 
 	private PolopolyClientLogger logger = new PolopolyClientLogger() {
 		public void info(String logMessage) {
@@ -114,8 +120,8 @@ public class PolopolyClient {
 	private boolean testConnection(String url) {
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-			connection.setConnectTimeout(1000);
-			connection.setReadTimeout(1000);
+			connection.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
+			connection.setReadTimeout(DEFAULT_CONNECTION_TIMEOUT);
 			connection.connect();
 
 			if (connection.getResponseCode() >= 400 && connection.getResponseCode() < 600) {
@@ -148,7 +154,7 @@ public class PolopolyClient {
 		}
 
 		throw new ConnectException(String.format("Could not get connection properties, both %s and %s are invalid.",
-				j2eeContainerUrl, mavenJbossUrl));
+			j2eeContainerUrl, mavenJbossUrl));
 	}
 
 	public PolopolyContext connect() throws ConnectException {
@@ -181,7 +187,7 @@ public class PolopolyClient {
 				@Override
 				protected PolicyCMServer createPolicyCMServer(CMServer legacyWrapper) {
 					return PolopolyClient.this.createPolicyCMServer(super.createPolicyCMServer(legacyWrapper), this,
-							app, legacyWrapper);
+						app, legacyWrapper);
 				}
 			};
 
@@ -207,6 +213,9 @@ public class PolopolyClient {
 			if (isAttachSolrSearchClient()) {
 				createSolrSearchClient(cmClient, app, "public");
 				createSolrSearchClient(cmClient, app, "internal");
+				for (String index : additionalIndexes) {
+					createSolrSearchClient(cmClient, app, index);
+				}
 			}
 
 			if (isAttachPollService()) {
@@ -230,13 +239,6 @@ public class PolopolyClient {
 			logMsgClient = new UDPLogMsgClient();
 			app.addApplicationComponent(logMsgClient);
 
-			try {
-				CommunityClient communityClient = new CommunityClient(cmClient);
-				app.addApplicationComponent(communityClient);
-			} catch (Throwable t) {
-				// Community JAR not present in class path. Skip it.
-			}
-
 			// Read connection properties.
 			app.readConnectionProperties(connectionProperties);
 
@@ -255,7 +257,7 @@ public class PolopolyClient {
 			throw e;
 		} catch (Exception e) {
 			throw new ConnectException("Error connecting to Polopoly server with connection URL " + connectionUrl
-					+ ": " + e, e);
+										+ ": " + e, e);
 		}
 	}
 
@@ -278,9 +280,10 @@ public class PolopolyClient {
 	}
 
 	private SolrSearchClient createSolrSearchClient(EjbCmClient cmClient, final StandardApplication app,
-			String indexName) throws IllegalApplicationStateException {
-		SolrSearchClient result = new SolrSearchClient(SolrSearchClient.DEFAULT_MODULE_NAME, "solrClient"
-				+ firstCharacterUppercase(indexName), cmClient);
+		String indexName) throws IllegalApplicationStateException {
+		SolrSearchClient result =
+			new SolrSearchClient(SolrSearchClient.DEFAULT_MODULE_NAME, "solrClient"
+																		+ firstCharacterUppercase(indexName), cmClient);
 
 		result.setIndexName(new SolrIndexName(indexName));
 
@@ -303,7 +306,7 @@ public class PolopolyClient {
 	 * Intended for overriding for clients needing to wrap the CM server.
 	 */
 	protected PolicyCMServer createPolicyCMServer(PolicyCMServer originalServer, EjbCmClient cmClient,
-			StandardApplication app, CMServer legacyWrapper) {
+		StandardApplication app, CMServer legacyWrapper) {
 		return originalServer;
 	}
 
@@ -330,8 +333,8 @@ public class PolopolyClient {
 	}
 
 	private void loginUserWithPassword(PolopolyContext context) throws Exception {
-		Caller caller = context.getUserServer().loginAndMerge(userName, password,
-				context.getPolicyCMServer().getCurrentCaller());
+		Caller caller =
+			context.getUserServer().loginAndMerge(userName, password, context.getPolicyCMServer().getCurrentCaller());
 
 		context.getPolicyCMServer().setCurrentCaller(caller);
 
@@ -351,7 +354,7 @@ public class PolopolyClient {
 			throw new ConnectException("The password supplied for user " + userName + " was incorrect.");
 		} catch (Exception e) {
 			throw new ConnectException("An error occurred while trying to log in user " + userName + ": "
-					+ e.getMessage(), e);
+										+ e.getMessage(), e);
 		}
 	}
 
@@ -395,5 +398,16 @@ public class PolopolyClient {
 
 	public void setAttachSolrSearchClient(boolean attachSolrSearchClient) {
 		this.attachSolrSearchClient = attachSolrSearchClient;
+	}
+
+	/**
+	 * Add additional index. A common usecase would be a userindex in which case
+	 * the parameter would be 'user'.
+	 * 
+	 * @param indexName
+	 *            The name of the index e.g. 'user'.
+	 */
+	public void addAdditionalIndex(String indexName) {
+		additionalIndexes.add(indexName);
 	}
 }

@@ -451,4 +451,16 @@ public class PolopolyContext {
 		return Util.util(contentId, this);
 	}
 
+	/**
+	 * Retrieves the solrSearch client in the app for the given index.
+	 * 
+	 * @param indexName
+	 *            name of the index for the solrSearchClient.
+	 * @return
+	 */
+	public SolrSearchClient getSolrSearchClient(String indexName) {
+		String compName = "search_solrClient" + Character.toUpperCase(indexName.charAt(0)) + indexName.substring(1);
+		return (SolrSearchClient) application.getApplicationComponent(compName);
+	}
+
 }
