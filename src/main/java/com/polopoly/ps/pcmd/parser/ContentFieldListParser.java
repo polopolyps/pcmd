@@ -30,7 +30,7 @@ public class ContentFieldListParser implements Parser<List<Field>> {
 
     private static final String COMMITTED = "committed";
 
-    private static final String NAME = "name";
+    public static final String NAME = "name";
 
     public static final String COMPONENT = "component";
 
@@ -41,6 +41,8 @@ public class ContentFieldListParser implements Parser<List<Field>> {
     private static final String CONTENT_LIST_SIZE = "contentlistsize";
 
     public static final String ID = "id";
+
+    public static final String MAJOR = "major";
 
     public static final String WORKFLOW = "workflow";
 

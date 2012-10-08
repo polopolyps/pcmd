@@ -29,6 +29,7 @@ import com.polopoly.user.server.UserServer;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.collection.ContentIdToContentIterator;
 import com.polopoly.util.content.ContentUtil;
+import com.polopoly.util.contentid.MajorStrings;
 import com.polopoly.util.contentlist.ContentListUtil;
 
 public class InspectTool implements Tool<ContentIdListParameters> {
@@ -39,8 +40,8 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 	}
 
 	public void execute(PolopolyContext context, ContentIdListParameters parameters) {
-		ContentIdToContentIterator it = new ContentIdToContentIterator(context, parameters.getContentIds(),
-				parameters.isStopOnException());
+		ContentIdToContentIterator it =
+			new ContentIdToContentIterator(context, parameters.getContentIds(), parameters.isStopOnException());
 
 		while (it.hasNext()) {
 			ContentRead content = it.next();
@@ -50,9 +51,13 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 
 				printId(content);
 
+				printMajor(content);
+
 				printInputTemplate(contentUtil);
 
 				printSecurityParent(context, content);
+
+				printName(content);
 
 				printLockInfo(content);
 
@@ -83,24 +88,44 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 		it.printInfo(System.err);
 	}
 
+	private void printName(ContentRead content) {
+		try {
+			String name = content.getName();
+			if (name != null) {
+				System.out.println(ContentFieldListParser.NAME + PREFIX_FIELD_SEPARATOR + name);
+			}
+		} catch (CMException e) {
+			// Empty.
+		}
+	}
+
 	private ExternalContentId printId(ContentRead content) throws CMException {
 		ExternalContentId externalId = content.getExternalId();
 
 		if (externalId != null) {
-			System.out.println(ContentFieldListParser.ID + PREFIX_FIELD_SEPARATOR
-					+ externalId.getExternalId());
+			System.out.println(ContentFieldListParser.ID + PREFIX_FIELD_SEPARATOR + externalId.getExternalId());
 			System.out.println(ContentFieldListParser.NUMERICAL_ID + PREFIX_FIELD_SEPARATOR
-					+ content.getContentId().getContentIdString());
+								+ content.getContentId().getContentIdString());
 		} else {
 			System.out.println(ContentFieldListParser.ID + PREFIX_FIELD_SEPARATOR
-					+ content.getContentId().getContentIdString());
+								+ content.getContentId().getContentIdString());
 		}
 		return externalId;
 	}
 
+	private void printMajor(ContentRead content) throws CMException {
+
+		int major = content.getContentId().getMajor();
+		String majorString = MajorStrings.get(major);
+		if (majorString != null) {
+			System.out.println(ContentFieldListParser.MAJOR + PREFIX_FIELD_SEPARATOR + majorString);
+		}
+
+	}
+
 	private void printInputTemplate(ContentUtil contentUtil) {
 		System.out.println(ContentFieldListParser.INPUT_TEMPLATE + PREFIX_FIELD_SEPARATOR
-				+ contentUtil.getInputTemplate().getContentIdString());
+							+ contentUtil.getInputTemplate().getContentIdString());
 	}
 
 	private void printSecurityParent(PolopolyContext context, ContentRead content) {
@@ -108,7 +133,7 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 
 		if (securityParentId != null) {
 			System.out.println(ContentFieldListParser.SECURITY_PARENT + PREFIX_FIELD_SEPARATOR
-					+ AbstractContentIdField.get(securityParentId, context));
+								+ AbstractContentIdField.get(securityParentId, context));
 		}
 	}
 
@@ -117,7 +142,7 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 
 		if (lockInfo != null && lockInfo.getLocker() != null) {
 			System.out.println(ContentFieldListParser.LOCKER + PREFIX_FIELD_SEPARATOR
-					+ lockInfo.getLocker().getLoginName());
+								+ lockInfo.getLocker().getLoginName());
 		}
 	}
 
@@ -127,7 +152,7 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 
 			if (workflowId != null) {
 				System.out.println(ContentFieldListParser.WORKFLOW + PREFIX_FIELD_SEPARATOR
-						+ AbstractContentIdField.get(workflowId, context));
+									+ AbstractContentIdField.get(workflowId, context));
 			}
 		}
 	}
@@ -147,7 +172,7 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 
 						if (group.isDirectMember(userId)) {
 							System.out.println("group" + PREFIX_FIELD_SEPARATOR + group.getName() + " ("
-									+ groupId.getGroupIdInt() + ")");
+												+ groupId.getGroupIdInt() + ")");
 						}
 					} catch (Exception e) {
 						System.err.println("group " + groupId + ":" + e.toString());
@@ -172,8 +197,13 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 			for (String name : names) {
 				String value = content.getComponent(group, name);
 
-				System.out.println(ContentFieldListParser.COMPONENT + PREFIX_FIELD_SEPARATOR + group + ':'
-						+ name + FIELD_VALUE_SEPARATOR + value);
+				// Name already printed at top of content.
+				if (group.equals("polopoly.Content") && name.equals("name")) {
+					continue;
+				}
+
+				System.out.println(ContentFieldListParser.COMPONENT + PREFIX_FIELD_SEPARATOR + group + ':' + name
+									+ FIELD_VALUE_SEPARATOR + value);
 			}
 		}
 		return groups;
@@ -190,7 +220,7 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 	}
 
 	private void printContentReferences(PolopolyContext context, ContentRead content, ContentUtil contentUtil)
-			throws CMException {
+		throws CMException {
 		String[] groups = content.getContentReferenceGroupNames();
 
 		Arrays.sort(groups);
@@ -205,9 +235,14 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 				Arrays.sort(names);
 
 				for (String name : names) {
-					System.out.println(ContentFieldListParser.CONTENT_REF + PREFIX_FIELD_SEPARATOR + group
-							+ ':' + name + FIELD_VALUE_SEPARATOR
-							+ new ContentRefField(group, name).get(content, context));
+					// Inputtemplate already printed at top.
+					if (group.equals("polopoly.Content") && name.equals("inputTemplateId")) {
+						continue;
+					}
+					System.out.println(ContentFieldListParser.CONTENT_REF + PREFIX_FIELD_SEPARATOR + group + ':' + name
+										+ FIELD_VALUE_SEPARATOR
+										+ new ContentRefField(group, name).get(content, context));
+
 				}
 			}
 		}
@@ -223,11 +258,11 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 
 			if (rmd != null) {
 				System.out.println("list" + PREFIX_FIELD_SEPARATOR + contentList.getContentListStorageGroup()
-						+ FIELD_VALUE_SEPARATOR + AbstractContentIdField.get(rmd, context)
-						+ FIELD_VALUE_SEPARATOR + AbstractContentIdField.get(referredId, context));
+									+ FIELD_VALUE_SEPARATOR + AbstractContentIdField.get(rmd, context)
+									+ FIELD_VALUE_SEPARATOR + AbstractContentIdField.get(referredId, context));
 			} else {
 				System.out.println("list" + PREFIX_FIELD_SEPARATOR + contentList.getContentListStorageGroup()
-						+ FIELD_VALUE_SEPARATOR + AbstractContentIdField.get(referredId, context));
+									+ FIELD_VALUE_SEPARATOR + AbstractContentIdField.get(referredId, context));
 			}
 		}
 	}
