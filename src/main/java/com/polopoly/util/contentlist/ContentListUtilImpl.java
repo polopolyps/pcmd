@@ -124,10 +124,6 @@ public class ContentListUtilImpl extends RuntimeExceptionContentListWrapper
 			PolopolyContext context) {
 		this(contentList, toString, context.getPolicyCMServer());
 
-		if (context == null) {
-			throw new IllegalArgumentException("Context was null.");
-		}
-
 		this.lazyContext = context;
 	}
 

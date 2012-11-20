@@ -6,7 +6,7 @@ polopolyversion=10.3-DR5-r59718
 pcmdversion=$polopolyversion-1
 toolversion=$polopolyversion-2
 luceneversion=2.3.1
-solrversion=1.4.1
+solrversion=3.6.0
 
 # if the JAR doesn't exist in the current directory, this is probably
 # a symlink to the script
@@ -90,9 +90,9 @@ then
       <version>1.9.1</version>
     </dependency>
     <dependency>
-    	<groupId>org.apache.solr</groupId>
-    	<artifactId>solr-solrj</artifactId>
-    	<version>1.4.1</version>
+      <groupId>org.apache.solr</groupId>
+      <artifactId>solr-solrj</artifactId>
+      <version>$solrversion</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
@@ -147,7 +147,7 @@ if [ "" != "$peardir" ]
 then
     polopolyjar=$peardir/../install/lib/polopoly.jar
     lucenejar=$peardir/../install/lib/lucene-core-2.3.1.jar
-    solrjar=$peardir/../install/lib/solr-solrj-1.4.0.jar
+    solrjar=$peardir/../install/lib/solr-solrj-$solrversion.jar
     classpath=$classpath:$peardir/../install/lib/metadata-extractor-2.3.1.jar
     
     if [ ! -f "$lucenejar" ]
