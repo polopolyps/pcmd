@@ -4,7 +4,7 @@
   
   <groupId>com.polopoly.ps.tools</groupId>
   <artifactId>pcmd</artifactId>
-  <version>2.0</version>
+  <version>2.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   
   <name>Polopoly Command Tool</name>
@@ -93,13 +93,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.polopoly.ps</groupId>
-      <artifactId>polopoly-jboss-deps</artifactId>
-      <version>1.0.1</version>
-      <type>pom</type>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <version>2.4</version>
@@ -156,6 +149,11 @@
       <artifactId>polopoly</artifactId>
       <version>${polopoly.version}</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-cli</groupId>
+      <artifactId>commons-cli</artifactId>
+      <version>1.2</version>
     </dependency>
   </dependencies>
 
