@@ -13,6 +13,7 @@ import com.polopoly.ps.pcmd.argument.Parameters;
 import com.polopoly.ps.pcmd.parser.BooleanParser;
 import com.polopoly.ps.pcmd.parser.IntegerParser;
 import com.polopoly.ps.pcmd.parser.SolrQueryParser;
+import com.polopoly.util.StringUtil;
 import com.polopoly.util.client.PolopolyContext;
 
 public class SolrParameters implements Parameters {
@@ -21,6 +22,7 @@ public class SolrParameters implements Parameters {
     private static final String RESOLVE_EXTERNAL_ID_OPTION = "resolveid";
     private static final String VERBOSE_OPTION = "verbose";
     private static final String INSPECT_OPTION = "inspect";
+    private static final String FILTER_QUERY_OPTION = "fq";
 
     private SolrQuery query;
     private String indexName;
@@ -28,6 +30,7 @@ public class SolrParameters implements Parameters {
     private boolean resolveIds;
     private boolean verbose;
     private boolean inspect;
+    private String filterQuery;
 
     @Override
     public void parseParameters(Arguments args, PolopolyContext context) throws ArgumentException {
@@ -48,6 +51,18 @@ public class SolrParameters implements Parameters {
         resolveIds = args.getFlag(RESOLVE_EXTERNAL_ID_OPTION, true);
         verbose = args.getFlag(VERBOSE_OPTION, false);
         inspect = args.getFlag(INSPECT_OPTION, false);
+        filterQuery = args.getOptionString(FILTER_QUERY_OPTION,"");
+        if(!StringUtil.isEmpty(filterQuery)){
+
+        	if(filterQuery.startsWith("\"")){
+        		filterQuery = filterQuery.substring(1);
+        	}
+        	if(filterQuery.endsWith("\"")){
+        		filterQuery = filterQuery.substring(0, filterQuery.length()-2);
+        	}
+
+        	query.addFilterQuery(filterQuery);
+        }
     }
 
     @Override
@@ -58,6 +73,7 @@ public class SolrParameters implements Parameters {
         help.addOption(RESOLVE_EXTERNAL_ID_OPTION, new BooleanParser(), "Whether to print external IDs rather than numerical IDs if available (reduces performance; defaults to true).");
         help.addOption(VERBOSE_OPTION, new BooleanParser(), "Print verbose execution log to stderr; defaults to false).");
         help.addOption(INSPECT_OPTION, new BooleanParser(), "Show stored fields in Solr document according to Solr search result's content ID; defaults to false).");
+        help.addOption(FILTER_QUERY_OPTION, null, "The filter query that can be used to restrict the super set of documents that can be returned, without influencing score");
     }
 
     public SolrQuery getSearchQuery() {
@@ -82,5 +98,9 @@ public class SolrParameters implements Parameters {
     
     public boolean inspect(){
     	return inspect;
+    }
+    
+    public String getFilterQuery(){
+    	return filterQuery;
     }
 }
