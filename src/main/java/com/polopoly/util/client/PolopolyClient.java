@@ -140,6 +140,13 @@ public class PolopolyClient {
             return mavenJbossUrl;
         }
 
+        // from 10.6 nitro dist install connection.properties deployed in jboss
+        String jbossUrl = "http://" + serverName + ":9090/connection-properties/connection.properties";
+
+        if (testConnection(jbossUrl)) {
+            return jbossUrl;
+        }
+
         // before 10.3 or not started using mvn p:run
         String j2eeContainerUrl = "http://" + serverName + ":8040/connection.properties";
 
