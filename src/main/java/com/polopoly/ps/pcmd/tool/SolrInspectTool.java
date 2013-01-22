@@ -81,6 +81,7 @@ public class SolrInspectTool implements Tool<SolrInspectParameters>, RequiresSol
 				SolrDocumentList sdls = r.getResults();	
 				if(sdls.size() < 1){
 					System.out.println("Solr index not found:" + contentId.getContentId().getContentIdString());
+					System.out.println("");
 				}
 				
 				for (SolrDocument sd : sdls) {
