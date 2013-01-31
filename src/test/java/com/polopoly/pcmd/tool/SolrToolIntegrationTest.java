@@ -1,5 +1,5 @@
 package com.polopoly.pcmd.tool;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -9,14 +9,12 @@ import java.util.List;
 import org.apache.geronimo.mail.util.StringBufferOutputStream;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 import com.polopoly.ps.pcmd.FatalToolException;
 import com.polopoly.ps.pcmd.Main;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.SolrTool;
-import com.polopoly.ps.testbase.annotations.markers.IntegrationTest;
 import com.polopoly.util.client.PolopolyContext;
 
 public class SolrToolIntegrationTest extends AbstractIntegrationTestBase {
