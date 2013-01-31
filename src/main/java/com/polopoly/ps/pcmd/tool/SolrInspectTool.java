@@ -80,7 +80,7 @@ public class SolrInspectTool implements Tool<SolrInspectParameters>, RequiresSol
 			for(QueryResponse r : resps) {
 				SolrDocumentList sdls = r.getResults();	
 				if(sdls.size() < 1){
-					System.out.println("Solr index not found:" + contentId.getContentId().getContentIdString());
+					System.out.println("No index document for:" + contentId.getContentId().getContentIdString());
 					System.out.println("");
 				}
 				
@@ -104,7 +104,7 @@ public class SolrInspectTool implements Tool<SolrInspectParameters>, RequiresSol
 				}
 			}
 		}else{
-			System.out.println("Solr index not found:" + contentId.getContentId().getContentIdString());
+			System.out.println("No index document for:" + contentId.getContentId().getContentIdString());
 		}
 	}
 
