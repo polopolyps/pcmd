@@ -59,15 +59,15 @@ public class SolrTool implements Tool<SolrParameters>, RequiresSolr {
     		}
         }else{
 
-        SearchClient searchClient = (SearchClient) context.getApplication().getApplicationComponent(componentName);
-        if (searchClient == null) {
-            throw new FatalToolException(componentName + " is not available");
-        }
-        if(context.getPolicyCMServer() == null) {
-        	throw new FatalToolException("CMServer is not available");
-        }
+            SearchClient searchClient = (SearchClient) context.getApplication().getApplicationComponent(componentName);
+            if (searchClient == null) {
+                throw new FatalToolException(componentName + " is not available");
+            }
+            if(context.getPolicyCMServer() == null) {
+                throw new FatalToolException("CMServer is not available");
+            }
 
-        try {
+	        try {
                 List<ContentId> searchResult = searchContent(searchClient, parameters);
                 
 
@@ -84,8 +84,7 @@ public class SolrTool implements Tool<SolrParameters>, RequiresSolr {
             } catch (Exception e) {
                 throw new FatalToolException("Failed to perform search for " + parameters.getSearchQuery(), e);
             }
-        }       
-
+        }
     }
 
     private List<ContentId> searchContent(SearchClient searchClient, SolrParameters params) throws SolrServerException, ServiceNotAvailableException {
