@@ -38,7 +38,7 @@ public class SolrToolIntegrationTest extends AbstractIntegrationTestBase {
         arguments.setContext(context);
 
         Main.execute(new SolrTool(), context, arguments);
-        assertTrue(out.toString().contains(this.getClass().getName() + ".article"));
+        assertTrue(out.toString().contains("example.demo.article."));
     }
 }
 
