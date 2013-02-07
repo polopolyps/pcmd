@@ -35,13 +35,13 @@ public class InspectToolIntegrationTest extends AbstractIntegrationTestBase {
     public void inspectTest() throws FatalToolException, ArgumentException {
 
         List<String> args = new ArrayList<String>();
-        args.add(this.getClass().getName() + ".article");
+        args.add("p.RootDepartment");
 
         DefaultArguments arguments = new DefaultArguments("InspectTool", new HashMap<String, List<String>>(), args);
         arguments.setContext(context);
 
         Main.execute(new InspectTool(), context, arguments);
-        assertTrue(out.toString().contains("name:" + this.getClass().getName()));
+        assertTrue(out.toString().contains("id:p.RootDepartment"));
     }
 
 }
