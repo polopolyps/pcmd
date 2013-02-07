@@ -58,21 +58,15 @@ public class SolrTool implements Tool<SolrParameters>, RequiresSolr {
     			System.err.println("Could not generate completely due to ServiceNotAvailableException"+ e.getMessage());
     		}
         }else{
-        	SearchClient searchClient = (SearchClient) context.getApplication().getApplicationComponent(componentName);
-            if (searchClient == null || context.getPolicyCMServer() == null) {
-                StringBuilder sb = new StringBuilder();
-                throw new FatalToolException(componentName + " or CMServer is not avaible, available indices are: " + sb.toString());
+            SearchClient searchClient = (SearchClient) context.getApplication().getApplicationComponent(componentName);
+            if (searchClient == null) {
+                throw new FatalToolException(componentName + " is not available");
+            }
+            if(context.getPolicyCMServer() == null) {
+                throw new FatalToolException("CMServer is not available");
             }
 
-        SearchClient searchClient = (SearchClient) context.getApplication().getApplicationComponent(componentName);
-        if (searchClient == null) {
-            throw new FatalToolException(componentName + " is not available");
-        }
-        if(context.getPolicyCMServer() == null) {
-        	throw new FatalToolException("CMServer is not available");
-        }
-
-        try {
+	        try {
                 List<ContentId> searchResult = searchContent(searchClient, parameters);
                 
 
@@ -89,8 +83,7 @@ public class SolrTool implements Tool<SolrParameters>, RequiresSolr {
             } catch (Exception e) {
                 throw new FatalToolException("Failed to perform search for " + parameters.getSearchQuery(), e);
             }
-        }       
-
+        }
     }
 
     private List<ContentId> searchContent(SearchClient searchClient, SolrParameters params) throws SolrServerException, ServiceNotAvailableException {
