@@ -58,11 +58,6 @@ public class SolrTool implements Tool<SolrParameters>, RequiresSolr {
     			System.err.println("Could not generate completely due to ServiceNotAvailableException"+ e.getMessage());
     		}
         }else{
-        	SearchClient searchClient = (SearchClient) context.getApplication().getApplicationComponent(componentName);
-            if (searchClient == null || context.getPolicyCMServer() == null) {
-                StringBuilder sb = new StringBuilder();
-                throw new FatalToolException(componentName + " or CMServer is not avaible, available indices are: " + sb.toString());
-            }
 
         SearchClient searchClient = (SearchClient) context.getApplication().getApplicationComponent(componentName);
         if (searchClient == null) {
