@@ -15,8 +15,10 @@ import com.polopoly.ps.pcmd.Main;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.SolrTool;
+import com.polopoly.ps.testbase.annotations.ImportTestContent;
 import com.polopoly.util.client.PolopolyContext;
 
+@ImportTestContent
 public class SolrToolIT extends AbstractIntegrationTestBase {
 
     private PolopolyContext context;
@@ -31,14 +33,20 @@ public class SolrToolIT extends AbstractIntegrationTestBase {
 
     @Test
     public void solrSearchTest() throws FatalToolException, ArgumentException {
+    	// Wait for indexing of imported content. Not pretty but...
+    	try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			fail("Got interrupted on sleep!");
+		}
         List<String> args = new ArrayList<String>();
-        args.add("Basic Test Article");
+        args.add(SolrToolIT.class.getName());
 
         DefaultArguments arguments = new DefaultArguments("SolrTool", new HashMap<String, List<String>>(), args);
         arguments.setContext(context);
 
         Main.execute(new SolrTool(), context, arguments);
-        assertTrue(out.toString().contains("example.demo.article."));
+        assertTrue(out.toString().contains(SolrToolIT.class.getName() + ".article"));
     }
 }
 

@@ -16,8 +16,10 @@ import com.polopoly.ps.pcmd.Main;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.InspectTool;
+import com.polopoly.ps.testbase.annotations.ImportTestContent;
 import com.polopoly.util.client.PolopolyContext;
 
+@ImportTestContent
 public class InspectToolIT extends AbstractIntegrationTestBase {
 
     private PolopolyContext context;
@@ -35,13 +37,13 @@ public class InspectToolIT extends AbstractIntegrationTestBase {
     public void inspectTest() throws FatalToolException, ArgumentException {
 
         List<String> args = new ArrayList<String>();
-        args.add("p.RootDepartment");
+        args.add(InspectToolIT.class.getName() + ".article");
 
         DefaultArguments arguments = new DefaultArguments("InspectTool", new HashMap<String, List<String>>(), args);
         arguments.setContext(context);
 
         Main.execute(new InspectTool(), context, arguments);
-        assertTrue(out.toString().contains("id:p.RootDepartment"));
+        assertTrue(out.toString().contains("name:" + InspectToolIT.class.getName()));
     }
 
 }
