@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 import javax.ejb.FinderException;
 
 import com.polopoly.application.ConnectionProperties;
-import com.polopoly.application.IllegalApplicationStateException;
 import com.polopoly.application.StandardApplication;
 import com.polopoly.cache.LRUSynchronizedUpdateCache;
 import com.polopoly.cm.client.CMServer;
@@ -29,8 +28,6 @@ import com.polopoly.cm.search.index.RmiSearchClient;
 import com.polopoly.management.ManagedBeanRegistry;
 import com.polopoly.management.jmx.JMXManagedBeanRegistry;
 import com.polopoly.poll.client.PollClient;
-import com.polopoly.search.solr.SolrIndexName;
-import com.polopoly.search.solr.SolrSearchClient;
 import com.polopoly.statistics.client.StatisticsClient;
 import com.polopoly.statistics.message.logging.UDPLogMsgClient;
 import com.polopoly.user.server.AuthenticationFailureException;
@@ -210,13 +207,6 @@ public class PolopolyClient {
 				app.addApplicationComponent(searchClient);
 			}
 
-			if (isAttachSolrSearchClient()) {
-				createSolrSearchClient(cmClient, app, "public");
-				createSolrSearchClient(cmClient, app, "internal");
-				for (String index : additionalIndexes) {
-					createSolrSearchClient(cmClient, app, index);
-				}
-			}
 
 			if (isAttachPollService()) {
 				pollClient = new PollClient();
@@ -279,22 +269,6 @@ public class PolopolyClient {
 		return result;
 	}
 
-	private SolrSearchClient createSolrSearchClient(EjbCmClient cmClient, final StandardApplication app,
-		String indexName) throws IllegalApplicationStateException {
-		SolrSearchClient result =
-			new SolrSearchClient(SolrSearchClient.DEFAULT_MODULE_NAME, "solrClient"
-																		+ firstCharacterUppercase(indexName), cmClient);
-
-		result.setIndexName(new SolrIndexName(indexName));
-
-		app.addApplicationComponent(result);
-
-		return result;
-	}
-
-	private String firstCharacterUppercase(String indexName) {
-		return Character.toUpperCase(indexName.charAt(0)) + indexName.substring(1);
-	}
 
 	/**
 	 * Intended for overriding.

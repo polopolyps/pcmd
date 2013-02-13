@@ -28,7 +28,6 @@ import com.polopoly.cm.policy.PolicyCMServerWrapper;
 import com.polopoly.cm.search.index.RmiSearchClient;
 import com.polopoly.poll.client.PollClient;
 import com.polopoly.poll.client.PollManager;
-import com.polopoly.search.solr.SolrSearchClient;
 import com.polopoly.user.server.Caller;
 import com.polopoly.user.server.User;
 import com.polopoly.user.server.UserId;
@@ -63,8 +62,6 @@ public class PolopolyContext {
 
 	private PollClient pollClient;
 
-	private SolrSearchClient solrSearchClientPublic;
-	private SolrSearchClient solrSearchClientInternal;
 
 	private CmClient client;
 
@@ -75,16 +72,12 @@ public class PolopolyContext {
 	public PolopolyContext(Application application) {
 		this((CmClient) application.getApplicationComponent(EjbCmClient.DEFAULT_COMPOUND_NAME),
 				(RmiSearchClient) application.getApplicationComponent(RmiSearchClient.DEFAULT_COMPOUND_NAME),
-				(PollClient) application.getApplicationComponent(PollClient.DEFAULT_COMPOUND_NAME),
-				(SolrSearchClient) application
-						.getApplicationComponent(SolrSearchClient.DEFAULT_COMPOUND_NAME),
-				(SolrSearchClient) application.getApplicationComponent("search_solrClientInternal"));
+				(PollClient) application.getApplicationComponent(PollClient.DEFAULT_COMPOUND_NAME));
 
 		this.application = application;
 	}
 
-	public PolopolyContext(CmClient cmClient, RmiSearchClient searchClient, PollClient pollClient,
-			SolrSearchClient solrSearchClientPublic, SolrSearchClient solrSearchClientInternal) {
+	public PolopolyContext(CmClient cmClient, RmiSearchClient searchClient, PollClient pollClient) {
 		this.client = cmClient;
 
 		if (cmClient != null) {
@@ -94,8 +87,6 @@ public class PolopolyContext {
 
 		this.pollClient = pollClient;
 		this.searchClient = searchClient;
-		this.solrSearchClientPublic = solrSearchClientPublic;
-		this.solrSearchClientInternal = solrSearchClientInternal;
 	}
 
 	public PolopolyContext(PolicyCMServer server) {
@@ -124,8 +115,6 @@ public class PolopolyContext {
 		this.client = context.client;
 		this.server = context.server;
 		this.pollClient = context.pollClient;
-		this.solrSearchClientPublic = context.solrSearchClientPublic;
-		this.solrSearchClientInternal = context.solrSearchClientInternal;
 	}
 
 	public CMServer getCMServer() {
@@ -171,22 +160,6 @@ public class PolopolyContext {
 		}
 
 		return pollClient;
-	}
-
-	public SolrSearchClient getSolrSearchClientPublic() throws ServiceUnattachedException {
-		if (solrSearchClientPublic == null) {
-			throw new ServiceUnattachedException("SOLR client (public index)");
-		}
-
-		return solrSearchClientPublic;
-	}
-
-	public SolrSearchClient getSolrSearchClientInternal() throws ServiceUnattachedException {
-		if (solrSearchClientInternal == null) {
-			throw new ServiceUnattachedException("SOLR client (internal index)");
-		}
-
-		return solrSearchClientInternal;
 	}
 
 	public CmClient getCmClient() {
@@ -451,16 +424,5 @@ public class PolopolyContext {
 		return Util.util(contentId, this);
 	}
 
-	/**
-	 * Retrieves the solrSearch client in the app for the given index.
-	 * 
-	 * @param indexName
-	 *            name of the index for the solrSearchClient.
-	 * @return
-	 */
-	public SolrSearchClient getSolrSearchClient(String indexName) {
-		String compName = "search_solrClient" + Character.toUpperCase(indexName.charAt(0)) + indexName.substring(1);
-		return (SolrSearchClient) application.getApplicationComponent(compName);
-	}
 
 }

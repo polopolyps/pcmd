@@ -143,7 +143,6 @@ public class ToolRetriever {
 			}
 
 			Collections.sort(tools, new Comparator<Tool<?>>() {
-				@Override
 				public int compare(Tool<?> t1, Tool<?> t2) {
 					return t1.getClass().getName().compareTo(t2.getClass().getName());
 				}

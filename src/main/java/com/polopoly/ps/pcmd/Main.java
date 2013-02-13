@@ -12,7 +12,6 @@ import com.polopoly.ps.pcmd.argument.CommandLineArgumentParser;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.argument.NotProvidedException;
 import com.polopoly.ps.pcmd.argument.Parameters;
-import com.polopoly.ps.pcmd.tool.DoesNotRequireRunningPolopoly;
 import com.polopoly.ps.pcmd.tool.HelpParameters;
 import com.polopoly.ps.pcmd.tool.HelpTool;
 import com.polopoly.ps.pcmd.tool.RequiresIndexServer;
@@ -23,7 +22,6 @@ import com.polopoly.ps.pcmd.util.ToolRetriever;
 import com.polopoly.ps.pcmd.util.ToolRetriever.NoSuchToolException;
 import com.polopoly.util.client.ClientFromArgumentsConfigurator;
 import com.polopoly.util.client.ConnectException;
-import com.polopoly.util.client.DisconnectedPolopolyContext;
 import com.polopoly.util.client.PolopolyContext;
 
 public class Main {
@@ -60,19 +58,15 @@ public class Main {
 		try {
 			Tool<?> tool = ToolRetriever.getTool(toolName);
 
-			if (!(tool instanceof DoesNotRequireRunningPolopoly)) {
-				PcmdPolopolyClient client = new PcmdPolopolyClient();
-				client.setAttachStatisticsService(tool instanceof RequiresStatisticsServer);
-				client.setAttachSearchService(tool instanceof RequiresIndexServer);
-				client.setAttachPollService(tool instanceof RequiresPollServer);
-				client.setAttachSolrSearchClient(tool instanceof RequiresSolr);
-				client.setAttachPollService(tool instanceof RequiresPollServer);
+			PcmdPolopolyClient client = new PcmdPolopolyClient();
+			client.setAttachStatisticsService(tool instanceof RequiresStatisticsServer);
+			client.setAttachSearchService(tool instanceof RequiresIndexServer);
+			client.setAttachPollService(tool instanceof RequiresPollServer);
+			client.setAttachSolrSearchClient(tool instanceof RequiresSolr);
+			client.setAttachPollService(tool instanceof RequiresPollServer);
 
 				new ClientFromArgumentsConfigurator(client, arguments).configure();
 				context = client.connect();
-			} else {
-				context = new DisconnectedPolopolyContext();
-			}
 
 			arguments.setContext(context);
 

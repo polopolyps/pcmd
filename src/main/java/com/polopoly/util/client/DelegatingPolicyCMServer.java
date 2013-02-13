@@ -173,7 +173,6 @@ public class DelegatingPolicyCMServer implements PolicyCMServer {
         return delegate.getContentListFilterChain();
     }
 
-    @SuppressWarnings("deprecation")
     public ContentRead getContentUnfiltered(ContentId contentId)
             throws CMException {
         return delegate.getContentUnfiltered(contentId);
@@ -199,7 +198,6 @@ public class DelegatingPolicyCMServer implements PolicyCMServer {
         return delegate.getMajorInfo(major);
     }
 
-    @SuppressWarnings("deprecation")
     public Policy getPolicy(ContentId contentId, ContentId inputTemplateId)
             throws CMException {
         return delegate.getPolicy(contentId, inputTemplateId);
@@ -209,7 +207,6 @@ public class DelegatingPolicyCMServer implements PolicyCMServer {
         return delegate.getPolicy(contentId);
     }
 
-    @SuppressWarnings("deprecation")
     public Policy getPolicy(ContentId[] contentIds, ContentId inputTemplateId)
             throws CMException {
         return delegate.getPolicy(contentIds, inputTemplateId);
@@ -220,7 +217,6 @@ public class DelegatingPolicyCMServer implements PolicyCMServer {
         return delegate.getPolicy(contentIds);
     }
 
-    @SuppressWarnings("deprecation")
     public Policy getPolicyFor(Content content, ContentId inputTemplateId)
             throws CMException {
         return delegate.getPolicyFor(content, inputTemplateId);
@@ -230,13 +226,11 @@ public class DelegatingPolicyCMServer implements PolicyCMServer {
         return delegate.getPolicyFor(content);
     }
 
-    @SuppressWarnings("deprecation")
     public Policy getPolicyFor(Content[] contents, ContentId inputTemplateId)
             throws CMException {
         return delegate.getPolicyFor(contents, inputTemplateId);
     }
 
-    @SuppressWarnings("deprecation")
     public Policy getPolicyFor(Content[] contents) throws CMException {
         return delegate.getPolicyFor(contents);
     }
@@ -308,8 +302,6 @@ public class DelegatingPolicyCMServer implements PolicyCMServer {
         return delegate;
     }
 
-    public LockInfo[] findAllLocks() throws CMException {
-        return delegate.findAllLocks();
-    }
+
 
 }
