@@ -71,7 +71,7 @@
               <addClasspath>true</addClasspath>
               <mainClass>com.polopoly.ps.pcmd.Main</mainClass>
             </manifest>
-          </archive>
+          </archive>          
         </configuration>
       </plugin>
       <plugin>
@@ -111,6 +111,67 @@
           </execution>
         </executions>
       </plugin> 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.3</version>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+              <excludeGroupIds>
+          		com.polopoly.ps.tools, com.polopoly
+        	  </excludeGroupIds>
+            </configuration>
+          </execution>
+        </executions>        
+      </plugin>
+     
+      <plugin>
+           <artifactId>maven-antrun-plugin</artifactId>
+           <executions>
+             <execution>
+               <phase>package</phase>
+               <goals>
+                 <goal>run</goal>
+               </goals>
+               <configuration>
+                 <tasks>                   
+                   <copy file="${project.build.directory}/pcmd-${project.version}.jar"
+                         tofile="${project.build.directory}/lib/pcmd-${project.version}.jar"/>
+                 </tasks>
+               </configuration>
+             </execution>
+           </executions>
+         </plugin>
+         
+      <plugin>
+  		<artifactId>maven-assembly-plugin</artifactId>
+  	    <version>2.4</version>
+         <executions>
+          <execution>
+            <id>make-assembly</id> 
+            <phase>package</phase> 
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>          
+          <descriptors>
+            <descriptor>src/assemble/distribution.xml</descriptor>
+          </descriptors>
+          <finalName>pcmd-client-${project.version}</finalName>
+        </configuration>
+      </plugin>
     </plugins>
     <resources>
       <resource>
@@ -191,6 +252,7 @@
       <version>1.2</version>
     </dependency>
     <dependency>
+<<<<<<< HEAD
       <groupId>com.polopoly.ps</groupId>
 	  <artifactId>testbase</artifactId>
   	  <version>1.0-SNAPSHOT</version>
@@ -203,6 +265,19 @@
     	<version>10.6.0-bc91117</version>
     	<scope>test</scope>
     </dependency>
+=======
+      <groupId>com.polopoly.ps.tools</groupId>
+      <artifactId>hotdeploy-pcmd-tools</artifactId>
+      <version>2.0</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>jboss</groupId>
+      <artifactId>jbossall-client</artifactId>
+      <version>4.0.5.GA</version>
+    </dependency>
+    
+>>>>>>> 3b9a8d9ca25ebfdc6da78970dd17b64099440e03
   </dependencies>
 
 </project>
