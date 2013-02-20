@@ -1,7 +1,5 @@
 package com.polopoly.ps.pcmd.tool;
 
-import static org.apache.commons.lang.StringUtils.capitalize;
-
 import java.util.List;
 
 import org.apache.solr.client.solrj.SolrServerException;
@@ -38,16 +36,16 @@ public class SolrTool implements Tool<SolrParameters>, RequiresSolr {
         inspect = parameters.inspect();
         resolveExternalId = parameters.getResolveIds();
 
-        String componentName = "search_solrClient" + capitalize(parameters.getIndexName());
+        String indexName = parameters.getIndexName();
         if (verbose) {
-            System.err.println("searching index: " + componentName);
+            System.err.println("searching index: " + indexName);
         }
         
         if(inspect){
-        	SolrSearchClient solrSearchClient = (SolrSearchClient) context.getApplication().getApplicationComponent(componentName);
+        	SolrSearchClient solrSearchClient = context.getSolrSearchClient(indexName);
     		if(solrSearchClient == null || context.getPolicyCMServer() == null) {
                 StringBuilder sb = new StringBuilder();
-                throw new FatalToolException(componentName + " or CMServer is not avaible, available indices are: " + sb.toString());
+                throw new FatalToolException(indexName + " or CMServer is not avaible, available indices are: " + sb.toString());
             }
     		
     		try {
@@ -60,9 +58,9 @@ public class SolrTool implements Tool<SolrParameters>, RequiresSolr {
         }else{
 
 
-            SearchClient searchClient = (SearchClient) context.getApplication().getApplicationComponent(componentName);
+            SearchClient searchClient = (SearchClient) context.getSolrSearchClient(indexName);
             if (searchClient == null) {
-                throw new FatalToolException(componentName + " is not available");
+                throw new FatalToolException(indexName + " is not available");
             }
             if(context.getPolicyCMServer() == null) {
                 throw new FatalToolException("CMServer is not available");

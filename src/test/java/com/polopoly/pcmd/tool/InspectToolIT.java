@@ -1,6 +1,6 @@
 package com.polopoly.pcmd.tool;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -11,12 +11,14 @@ import org.apache.geronimo.mail.util.StringBufferOutputStream;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.inject.Inject;
+import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.ps.pcmd.FatalToolException;
 import com.polopoly.ps.pcmd.Main;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.InspectTool;
-import com.polopoly.ps.testbase.annotations.ImportTestContent;
+import com.polopoly.testbase.ImportTestContent;
 import com.polopoly.util.client.PolopolyContext;
 
 @ImportTestContent
@@ -25,9 +27,12 @@ public class InspectToolIT extends AbstractIntegrationTestBase {
     private PolopolyContext context;
     private StringBuffer out;
 
+    @Inject
+    private PolicyCMServer cmServer;
+    
     @Before
     public void setup() {
-        context = new PolopolyContext(testApplication.getApplication());
+        context = new PolopolyContext(cmServer);
         out = new StringBuffer();
         System.setOut(new PrintStream(new StringBufferOutputStream(out)));
 

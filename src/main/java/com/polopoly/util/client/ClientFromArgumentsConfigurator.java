@@ -26,6 +26,8 @@ public class ClientFromArgumentsConfigurator {
 	public static final String VERBOSE = "verbose";
 
 	private static final String PERSISTENCE_CACHE_DIR = "persistencecachedir";
+	
+	private static final String INDEX = "index";
 
 	public ClientFromArgumentsConfigurator(PcmdPolopolyClient client, Arguments arguments) {
 		this.client = client;
@@ -65,6 +67,12 @@ public class ClientFromArgumentsConfigurator {
 				}
 			});
 		}
+		
+		String index = arguments.getOptionString(INDEX, "notset");
+		if(!index.equals("notset")) {
+			client.addAdditionalIndex(index);
+		}
+			
 	}
 
 	public static void getHelp(ParameterHelp help) {

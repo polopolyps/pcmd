@@ -1,9 +1,5 @@
 package com.polopoly.ps.pcmd.tool;
 
-import org.apache.lucene.analysis.KeywordAnalyzer;
-import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.solr.client.solrj.SolrQuery;
 
 import com.polopoly.ps.pcmd.argument.ArgumentException;
@@ -12,7 +8,6 @@ import com.polopoly.ps.pcmd.argument.ParameterHelp;
 import com.polopoly.ps.pcmd.argument.Parameters;
 import com.polopoly.ps.pcmd.parser.BooleanParser;
 import com.polopoly.ps.pcmd.parser.IntegerParser;
-import com.polopoly.ps.pcmd.parser.SolrQueryParser;
 import com.polopoly.util.StringUtil;
 import com.polopoly.util.client.PolopolyContext;
 

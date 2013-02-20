@@ -17,12 +17,20 @@ import java.util.logging.Logger;
 import javax.ejb.FinderException;
 
 import com.polopoly.application.ConnectionProperties;
+import com.polopoly.application.ConnectionPropertiesConfigurationException;
 import com.polopoly.application.IllegalApplicationStateException;
 import com.polopoly.application.StandardApplication;
 import com.polopoly.cache.LRUSynchronizedUpdateCache;
 import com.polopoly.cm.client.CMServer;
+import com.polopoly.cm.client.CmClient;
+import com.polopoly.cm.client.CmClientBase;
+import com.polopoly.cm.client.CmClientFacade;
 import com.polopoly.cm.client.ContentFilterSettings;
 import com.polopoly.cm.client.EjbCmClient;
+import com.polopoly.cm.client.HttpContentRepositoryClient;
+import com.polopoly.cm.client.HttpEnvironment;
+import com.polopoly.cm.client.HttpUserServiceClient;
+import com.polopoly.cm.client.UserServiceClient;
 import com.polopoly.cm.client.filter.ContentFilter;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.cm.search.index.RmiSearchClient;
@@ -170,7 +178,7 @@ public class PolopolyClient {
 			listener.willConnectToPolopoly(this);
 		}
 
-		EjbCmClient cmClient = null;
+		CmClientBase cmClient = null;
 		RmiSearchClient searchClient = null;
 		StatisticsClient statisticsClient = null;
 		UDPLogMsgClient logMsgClient = null;
@@ -183,13 +191,7 @@ public class PolopolyClient {
 
 			final StandardApplication app = new StandardApplication(applicationName);
 
-			cmClient = new EjbCmClient() {
-				@Override
-				protected PolicyCMServer createPolicyCMServer(CMServer legacyWrapper) {
-					return PolopolyClient.this.createPolicyCMServer(super.createPolicyCMServer(legacyWrapper), this,
-						app, legacyWrapper);
-				}
-			};
+			cmClient = createClient(connectionProperties, app);
 
 			setUpCmClient(cmClient);
 
@@ -241,9 +243,10 @@ public class PolopolyClient {
 
 			// Read connection properties.
 			app.readConnectionProperties(connectionProperties);
-
+			
 			// Init.
 			app.init();
+			
 			PolopolyContext context = new PolopolyContext(app);
 
 			login(context);
@@ -259,6 +262,40 @@ public class PolopolyClient {
 			throw new ConnectException("Error connecting to Polopoly server with connection URL " + connectionUrl
 										+ ": " + e, e);
 		}
+	}
+
+	protected CmClientBase createClient(ConnectionProperties connectionProperties, final StandardApplication application) throws IllegalArgumentException, ConnectionPropertiesConfigurationException, IllegalApplicationStateException {
+        if (connectionProperties.getBean("cm", "httpEnvironment", HttpEnvironment.class) != null) {
+            HttpContentRepositoryClient contentRepositoryClient = new HttpContentRepositoryClient();
+            @SuppressWarnings("deprecation")
+            UserServiceClient userServiceClient = new HttpUserServiceClient();
+
+            CmClientFacade cmClient = new CmClientFacade() {
+				@Override
+				protected PolicyCMServer createPolicyCMServer(CMServer legacyWrapper) {
+					return PolopolyClient.this.createPolicyCMServer(super.createPolicyCMServer(legacyWrapper), this,
+						application, legacyWrapper);
+				}
+			};
+            cmClient.setContentRepositoryClient(contentRepositoryClient);
+            cmClient.setUserServiceClient(userServiceClient);
+
+            application.addApplicationComponent(contentRepositoryClient);
+            application.addApplicationComponent(userServiceClient);
+            return cmClient;
+            
+        } else {
+            EjbCmClient cmClient = new EjbCmClient() {
+    				@Override
+    				protected PolicyCMServer createPolicyCMServer(CMServer legacyWrapper) {
+    					return PolopolyClient.this.createPolicyCMServer(super.createPolicyCMServer(legacyWrapper), this,
+    						application, legacyWrapper);
+    				}
+    			};
+            
+            return cmClient;
+        }
+
 	}
 
 	public static Iterable<ConnectListener> getConnectListeners() {
@@ -279,7 +316,7 @@ public class PolopolyClient {
 		return result;
 	}
 
-	private SolrSearchClient createSolrSearchClient(EjbCmClient cmClient, final StandardApplication app,
+	private SolrSearchClient createSolrSearchClient(CmClient cmClient, final StandardApplication app,
 		String indexName) throws IllegalApplicationStateException {
 		SolrSearchClient result =
 			new SolrSearchClient(SolrSearchClient.DEFAULT_MODULE_NAME, "solrClient"
@@ -298,14 +335,15 @@ public class PolopolyClient {
 
 	/**
 	 * Intended for overriding.
+	 * @param connectionProperties 
 	 */
-	protected void setUpCmClient(EjbCmClient cmClient) {
+	protected void setUpCmClient(CmClientBase cmClient) {
 	}
 
 	/**
 	 * Intended for overriding for clients needing to wrap the CM server.
 	 */
-	protected PolicyCMServer createPolicyCMServer(PolicyCMServer originalServer, EjbCmClient cmClient,
+	protected PolicyCMServer createPolicyCMServer(PolicyCMServer originalServer, CmClient cmClient,
 		StandardApplication app, CMServer legacyWrapper) {
 		return originalServer;
 	}

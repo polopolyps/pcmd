@@ -3,6 +3,9 @@ package com.polopoly.util.client;
 import static com.polopoly.util.policy.Util.util;
 
 import java.rmi.RemoteException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,7 +58,11 @@ import com.polopoly.util.policy.PolicyUtil;
 import com.polopoly.util.policy.Util;
 
 public class PolopolyContext {
+
 	private static final Logger logger = Logger.getLogger(PolopolyContext.class.getName());
+
+	public static final String INTERNAL_INDEX_NAME = "internal";
+	public static final String PUBLIC_INDEX_NAME = "public";
 
 	private PolicyCMServer server;
 
@@ -63,8 +70,7 @@ public class PolopolyContext {
 
 	private PollClient pollClient;
 
-	private SolrSearchClient solrSearchClientPublic;
-	private SolrSearchClient solrSearchClientInternal;
+	private Map<String, SolrSearchClient> solrSearchClients = new HashMap<String, SolrSearchClient>();
 
 	private CmClient client;
 
@@ -72,19 +78,26 @@ public class PolopolyContext {
 
 	private CMServer cmServer;
 
+    private static Map<String, SolrSearchClient> createDefaultIndexMap(SolrSearchClient internalIndexClient, SolrSearchClient publicIndexClient) {
+        Map<String, SolrSearchClient> result = new HashMap<String, SolrSearchClient>();
+        result.put(PUBLIC_INDEX_NAME, publicIndexClient);
+        result.put(INTERNAL_INDEX_NAME, internalIndexClient);
+        return Collections.unmodifiableMap(result);
+    }
+	
 	public PolopolyContext(Application application) {
 		this((CmClient) application.getApplicationComponent(EjbCmClient.DEFAULT_COMPOUND_NAME),
 				(RmiSearchClient) application.getApplicationComponent(RmiSearchClient.DEFAULT_COMPOUND_NAME),
 				(PollClient) application.getApplicationComponent(PollClient.DEFAULT_COMPOUND_NAME),
-				(SolrSearchClient) application
-						.getApplicationComponent(SolrSearchClient.DEFAULT_COMPOUND_NAME),
-				(SolrSearchClient) application.getApplicationComponent("search_solrClientInternal"));
+				createDefaultIndexMap(
+				(SolrSearchClient) application.getApplicationComponent("search_solrClientInternal"),
+				(SolrSearchClient) application.getApplicationComponent(SolrSearchClient.DEFAULT_COMPOUND_NAME)));
 
 		this.application = application;
 	}
 
 	public PolopolyContext(CmClient cmClient, RmiSearchClient searchClient, PollClient pollClient,
-			SolrSearchClient solrSearchClientPublic, SolrSearchClient solrSearchClientInternal) {
+			Map<String, SolrSearchClient> solrSearchClients) {
 		this.client = cmClient;
 
 		if (cmClient != null) {
@@ -94,13 +107,17 @@ public class PolopolyContext {
 
 		this.pollClient = pollClient;
 		this.searchClient = searchClient;
-		this.solrSearchClientPublic = solrSearchClientPublic;
-		this.solrSearchClientInternal = solrSearchClientInternal;
+		this.solrSearchClients = solrSearchClients;
 	}
 
 	public PolopolyContext(PolicyCMServer server) {
+		this(server, null);
+	}
+	public PolopolyContext(PolicyCMServer server, Map<String, SolrSearchClient> solrSearchClients) {
 		this.server = Require.require(server);
-
+		if(solrSearchClients != null)
+			this.solrSearchClients = solrSearchClients;
+		
 		// get the CM server from the policy CM server.
 		PolicyCMServer atServer = server;
 
@@ -124,8 +141,7 @@ public class PolopolyContext {
 		this.client = context.client;
 		this.server = context.server;
 		this.pollClient = context.pollClient;
-		this.solrSearchClientPublic = context.solrSearchClientPublic;
-		this.solrSearchClientInternal = context.solrSearchClientInternal;
+		this.solrSearchClients = context.solrSearchClients;
 	}
 
 	public CMServer getCMServer() {
@@ -174,20 +190,20 @@ public class PolopolyContext {
 	}
 
 	public SolrSearchClient getSolrSearchClientPublic() throws ServiceUnattachedException {
-		if (solrSearchClientPublic == null) {
+		
+		if (solrSearchClients == null || solrSearchClients.get(PUBLIC_INDEX_NAME) == null) {
 			throw new ServiceUnattachedException("SOLR client (public index)");
 		}
 
-		return solrSearchClientPublic;
+		return solrSearchClients.get(PUBLIC_INDEX_NAME);
 	}
 
 	public SolrSearchClient getSolrSearchClientInternal() throws ServiceUnattachedException {
-		if (solrSearchClientInternal == null) {
-			throw new ServiceUnattachedException("SOLR client (internal index)");
+		if (solrSearchClients == null || solrSearchClients.get(INTERNAL_INDEX_NAME) == null) {
+			throw new ServiceUnattachedException("SOLR client (public index)");
 		}
 
-		return solrSearchClientInternal;
-	}
+		return solrSearchClients.get(INTERNAL_INDEX_NAME);	}
 
 	public CmClient getCmClient() {
 		return client;
@@ -452,15 +468,19 @@ public class PolopolyContext {
 	}
 
 	/**
-	 * Retrieves the solrSearch client in the app for the given index.
+	 * Retrieves the solrSearch client matching the indexName set in the context or in the app.
 	 * 
 	 * @param indexName
 	 *            name of the index for the solrSearchClient.
 	 * @return
 	 */
 	public SolrSearchClient getSolrSearchClient(String indexName) {
-		String compName = "search_solrClient" + Character.toUpperCase(indexName.charAt(0)) + indexName.substring(1);
-		return (SolrSearchClient) application.getApplicationComponent(compName);
+		SolrSearchClient client = solrSearchClients.get(indexName);
+		if(client == null && application != null) {
+			String compName = "search_solrClient" + Character.toUpperCase(indexName.charAt(0)) + indexName.substring(1);
+			client = (SolrSearchClient) application.getApplicationComponent(compName);
+		}
+		return client;
 	}
 
 }

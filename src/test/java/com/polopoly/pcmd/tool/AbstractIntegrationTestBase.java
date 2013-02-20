@@ -2,21 +2,11 @@ package com.polopoly.pcmd.tool;
 
 import org.junit.runner.RunWith;
 
-import com.polopoly.ps.testbase.TestApplication;
-import com.polopoly.ps.testbase.TestBaseJUnitRunner;
-import com.polopoly.ps.testbase.TestContentImporter;
-import com.polopoly.ps.testbase.annotations.ImportTestContent;
-import com.polopoly.ps.testbase.annotations.InjectTestApplication;
-import com.polopoly.ps.testbase.annotations.InjectTestContentImporter;
+import com.polopoly.testbase.ImportTestContent;
+import com.polopoly.testbase.TestBaseRunner;
+
 
 @ImportTestContent
-@RunWith(TestBaseJUnitRunner.class)
+@RunWith(TestBaseRunner.class)
 public abstract class AbstractIntegrationTestBase {
-
-    @InjectTestApplication(applicationComponents = { SolrSearchClientApplicationComponentFactory.class })
-    protected TestApplication testApplication;
-
-    @InjectTestContentImporter
-    protected TestContentImporter testContentImporter;
-
 }

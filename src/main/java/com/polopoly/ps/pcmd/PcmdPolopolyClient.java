@@ -5,9 +5,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.polopoly.application.IllegalApplicationStateException;
+import com.polopoly.cm.client.CmClientBase;
 import com.polopoly.cm.client.ContentCacheSettings;
 import com.polopoly.cm.client.DiskCacheSettings;
-import com.polopoly.cm.client.EjbCmClient;
 import com.polopoly.util.client.PolopolyClient;
 
 public class PcmdPolopolyClient extends PolopolyClient {
@@ -20,9 +20,9 @@ public class PcmdPolopolyClient extends PolopolyClient {
     private File persistenceCacheDir = null;
 
     @Override
-    protected void setUpCmClient(EjbCmClient cmClient) {
-        super.setUpCmClient(cmClient);
-
+    protected void setUpCmClient(CmClientBase cmClient) {
+        super.setUpCmClient(cmClient);        
+        
         setupContentCache(cmClient);
 
         // Pcmd has no use for a persistence cache unless it's warming one for
@@ -32,7 +32,7 @@ public class PcmdPolopolyClient extends PolopolyClient {
         }
     }
 
-    private void setupPersistenceCache(EjbCmClient cmClient) {
+    private void setupPersistenceCache(CmClientBase cmClient) {
         DiskCacheSettings diskCacheSettings = new DiskCacheSettings();
         final String BASE = persistenceCacheDir.getAbsolutePath();
         diskCacheSettings.setCacheBaseDirectory(persistenceCacheDir);
@@ -48,7 +48,7 @@ public class PcmdPolopolyClient extends PolopolyClient {
         }
     }
 
-    private void setupContentCache(EjbCmClient cmClient) {
+    private void setupContentCache(CmClientBase cmClient) {
         ContentCacheSettings contentCacheSettings = new ContentCacheSettings();
 
         if (policyCacheSize != null) {
