@@ -17,20 +17,20 @@
 
 
 	<distributionManagement>
-		<repository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>professional-services</id>
-			<name>Professional Services</name>
-			<url>http://maven.polopoly.com/nexus/content/repositories/professional-services</url>
-			<layout>default</layout>
-		</repository>
-		<snapshotRepository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>professional-services-snapshots</id>
-			<name>Professional Services Snapshots</name>
-			<url>http://maven.polopoly.com/nexus/content/repositories/professional-services-snapshots</url>
-			<layout>default</layout>
-		</snapshotRepository>
+	  <repository>
+	    <uniqueVersion>false</uniqueVersion>
+	    <id>polopoly-ps</id>
+	    <name>Professional Services</name>
+	    <url>http://maven.polopoly.com/nexus/content/repositories/professional-services</url>
+	    <layout>default</layout>
+	  </repository>
+	  <snapshotRepository>
+	    <uniqueVersion>false</uniqueVersion>
+	    <id>polopoly-ps-snapshots</id>
+	    <name>Professional Services Snapshots</name>
+	    <url>http://maven.polopoly.com/nexus/content/repositories/professional-services-snapshots</url>
+	    <layout>default</layout>
+	  </snapshotRepository>
 	</distributionManagement>
 
 	<repositories>
