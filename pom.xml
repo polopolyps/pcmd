@@ -35,13 +35,16 @@
   
    <build>
     <plugins>
+    
+
+    
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.5</source>
+          <target>1.5</target>
           <encoding>UTF-8</encoding>
           <compilerArgument>-Xlint:all</compilerArgument>
           <showDeprecation>true</showDeprecation>
@@ -148,7 +151,7 @@
       <groupId>com.polopoly</groupId>
       <artifactId>polopoly</artifactId>
       <version>${polopoly.version}</version>
-      <scope>provided</scope>
+      <!--scope>provided</scope-->
     </dependency>
     <dependency>
       <groupId>commons-cli</groupId>
