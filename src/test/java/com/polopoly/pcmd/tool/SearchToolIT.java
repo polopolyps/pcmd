@@ -67,7 +67,7 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     }
 
     @Test
-    public void testInputTemplate() throws ArgumentException, CMException {
+    public void inputTemplateTest() throws ArgumentException, CMException {
         setup(false, true);
         setupSystemErrIntoStringBuffer(false);
 
@@ -89,7 +89,7 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     }
 
     @Test
-    public void testMajor() throws ArgumentException {
+    public void majorTest() throws ArgumentException {
         setup(false, true);
         setupSystemErrIntoStringBuffer(false);
 
@@ -106,7 +106,7 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     }
 
     @Test
-    public void testResolveId() throws ArgumentException, CMException {
+    public void resolveIdTest() throws ArgumentException, CMException {
         setup(false, true);
         setupSystemErrIntoStringBuffer(false);
 
@@ -128,7 +128,7 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     }
 
     @Test
-    public void testComponentAndComponentValue() throws ArgumentException {
+    public void componentAndComponentValueTest() throws ArgumentException {
         setup(false, true);
         setupSystemErrIntoStringBuffer(false);
 
@@ -148,7 +148,7 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     }
 
     @Test
-    public void testRefersTo() throws ArgumentException, CMException {
+    public void refersToTest() throws ArgumentException, CMException {
         setup(false, true);
         setupSystemErrIntoStringBuffer(false);
 
@@ -172,7 +172,7 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     }
 
     @Test
-    public void testBatchSize() throws ArgumentException {
+    public void batchSizeTest() throws ArgumentException {
         setup(false, true);
         setupSystemErrIntoStringBuffer(true);
         List<String> args = new ArrayList<String>();
@@ -196,7 +196,7 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     }
 
     @Test
-    public void testSinceVersion() throws CMException, ArgumentException {
+    public void sinceVersionTest() throws CMException, ArgumentException {
         setup(false, true);
         setupSystemErrIntoStringBuffer(false);
 
@@ -225,7 +225,7 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     }
 
     @Test
-    public void testUntilVersion() throws CMException, ArgumentException {
+    public void untilVersionTest() throws CMException, ArgumentException {
         StandardArticlePolicy articlePolicy =
             (StandardArticlePolicy) cmServer
                 .getPolicy(new ExternalContentId(SearchToolIT.class.getName() + ".article"));
