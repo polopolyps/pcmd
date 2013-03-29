@@ -85,7 +85,7 @@ public class ExportFilesToolIT extends AbstractIntegrationTestBase {
 
         File imageFile = getFile(imageExternalId);
         System.out.println("image check...");
-        assertTrue(imageFile.isFile() && imageFile.exists());
+        assertTrue(imageFile.exists() && imageFile.isFile());
 
         File emptyImageFile = getFile(emptyImageExternalId);
         System.out.println("empty image check...");
@@ -93,11 +93,11 @@ public class ExportFilesToolIT extends AbstractIntegrationTestBase {
 
         File otherFiles = getFile(docExternalId);
         System.out.println("file check...");
-        assertTrue(otherFiles.isFile() && otherFiles.exists());
+        assertTrue(otherFiles.exists() && otherFiles.isFile());
 
         File videoFile = getFile(videoExternalId);
         System.out.println("video file check...");
-        assertTrue(videoFile.isFile() && videoFile.exists());
+        assertTrue(videoFile.exists() && videoFile.isFile());
     }
 
     private File getFile(String externalId) throws CMException, IOException {
