@@ -59,17 +59,14 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
         System.setOut(new PrintStream(new StringBufferOutputStream(out)));
     }
 
-    public void setupSystemErrIntoStringBuffer(boolean toSet) {
-        if (toSet) {
-            err = new StringBuffer();
-            System.setErr(new PrintStream(new StringBufferOutputStream(err)));
-        }
+    private void setupSystemErr() {
+        err = new StringBuffer();
+        System.setErr(new PrintStream(new StringBufferOutputStream(err)));
     }
 
     @Test
     public void inputTemplateTest() throws ArgumentException, CMException {
         setup(false, true);
-        setupSystemErrIntoStringBuffer(false);
 
         List<String> args = new ArrayList<String>();
 
@@ -91,7 +88,6 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     @Test
     public void majorTest() throws ArgumentException {
         setup(false, true);
-        setupSystemErrIntoStringBuffer(false);
 
         List<String> args = new ArrayList<String>();
 
@@ -108,7 +104,6 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     @Test
     public void resolveIdTest() throws ArgumentException, CMException {
         setup(false, true);
-        setupSystemErrIntoStringBuffer(false);
 
         List<String> args = new ArrayList<String>();
 
@@ -130,7 +125,6 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     @Test
     public void componentAndComponentValueTest() throws ArgumentException {
         setup(false, true);
-        setupSystemErrIntoStringBuffer(false);
 
         List<String> args = new ArrayList<String>();
 
@@ -150,7 +144,6 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     @Test
     public void refersToTest() throws ArgumentException, CMException {
         setup(false, true);
-        setupSystemErrIntoStringBuffer(false);
 
         List<String> args = new ArrayList<String>();
 
@@ -174,7 +167,7 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     @Test
     public void batchSizeTest() throws ArgumentException {
         setup(false, true);
-        setupSystemErrIntoStringBuffer(true);
+        setupSystemErr();
         List<String> args = new ArrayList<String>();
 
         int batchsize = 5;
@@ -198,7 +191,6 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     @Test
     public void sinceVersionTest() throws CMException, ArgumentException {
         setup(false, true);
-        setupSystemErrIntoStringBuffer(false);
 
         List<String> args = new ArrayList<String>();
 
@@ -233,7 +225,6 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
         int version = articlePolicy.getVersionInfo().getVersion();
 
         setup(false, true);
-        setupSystemErrIntoStringBuffer(false);
 
         List<String> args = new ArrayList<String>();
 
