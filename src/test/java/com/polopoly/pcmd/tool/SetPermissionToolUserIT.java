@@ -54,7 +54,7 @@ public class SetPermissionToolUserIT extends AbstractIntegrationTestBase {
 
         Map<String, List<String>> options = new HashMap<String, List<String>>();
         options.put("user", Arrays.asList("testtooluser"));
-        options.put("permission", Arrays.asList("3READ"));
+        options.put("permission", Arrays.asList("1READ"));
 
         DefaultArguments arguments = new DefaultArguments("SetPermissionTool", options, args);
         arguments.setContext(context);
@@ -67,8 +67,8 @@ public class SetPermissionToolUserIT extends AbstractIntegrationTestBase {
         // sysadmin's rights, instead checking for user 6001's (testtooluser)
         cmServer.setCurrentCaller(new Caller(new UserId("6001")));
 
-        assertTrue(cmServer.checkPermission(new ExternalContentId("GreenfieldTimes.d"), "3READ", false));
-        assertFalse(cmServer.checkPermission(new ExternalContentId("GreenfieldTimes.d"), "3WRITE", false));
+        assertTrue(cmServer.checkPermission(new ExternalContentId("GreenfieldTimes.d"), "1READ", false));
+        assertFalse(cmServer.checkPermission(new ExternalContentId("GreenfieldTimes.d"), "1WRITE", false));
     }
 
 }
