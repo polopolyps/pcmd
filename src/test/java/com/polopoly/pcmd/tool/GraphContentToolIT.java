@@ -98,7 +98,6 @@ public class GraphContentToolIT extends AbstractIntegrationTestBase {
 
         Map<String, List<String>> options = new HashMap<String, List<String>>();
         options.put("no-polopoly", Arrays.asList("true"));
-        // major 2 = Department
 
         DefaultArguments arguments = new DefaultArguments("GraphContentTool", options, args);
         arguments.setContext(context);

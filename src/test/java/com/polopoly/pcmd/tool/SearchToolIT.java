@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.geronimo.mail.util.StringBufferOutputStream;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -22,15 +23,13 @@ import com.polopoly.ps.pcmd.Main;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.SearchTool;
-import com.polopoly.search.solr.PostFilteredSolrSearchClient;
-import com.polopoly.search.solr.SolrSearchClient;
 import com.polopoly.testbase.ImportTestContent;
 import com.polopoly.util.client.PolopolyContext;
 
 import example.content.article.StandardArticlePolicy;
 import example.content.image.ImagePolicy;
 
-@ImportTestContent(waitUntilContentsAreIndexed = { "com.polopoly.pcmd.tool.SearchToolIT.article" })
+@ImportTestContent(files = { "com.polopoly.pcmd.tool.SearchToolIT.content" })
 public class SearchToolIT extends AbstractIntegrationTestBase {
 
     private PolopolyContext context;
@@ -40,20 +39,9 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     @Inject
     private PolicyCMServer cmServer;
 
-    @Inject
-    private SolrSearchClient solrClientPublic;
-
-    @Inject
-    private PostFilteredSolrSearchClient solrClientInternal;
-
-    public void setup(boolean internalIndex, boolean publicIndex) {
-        Map<String, SolrSearchClient> indexClientMap = new HashMap<String, SolrSearchClient>();
-        if (internalIndex)
-            indexClientMap.put("internal", solrClientInternal);
-        if (publicIndex)
-            indexClientMap.put("public", solrClientPublic);
-
-        context = new PolopolyContext(cmServer, indexClientMap);
+    @Before
+    public void setup() {
+        context = new PolopolyContext(cmServer);
 
         out = new StringBuffer();
         System.setOut(new PrintStream(new StringBufferOutputStream(out)));
@@ -66,7 +54,7 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
 
     @Test
     public void inputTemplateTest() throws ArgumentException, CMException {
-        setup(false, true);
+        setup();
 
         List<String> args = new ArrayList<String>();
 
@@ -87,8 +75,6 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
 
     @Test
     public void majorTest() throws ArgumentException {
-        setup(false, true);
-
         List<String> args = new ArrayList<String>();
 
         Map<String, List<String>> options = new HashMap<String, List<String>>();
@@ -103,8 +89,6 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
 
     @Test
     public void resolveIdTest() throws ArgumentException, CMException {
-        setup(false, true);
-
         List<String> args = new ArrayList<String>();
 
         Map<String, List<String>> options = new HashMap<String, List<String>>();
@@ -124,8 +108,6 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
 
     @Test
     public void componentAndComponentValueTest() throws ArgumentException {
-        setup(false, true);
-
         List<String> args = new ArrayList<String>();
 
         Map<String, List<String>> options = new HashMap<String, List<String>>();
@@ -143,8 +125,6 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
 
     @Test
     public void refersToTest() throws ArgumentException, CMException {
-        setup(false, true);
-
         List<String> args = new ArrayList<String>();
 
         Map<String, List<String>> options = new HashMap<String, List<String>>();
@@ -166,7 +146,6 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
 
     @Test
     public void batchSizeTest() throws ArgumentException {
-        setup(false, true);
         setupSystemErr();
         List<String> args = new ArrayList<String>();
 
@@ -190,8 +169,6 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
 
     @Test
     public void sinceVersionTest() throws CMException, ArgumentException {
-        setup(false, true);
-
         List<String> args = new ArrayList<String>();
 
         ImagePolicy imagePolicy =
@@ -223,8 +200,6 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
                 .getPolicy(new ExternalContentId(SearchToolIT.class.getName() + ".article"));
 
         int version = articlePolicy.getVersionInfo().getVersion();
-
-        setup(false, true);
 
         List<String> args = new ArrayList<String>();
 
