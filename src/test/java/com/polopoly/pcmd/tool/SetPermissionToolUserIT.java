@@ -1,5 +1,6 @@
 package com.polopoly.pcmd.tool;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.PrintStream;
@@ -14,13 +15,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.inject.Inject;
+import com.polopoly.cm.ExternalContentId;
+import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.ps.pcmd.Main;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
-import com.polopoly.ps.pcmd.tool.CheckPermissionTool;
 import com.polopoly.ps.pcmd.tool.SetPermissionTool;
 import com.polopoly.testbase.ImportTestContent;
+import com.polopoly.user.server.Caller;
+import com.polopoly.user.server.UserId;
 import com.polopoly.user.server.UserServer;
 import com.polopoly.util.client.PolopolyContext;
 
@@ -58,20 +62,13 @@ public class SetPermissionToolUserIT extends AbstractIntegrationTestBase {
     }
 
     @Test
-    public void checkUserPermissionTest() throws ArgumentException {
-        List<String> args = new ArrayList<String>();
-        args.add("GreenfieldTimes.d");
+    public void checkUserPermissionTest() throws CMException {
+        // default caller is sysadmin (98) - but we are not checking for
+        // sysadmin's rights, instead checking for user 6001's (testtooluser)
+        cmServer.setCurrentCaller(new Caller(new UserId("6001")));
 
-        HashMap<String, List<String>> options = new HashMap<String, List<String>>();
-        options.put("permission", Arrays.asList(new String[] { "3READ" }));
-
-        DefaultArguments arguments = new DefaultArguments("CheckPermissionTool", options, args);
-        arguments.setContext(context);
-        arguments.setOptionString("loginuser", "testtooluser");
-
-        Main.execute(new CheckPermissionTool(), context, arguments, true);
-
-        assertTrue(out.toString().contains("testtooluser has permission 3READ"));
+        assertTrue(cmServer.checkPermission(new ExternalContentId("GreenfieldTimes.d"), "3READ", false));
+        assertFalse(cmServer.checkPermission(new ExternalContentId("GreenfieldTimes.d"), "3WRITE", false));
     }
 
 }

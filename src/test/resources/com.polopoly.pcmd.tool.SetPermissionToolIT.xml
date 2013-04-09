@@ -49,23 +49,4 @@
     </contentlist>
   </content>
   
-  <content>
-    <metadata>
-      <contentid>
-        <major>Department</major>
-        <externalid>GreenfieldTimes.d</externalid>
-      </contentid>
-    </metadata>
-    <acl>
-     <entry mode="reset">
-        <principal group="Test Tool Group" />
-
-        <!-- Community -->
-        <addpermission>19READ</addpermission>
-        <addpermission>19WRITE</addpermission>
-        <addpermission>19CREATE</addpermission>
-        <addpermission>19REMOVE</addpermission>
-      </entry>
-    </acl>
-  </content>
 </batch>  
