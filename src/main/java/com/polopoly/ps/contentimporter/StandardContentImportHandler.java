@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +39,65 @@ public class StandardContentImportHandler implements ContentImportHandler {
 
     public StandardContentImportHandler(DocumentImporter documentImporter) {
         this.documentImporter = documentImporter;
+    }
+
+    public void importContentByImportOrder(LinkedHashSet<URL> resources) {
+
+        if (resources == null) {
+            LOGGER.log(Level.WARNING, WARNING_RESOURCE_SET_WAS_NULL);
+            System.err.println(WARNING_RESOURCE_SET_WAS_NULL);
+        } else if (resources.isEmpty()) {
+            LOGGER.log(Level.WARNING, WARNING_RESOURCE_SET_WAS_EMPTY);
+            System.err.println(WARNING_RESOURCE_SET_WAS_EMPTY);
+        } else {
+
+            for (URL resourceURL : resources) {
+                if (isValidResource(resourceURL)) {
+
+                    String fileName = resourceURL.getFile();
+
+                    if (fileName.endsWith(".content")) {
+
+                        try {
+
+                            InputStream inputStream = new FileInputStream(new File(fileName));
+
+                            TextContentParser textContentParser =
+                                new TextContentParser(inputStream, resourceURL, fileName);
+                            TextContentSet textContentSet = textContentParser.parse();
+
+                            StringWriter writer = new StringWriter();
+                            TextContentXmlWriter contentXmlWriter = new TextContentXmlWriter(writer);
+
+                            contentXmlWriter.write(textContentSet);
+                            contentXmlWriter.close();
+
+                            String xml = writer.getBuffer().toString();
+
+                            documentImporter.importXML(xml);
+                            LOGGER.log(Level.INFO, String.format(INFO_CONTENT_IMPORT_SUCCEDED, fileName));
+                            System.out.println(String.format(INFO_CONTENT_IMPORT_SUCCEDED, fileName));
+
+                        } catch (Exception e) {
+                            LOGGER.log(Level.SEVERE, SEVERE_CONTENT_IMPORT_FAILED, e);
+                            System.err.println(SEVERE_CONTENT_IMPORT_FAILED + e.getMessage());
+                        }
+                    } else if (fileName.endsWith(".xml")) {
+                        try {
+
+                            documentImporter.importXML(new File(fileName));
+
+                            LOGGER.log(Level.INFO, String.format(INFO_CONTENT_IMPORT_SUCCEDED, fileName));
+                            System.out.println(String.format(INFO_CONTENT_IMPORT_SUCCEDED, fileName));
+
+                        } catch (Exception e) {
+                            LOGGER.log(Level.SEVERE, SEVERE_CONTENT_IMPORT_FAILED, e);
+                            System.err.println(SEVERE_CONTENT_IMPORT_FAILED + e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void importContent(Set<URL> resources) {

@@ -1,6 +1,7 @@
 package com.polopoly.ps.contentimporter;
 
 import java.net.URL;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -10,4 +11,6 @@ import java.util.Set;
  */
 public interface ContentImportHandler {
     public void importContent(Set<URL> resources);
+
+    public void importContentByImportOrder(LinkedHashSet<URL> resources);
 }

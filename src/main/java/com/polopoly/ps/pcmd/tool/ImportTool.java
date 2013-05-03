@@ -100,7 +100,7 @@ public class ImportTool implements Tool<ImportParameters> {
                         DocumentImporterFactory.getDocumentImporter(context.getPolicyCMServer());
                     StandardContentImportHandler importHandler = new StandardContentImportHandler(importer);
                     importHandler.importContent(bootstrapFiles);
-                    importHandler.importContent(resources);
+                    importHandler.importContentByImportOrder(resources);
                     File tempFile = new File(temporaryBootstrapFile);
 
                     FileDeleteStrategy.FORCE.delete(tempFile);
