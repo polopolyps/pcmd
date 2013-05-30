@@ -1,8 +1,27 @@
-    ____  ________  _______     ________    ___________   ________
-   / __ \/ ____/  |/  / __ \   / ____/ /   /  _/ ____/ | / /_  __/
-  / /_/ / /   / /|_/ / / / /  / /   / /    / // __/ /  |/ / / /   
- / ____/ /___/ /  / / /_/ /  / /___/ /____/ // /___/ /|  / / /    
-/_/    \____/_/  /_/_____/   \____/_____/___/_____/_/ |_/ /_/  
+    ____  ________  _______  
+   / __ \/ ____/  |/  / __ \ 
+  / /_/ / /   / /|_/ / / / / 
+ / ____/ /___/ /  / / /_/ /  
+/_/    \____/_/  /_/_____/   
+
+HOW TO INSTALL PCMD 
+To run pcmd on your local polopoly installation you do **not** need to download the pcmd source! PCMD produces an assembly artifact when built and this assembly is deployed to the maven.polopoly.com nexus repository. 
+
+So to use PCMD on your local installation you should 
+
+1. download the pcmd assembly ZIP file from nexus. 
+
+To get the latest (SNAPSHOT) version of the distribution use this link: http://goo.gl/IDaUt 
+
+*(The full link is: http://maven.polopoly.com/nexus/service/local/artifact/maven/redirect?r=professional-services-snapshots&g=com.polopoly.ps.tools&a=pcmd&v=LATEST&c=distribution&e=zip)*
+
+2. Unpack the zip file in a directory on your local computer.
+
+3. Locate the polopoly.jar file used by the Polopoly installation that you want to use with pcmd and copy it to the "lib" folder at the location of the unzipped distribution file. 
+
+4. Add the pcmd binary located in the "bin" directory to your PATH to be able to run pcmd from anywhere in the filesystem. See HOW TO INSTALL PCMD ON THE PATH below.
+
+Now you are ready to go!
 
 HOW TO RUN PCMD CLIENT
 Run the pcmd script located in the bin folder of this distribution. 
@@ -26,15 +45,15 @@ If you want to connect to a different server or use a different login name or
 use a different password you can set the following environment variables:
 
 -- Set the POLOPOLY_SERVER environment variable to connect to another server:
-$Êexport POLOPOLY_SERVER=192.168.101.135
+$ï¿½export POLOPOLY_SERVER=192.168.101.135
 
 -- Set the POLOPOLY_USER environment variable to change the polopoly user 
 -- (sysadmin is used by default):
-$Êexport POLOPOLY_USER=brian
+$ï¿½export POLOPOLY_USER=brian
 
 -- Set the POLOPOLY_PASSWORD environment variable to change the polopoly user's password 
 -- (sysadmin is used by default):
-$Êexport POLOPOLY_PASSWORD=brianspassword
+$ï¿½export POLOPOLY_PASSWORD=brianspassword
 
 
 HOW TO ADD CUSTOM TOOL
