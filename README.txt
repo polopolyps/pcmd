@@ -5,7 +5,7 @@
 /_/    \____/_/  /_/_____/   
 
 HOW TO INSTALL PCMD 
-To run pcmd on your local polopoly installation you do **not** need to download the pcmd source! PCMD produces an assembly artifact when built and this assembly is deployed to the maven.polopoly.com nexus repository. 
+To run pcmd on your local polopoly installation you do NOT need to download the pcmd source! PCMD produces an assembly artifact when built and this assembly is deployed to the maven.polopoly.com nexus repository. 
 
 So to use PCMD on your local installation you should 
 
@@ -13,11 +13,13 @@ So to use PCMD on your local installation you should
 
 To get the latest (SNAPSHOT) version of the distribution use this link: http://goo.gl/IDaUt 
 
-*(The full link is: http://maven.polopoly.com/nexus/service/local/artifact/maven/redirect?r=professional-services-snapshots&g=com.polopoly.ps.tools&a=pcmd&v=LATEST&c=distribution&e=zip)*
+(The full link is: http://maven.polopoly.com/nexus/service/local/artifact/maven/redirect?r=professional-services-snapshots&g=com.polopoly.ps.tools&a=pcmd&v=LATEST&c=distribution&e=zip)
 
 2. Unpack the zip file in a directory on your local computer.
 
 3. Locate the polopoly.jar file used by the Polopoly installation that you want to use with pcmd and copy it to the "lib" folder at the location of the unzipped distribution file. 
+
+The polopoly.jar file is actually named polopoly-[polopoly version].jar and will be packaged into your project webapps and also be part of your local maven repository. 
 
 4. Add the pcmd binary located in the "bin" directory to your PATH to be able to run pcmd from anywhere in the filesystem. See HOW TO INSTALL PCMD ON THE PATH below.
 
