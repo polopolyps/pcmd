@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<batch xmlns="http://www.polopoly.com/polopoly/cm/xmlio">
+  <content>
+    <metadata>
+      <contentid>
+        <major>UserData</major>
+        <externalid>AddGroupMemberToolITUser</externalid>
+      </contentid>
+      <input-template>
+        <externalid>p.UserEditor</externalid>
+      </input-template>
+      <security-parent>
+        <externalid>p.siteengine.Sites.d</externalid>
+      </security-parent>
+    </metadata>
+    <value name="loginName">testaddgroupmember</value>
+    <value name="password">testaddgroupmember</value>
+    <component name="isCMUser" group="CMUser">true</component>
+    <component name="value" group="FirstName">Test</component>
+    <component name="value" group="LastName">Group Member</component>
+    <component name="locale" group="polopoly.Client">en_US</component>
+  </content>
+</batch>
