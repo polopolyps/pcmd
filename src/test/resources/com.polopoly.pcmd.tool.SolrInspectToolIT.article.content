@@ -1,0 +1,5 @@
+id:com.polopoly.pcmd.tool.SolrInspectToolIT.article
+inputtemplate:example.StandardArticle
+major:1
+name:com.polopoly.pcmd.tool.SolrInspectToolIT.article
+securityparent:p.siteengine.Sites.d

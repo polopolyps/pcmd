@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<batch xmlns="http://www.polopoly.com/polopoly/cm/xmlio">
+<content>
+  	<metadata>
+	<contentid>
+	<major>Department</major>
+	<externalid>WorkflowActionsToolIT_site</externalid>
+	</contentid>
+	<input-template>
+	<major>InputTemplate</major>
+	<externalid>p.siteengine.Site</externalid>
+	</input-template>
+	<security-parent>
+	<major>Department</major>
+	<externalid>p.siteengine.Sites.d</externalid>
+	</security-parent>
+	</metadata>
+	
+	<component group="polopoly.Content" name="name">Workflow Actions Tool Test Site</component>
+</content>
+
+<content>
+  	<metadata>
+	<contentid>
+	<major>Department</major>
+	<externalid>WorkflowActionsToolIT_dept1</externalid>
+	</contentid>
+	<input-template>
+	<major>InputTemplate</major>
+	<externalid>p.siteengine.Page</externalid>
+	</input-template>
+	<security-parent>
+	<major>Department</major>
+	<externalid>WorkflowActionsToolIT_site</externalid>
+	</security-parent>
+	</metadata>	
+	<component group="polopoly.Content" name="name">Workflow Actions Tool Dept 1</component>
+</content>
+</batch>
