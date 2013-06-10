@@ -9,6 +9,7 @@ com.polopoly.ps.pcmd.tool.GraphContentTool
 com.polopoly.ps.pcmd.tool.GroovyTool
 com.polopoly.ps.pcmd.tool.GroupTool
 com.polopoly.ps.pcmd.tool.HelpTool
+com.polopoly.ps.pcmd.tool.ImportTool
 com.polopoly.ps.pcmd.tool.InspectTool
 com.polopoly.ps.pcmd.tool.ListTool
 com.polopoly.ps.pcmd.tool.LockTool
