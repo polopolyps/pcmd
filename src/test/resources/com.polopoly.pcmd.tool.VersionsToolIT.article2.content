@@ -1,5 +1,5 @@
-id:com.polopoly.pcmd.tool.VersionsToolIT.article1
+id:com.polopoly.pcmd.tool.VersionsToolIT.article2
 inputtemplate:example.StandardArticle
 major:1
-name:com.polopoly.pcmd.tool.VersionsToolIT.article1
+name:com.polopoly.pcmd.tool.VersionsToolIT.article2
 component:lead:value:Testing

@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.geronimo.mail.util.StringBufferOutputStream;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,18 +41,13 @@ public class VersionsToolIT extends AbstractIntegrationTestBase {
         System.setOut(new PrintStream(new StringBufferOutputStream(out)));
     }
     
-    @After
-    public void cleanUp() throws CMException {
-    	ContentId contentId = new ExternalContentId("com.polopoly.pcmd.tool.VersionsToolIT.article1"); 
-    	cmServer.removeContent(contentId); 
-    }
-
     @ImportTestContent(files = { "com.polopoly.pcmd.tool.VersionsToolIT.article1.content" }, 
     		           waitUntilContentsAreIndexed = { "com.polopoly.pcmd.tool.VersionsToolIT.article1" })
     @Test
     public void checkWithSymbolicVersions() throws FatalToolException, ArgumentException {
+    	String testArticle = "com.polopoly.pcmd.tool.VersionsToolIT.article1"; 
         List<String> args = new ArrayList<String>();
-        args.add("com.polopoly.pcmd.tool.VersionsToolIT.article1");
+        args.add(testArticle);
 
         DefaultArguments arguments = new DefaultArguments("VersionsTool", new HashMap<String, List<String>>(), args);
         arguments.setContext(context);
@@ -62,8 +56,7 @@ public class VersionsToolIT extends AbstractIntegrationTestBase {
         String articleContentId = "";
         try {
             versionContentId =
-                cmServer.findContentIdByExternalId(new ExternalContentId(
-                    "com.polopoly.pcmd.tool.VersionsToolIT.article1"));
+                cmServer.findContentIdByExternalId(new ExternalContentId(testArticle));
             articleContentId = versionContentId.getContentId().getContentId().getContentId().getContentIdString();
         } catch (CMException e) {
             e.printStackTrace();
@@ -75,18 +68,21 @@ public class VersionsToolIT extends AbstractIntegrationTestBase {
         assertTrue(result.contains(articleContentId));
         assertTrue(result.contains("LATEST"));
         assertTrue(result.contains("DEFAULT_STAGE"));
+        
+        cleanUpArticle(testArticle); 
     }
 
-    @ImportTestContent(files = { "com.polopoly.pcmd.tool.VersionsToolIT.article1.content",
-                                 "com.polopoly.pcmd.tool.VersionsToolIT.article2.content" }, 
-                       waitUntilContentsAreIndexed = { "com.polopoly.pcmd.tool.VersionsToolIT.article1" })
+    @ImportTestContent(files = { "com.polopoly.pcmd.tool.VersionsToolIT.article2.content" }, 
+                       waitUntilContentsAreIndexed = { "com.polopoly.pcmd.tool.VersionsToolIT.article2" })
     @Test
     public void checkWithoutSymbolicVersions() throws FatalToolException, ArgumentException {
-        List<String> args = new ArrayList<String>();
-        args.add("com.polopoly.pcmd.tool.VersionsToolIT.article1");
+    	String testArticle = "com.polopoly.pcmd.tool.VersionsToolIT.article2"; 
+    	
+    	List<String> args = new ArrayList<String>();
+        args.add(testArticle);
 
         HashMap<String, List<String>> options = new HashMap<String, List<String>>();
-        options.put("symbolic", Arrays.asList(new String[] { "false" }));
+        options.put("symbolic", Arrays.asList("false"));
 
         DefaultArguments arguments = new DefaultArguments("VersionsTool", options, args);
         arguments.setContext(context);
@@ -95,8 +91,7 @@ public class VersionsToolIT extends AbstractIntegrationTestBase {
         String articleContentId = "";
         try {
             versionContentId =
-                cmServer.findContentIdByExternalId(new ExternalContentId(
-                    "com.polopoly.pcmd.tool.VersionsToolIT.article1"));
+                cmServer.findContentIdByExternalId(new ExternalContentId(testArticle));
             articleContentId = versionContentId.getContentId().getContentId().getContentId().getContentIdString();
         } catch (CMException e) {
             e.printStackTrace();
@@ -109,5 +104,19 @@ public class VersionsToolIT extends AbstractIntegrationTestBase {
         assertTrue(result.contains(articleContentId));
         assertFalse(result.contains("LATEST"));
         assertFalse(result.contains("DEFAULT_STAGE"));
+        
+        cleanUpArticle(testArticle); 
+    }
+    
+    private void cleanUpArticle(String externalId) {
+    	ContentId contentId = new ExternalContentId(externalId); 
+
+    	try {
+    		if(cmServer.contentExists(contentId)) {
+    			cmServer.removeContent(contentId); 
+    		}
+    	} catch (CMException ex) {
+    		ex.printStackTrace(); 
+    	}
     }
 }
