@@ -1,6 +1,5 @@
 package com.polopoly.pcmd.tool;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -11,10 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.geronimo.mail.util.StringBufferOutputStream;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.google.inject.Inject;
+import com.polopoly.cm.ContentId;
 import com.polopoly.cm.ExternalContentId;
 import com.polopoly.cm.VersionedContentId;
 import com.polopoly.cm.client.CMException;
@@ -23,7 +24,6 @@ import com.polopoly.ps.pcmd.FatalToolException;
 import com.polopoly.ps.pcmd.Main;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
-import com.polopoly.ps.pcmd.tool.DeleteTool;
 import com.polopoly.ps.pcmd.tool.VersionsTool;
 import com.polopoly.testbase.ImportTestContent;
 import com.polopoly.util.client.PolopolyContext;
@@ -41,8 +41,15 @@ public class VersionsToolIT extends AbstractIntegrationTestBase {
         out = new StringBuffer();
         System.setOut(new PrintStream(new StringBufferOutputStream(out)));
     }
+    
+    @After
+    public void cleanUp() throws CMException {
+    	ContentId contentId = new ExternalContentId("com.polopoly.pcmd.tool.VersionsToolIT.article1"); 
+    	cmServer.removeContent(contentId); 
+    }
 
-    @ImportTestContent(files = { "com.polopoly.pcmd.tool.VersionsToolIT.article1.content" }, waitUntilContentsAreIndexed = { "com.polopoly.pcmd.tool.VersionsToolIT.article1" })
+    @ImportTestContent(files = { "com.polopoly.pcmd.tool.VersionsToolIT.article1.content" }, 
+    		           waitUntilContentsAreIndexed = { "com.polopoly.pcmd.tool.VersionsToolIT.article1" })
     @Test
     public void checkWithSymbolicVersions() throws FatalToolException, ArgumentException {
         List<String> args = new ArrayList<String>();
@@ -64,14 +71,15 @@ public class VersionsToolIT extends AbstractIntegrationTestBase {
 
         Main.execute(new VersionsTool(), context, arguments);
         String result = out.toString();
-        String[] versions = result.split("\\r\\n");
-        assertTrue(out.toString().contains(articleContentId));
-        assertTrue(out.toString().contains("LATEST"));
-        assertEquals(1, versions.length);
+
+        assertTrue(result.contains(articleContentId));
+        assertTrue(result.contains("LATEST"));
+        assertTrue(result.contains("DEFAULT_STAGE"));
     }
 
     @ImportTestContent(files = { "com.polopoly.pcmd.tool.VersionsToolIT.article1.content",
-                                "com.polopoly.pcmd.tool.VersionsToolIT.article2.content" }, waitUntilContentsAreIndexed = { "com.polopoly.pcmd.tool.VersionsToolIT.article1" })
+                                 "com.polopoly.pcmd.tool.VersionsToolIT.article2.content" }, 
+                       waitUntilContentsAreIndexed = { "com.polopoly.pcmd.tool.VersionsToolIT.article1" })
     @Test
     public void checkWithoutSymbolicVersions() throws FatalToolException, ArgumentException {
         List<String> args = new ArrayList<String>();
@@ -95,22 +103,11 @@ public class VersionsToolIT extends AbstractIntegrationTestBase {
         }
 
         Main.execute(new VersionsTool(), context, arguments);
+        
         String result = out.toString();
-        String[] versions = result.split("\\r\\n");
-        assertTrue(out.toString().contains(articleContentId));
-        assertFalse(out.toString().contains("LATEST"));
-        assertFalse(out.toString().contains("DEFAULT_STAGE"));
-        assertEquals(2, versions.length);
-        deleteImportedTestContent();
-    }
-
-    public void deleteImportedTestContent() throws ArgumentException {
-        List<String> args = new ArrayList<String>();
-        args.add("com.polopoly.pcmd.tool.VersionsToolIT.article1");
-
-        DefaultArguments arguments = new DefaultArguments("DeleteTool", new HashMap<String, List<String>>(), args);
-        arguments.setContext(context);
-
-        Main.execute(new DeleteTool(), context, arguments);
+        
+        assertTrue(result.contains(articleContentId));
+        assertFalse(result.contains("LATEST"));
+        assertFalse(result.contains("DEFAULT_STAGE"));
     }
 }
