@@ -29,11 +29,13 @@ import com.polopoly.user.server.GroupId;
 import com.polopoly.user.server.InvalidSessionKeyException;
 import com.polopoly.user.server.PermissionDeniedException;
 import com.polopoly.user.server.PrincipalId;
+import com.polopoly.user.server.User;
 import com.polopoly.user.server.UserServer;
 import com.polopoly.util.client.PolopolyContext;
 
 public class AddGroupMemberToolIT extends AbstractIntegrationTestBase {
-    private static final String TESTADDGROUPMEMBER = "testaddgroupmember";
+    private static final String TEST_GROUP2 = "AddGroupMemberToolIT_Group2";
+	private static final String TESTADDGROUPMEMBER = "testaddgroupmember";
 	private static final String TEST_GROUP1 = "AddGroupMemberToolIT_Group1";
 	private PolopolyContext context;
     private StringBuffer out;
@@ -53,7 +55,7 @@ public class AddGroupMemberToolIT extends AbstractIntegrationTestBase {
 
     @ImportTestContent(files = { "AddGroupMemberToolIT_group1.xml", "AddGroupMemberToolIT_user.xml" })
     @Test
-    public void addGroupMemberTest() throws FatalToolException, ArgumentException {
+    public void addGroupMemberTest() throws FatalToolException, ArgumentException, RemoteException, FinderException {
         List<String> args = new ArrayList<String>();
         args.add(TESTADDGROUPMEMBER);
 
@@ -67,17 +69,20 @@ public class AddGroupMemberToolIT extends AbstractIntegrationTestBase {
         Main.execute(new AddGroupMemberTool(), context, arguments);
         assertTrue("Tool output did not contain " + TESTADDGROUPMEMBER, out.toString().contains(TESTADDGROUPMEMBER));
         
+        Group group = getGroup(TEST_GROUP1);
+        User testUser = userServer.getUserByLoginName(TESTADDGROUPMEMBER);
+        assertTrue("User " + TESTADDGROUPMEMBER + " is not a member of group " + TEST_GROUP1, group.isDirectMember(testUser.getUserId()));
         removeGroupMemberAfterTest(TESTADDGROUPMEMBER, TEST_GROUP1, false);
     }
 
     @ImportTestContent(files = { "AddGroupMemberToolIT_group1.xml", "AddGroupMemberToolIT_group2.xml" })
     @Test
-    public void addGroupTest() throws FatalToolException, ArgumentException {
+    public void addGroupTest() throws FatalToolException, ArgumentException, RemoteException, FinderException {
         List<String> args = new ArrayList<String>();
         args.add(TEST_GROUP1);
 
         HashMap<String, List<String>> options = new HashMap<String, List<String>>();
-        options.put("group", Arrays.asList(new String[] { "AddGroupMemberToolIT_Group2" }));
+        options.put("group", Arrays.asList(new String[] { TEST_GROUP2 }));
 
         DefaultArguments arguments = new DefaultArguments("AddGroupMemberTool", options, args);
         arguments.setContext(context);
@@ -85,7 +90,12 @@ public class AddGroupMemberToolIT extends AbstractIntegrationTestBase {
 
         Main.execute(new AddGroupMemberTool(), context, arguments);
         assertTrue("Tool output did not contain: " + TEST_GROUP1, out.toString().contains(TEST_GROUP1));
-        removeGroupMemberAfterTest(TEST_GROUP1, "AddGroupMemberToolIT_Group2", true);
+     
+        Group group1 = getGroup(TEST_GROUP1);
+        Group group2 = getGroup(TEST_GROUP2);
+        
+        assertTrue("Group " + TEST_GROUP1 + " is not a member of " + TEST_GROUP2, group2.isDirectMember(group1.getGroupId()));
+        removeGroupMemberAfterTest(TEST_GROUP1, TEST_GROUP2, true);
     }
 
     private void removeGroupMemberAfterTest(String groupMember, String groupName, boolean isGroup) {
@@ -120,4 +130,10 @@ public class AddGroupMemberToolIT extends AbstractIntegrationTestBase {
 
     }
 
+    private Group getGroup(String groupName) throws RemoteException, FinderException {
+		GroupId[] groupId = userServer.findGroupsByName(groupName);
+        assertTrue("Failed to find test group for validation: " + groupName, groupId.length == 1);
+        Group group = userServer.findGroup(groupId[0]);
+		return group;
+	}
 }
