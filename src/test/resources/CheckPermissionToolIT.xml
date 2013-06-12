@@ -24,29 +24,6 @@
     </contentref>
   </content>
   
-  <content>
-    <metadata>
-      <contentid>
-        <major>UserData</major>
-        <externalid>10002</externalid>
-      </contentid>
-      <security-parent>
-        <externalid>GreenfieldTimes.d</externalid>
-      </security-parent>
-    </metadata>
-    <value name="loginName">checkpermissiontooluser2</value>
-    <value name="password">checkpermissiontooluser2</value>
-    <component name="isCMUser" group="CMUser">true</component>
-    <component name="value" group="FirstName">Check Permission Tool</component>
-    <component name="value" group="LastName">User2</component>
-    <component name="locale" group="polopoly.Client">en_US</component>
-    <contentref name="inputTemplateId" group="polopoly.Content">
-      <contentid>
-        <externalid>p.UserEditor</externalid>
-      </contentid>
-    </contentref>
-  </content>
-  
   <!-- Groups -->
   <content>
     <metadata>
@@ -70,29 +47,5 @@
       </entry>
     </contentlist>
   </content>
-  
-  <content>
-    <metadata>
-      <contentid>
-        <major>Content</major>
-        <externalid>p.Group:Check Permission Tool Group2</externalid>
-      </contentid>
-      <input-template>
-        <externalid>p.GroupData</externalid>
-      </input-template>
-    </metadata>
-    <contentlist group="members" mode="reset">
-      <entry mode="modify" withMetadata="false">
-        <metadata>
-          <referredContent>
-            <contentid>
-              <externalid>10002</externalid>
-            </contentid>
-          </referredContent>
-        </metadata>
-      </entry>
-    </contentlist>
-  </content>
-  
   
 </batch> 

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.geronimo.mail.util.StringBufferOutputStream;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,6 +21,7 @@ import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.CheckPermissionTool;
 import com.polopoly.testbase.ImportTestContent;
+import com.polopoly.user.server.Caller;
 import com.polopoly.user.server.UserServer;
 import com.polopoly.util.client.PolopolyContext;
 
@@ -33,12 +35,25 @@ public class CheckPermissionToolIT extends AbstractIntegrationTestBase {
 
     @Inject
     private UserServer userServer;
-
+    
+    private Caller testCaller; 
+    
     @Before
     public void setup() {
         context = new PolopolyContext(userServer, cmServer);
         out = new StringBuffer();
         System.setOut(new PrintStream(new StringBufferOutputStream(out)));
+        
+        testCaller = login(userServer, "checkpermissiontooluser1", "checkpermissiontooluser1");
+        cmServer.setCurrentCaller(testCaller);
+    }
+    
+    @After
+    public void resetLoginDetail() { 
+    	logout(userServer, testCaller);
+    	
+    	// to enable import of next test case's xml/content file
+    	cmServer.setCurrentCaller(login(userServer, DEFAULT_USER,  DEFAULT_PASSWORD));
     }
 
     @Test
@@ -47,28 +62,32 @@ public class CheckPermissionToolIT extends AbstractIntegrationTestBase {
         args.add("GreenfieldTimes.d");
 
         HashMap<String, List<String>> options = new HashMap<String, List<String>>();
-        options.put("permission", Arrays.asList(new String[] { "1READ" }));
-
+        options.put("permission", Arrays.asList("1READ"));
+        
         DefaultArguments arguments = new DefaultArguments("check-permission", options, args);
         arguments.setContext(context);
         arguments.setOptionString("loginuser", "checkpermissiontooluser1");
 
-        Main.execute(new CheckPermissionTool(), context, arguments, true);
-        assertTrue(out.toString().contains("checkpermissiontooluser1 has permission 1READ"));
+        Main.execute(new CheckPermissionTool(), context, arguments);
+        
+        assertTrue(out.toString().contains("has permission 1READ"));
     }
 
+    @Test
     public void checkUserWithInvalidPermission() throws FatalToolException, ArgumentException {
+    	
         List<String> args = new ArrayList<String>();
         args.add("GreenfieldTimes.d");
 
         HashMap<String, List<String>> options = new HashMap<String, List<String>>();
-        options.put("permission", Arrays.asList(new String[] { "1WRITE" }));
-
-        DefaultArguments arguments = new DefaultArguments("CheckPermissionTool", options, args);
+        options.put("permission", Arrays.asList("3WRITE"));
+        
+        DefaultArguments arguments = new DefaultArguments("check-permission", options, args);
         arguments.setContext(context);
-        arguments.setOptionString("loginuser", "checkpermissiontooluser2");
+        arguments.setOptionString("loginuser", "checkpermissiontooluser1");
 
-        Main.execute(new CheckPermissionTool(), context, arguments, true);
-        assertTrue(out.toString().contains("checkpermissiontooluser2 does not have permission 1WRITE"));
+        Main.execute(new CheckPermissionTool(), context, arguments);
+        
+        assertTrue(out.toString().contains("does not have permission 3WRITE."));
     }
 }

@@ -9,8 +9,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.apache.geronimo.mail.util.StringBufferOutputStream;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,6 +40,9 @@ public class SetPermissionToolUserIT extends AbstractIntegrationTestBase {
 
     @Inject
     private UserServer userServer;
+    
+    @Inject
+    private Logger LOG; 
 
     @Before
     public void setup() throws ArgumentException {
@@ -47,7 +52,12 @@ public class SetPermissionToolUserIT extends AbstractIntegrationTestBase {
 
         createUserPermission();
     }
-
+    
+    @After
+    public void resetLoginDetail() { // to enable import of next test case's xml/content file
+    	cmServer.setCurrentCaller(login(userServer, DEFAULT_USER,  DEFAULT_PASSWORD));
+    }
+    
     public void createUserPermission() throws ArgumentException {
         List<String> args = new ArrayList<String>();
         args.add("GreenfieldTimes.d");
@@ -65,10 +75,10 @@ public class SetPermissionToolUserIT extends AbstractIntegrationTestBase {
     public void checkUserPermissionTest() throws CMException {
         // default caller is sysadmin (98) - but we are not checking for
         // sysadmin's rights, instead checking for user 6001's (testtooluser)
+       // cmServer.setCurrentCaller(new Caller(new UserId("6001")));
         cmServer.setCurrentCaller(new Caller(new UserId("6001")));
 
         assertTrue(cmServer.checkPermission(new ExternalContentId("GreenfieldTimes.d"), "1READ", false));
         assertFalse(cmServer.checkPermission(new ExternalContentId("GreenfieldTimes.d"), "1WRITE", false));
     }
-
 }

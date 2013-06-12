@@ -62,7 +62,7 @@ public class AddGroupMemberToolIT extends AbstractIntegrationTestBase {
         arguments.setContext(context);
         arguments.setOptionString("loginpassword", "sysadmin");
 
-        Main.execute(new AddGroupMemberTool(), context, arguments, true);
+        Main.execute(new AddGroupMemberTool(), context, arguments);
         assertTrue(out.toString().contains("testaddgroupmember"));
         removeGroupMemberAfterTest("testaddgroupmember", "AddGroupMemberToolIT_Group1", false);
     }
@@ -80,7 +80,7 @@ public class AddGroupMemberToolIT extends AbstractIntegrationTestBase {
         arguments.setContext(context);
         arguments.setOptionString("loginpassword", "sysadmin");
 
-        Main.execute(new AddGroupMemberTool(), context, arguments, true);
+        Main.execute(new AddGroupMemberTool(), context, arguments);
         assertTrue(out.toString().contains("AddGroupMemberToolIT_Group1"));
         removeGroupMemberAfterTest("AddGroupMemberToolIT_Group1", "AddGroupMemberToolIT_Group2", true);
     }

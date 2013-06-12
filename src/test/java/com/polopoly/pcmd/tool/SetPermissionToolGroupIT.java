@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.geronimo.mail.util.StringBufferOutputStream;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,6 +47,11 @@ public class SetPermissionToolGroupIT extends AbstractIntegrationTestBase {
         System.setOut(new PrintStream(new StringBufferOutputStream(out)));
 
         createGroupPermission();
+    }
+    
+    @After
+    public void resetLoginDetail() { // to enable import of next test case's xml/content file
+    	cmServer.setCurrentCaller(login(userServer, DEFAULT_USER,  DEFAULT_PASSWORD));
     }
 
     public void createGroupPermission() throws ArgumentException {
