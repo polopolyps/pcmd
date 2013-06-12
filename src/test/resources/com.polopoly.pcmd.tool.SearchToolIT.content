@@ -1,0 +1,16 @@
+id:.article
+inputtemplate:example.StandardArticle
+major:1
+securityparent:GreenfieldTimes.d
+name:com.polopoly.pcmd.tool.SearchToolIT
+component:body:value:A web search engine is software code that is designed to search for information on the World Wide Web. The search results are generally presented in a line of results often referred to as search engine results pages (SERP's). The information may be a specialist in web pages, images, information and other types of files. Some search engines also mine data available in databases or open directories. Unlike web directories, which are maintained only by human editors, search engines also maintain real-time information by running an algorithm on a web crawler.
+component:lead:value:Something about search engine
+component:author:value:Andy Miller
+list:images:com.polopoly.pcmd.tool.SearchToolIT.image
+
+id:.image
+inputtemplate:example.Image
+major:1
+securityparent:GreenfieldTimes.d
+name:com.polopoly.pcmd.tool.SearchToolIT Image
+component:byline:value:Kevin Tostado
