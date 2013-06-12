@@ -33,7 +33,9 @@ import com.polopoly.user.server.UserServer;
 import com.polopoly.util.client.PolopolyContext;
 
 public class AddGroupMemberToolIT extends AbstractIntegrationTestBase {
-    private PolopolyContext context;
+    private static final String TESTADDGROUPMEMBER = "testaddgroupmember";
+	private static final String TEST_GROUP1 = "AddGroupMemberToolIT_Group1";
+	private PolopolyContext context;
     private StringBuffer out;
 
     @Inject
@@ -53,25 +55,26 @@ public class AddGroupMemberToolIT extends AbstractIntegrationTestBase {
     @Test
     public void addGroupMemberTest() throws FatalToolException, ArgumentException {
         List<String> args = new ArrayList<String>();
-        args.add("testaddgroupmember");
+        args.add(TESTADDGROUPMEMBER);
 
         HashMap<String, List<String>> options = new HashMap<String, List<String>>();
-        options.put("group", Arrays.asList(new String[] { "AddGroupMemberToolIT_Group1" }));
+        options.put("group", Arrays.asList(new String[] { TEST_GROUP1 }));
 
         DefaultArguments arguments = new DefaultArguments("AddGroupMemberTool", options, args);
         arguments.setContext(context);
         arguments.setOptionString("loginpassword", "sysadmin");
 
         Main.execute(new AddGroupMemberTool(), context, arguments);
-        assertTrue(out.toString().contains("testaddgroupmember"));
-        removeGroupMemberAfterTest("testaddgroupmember", "AddGroupMemberToolIT_Group1", false);
+        assertTrue("Tool output did not contain " + TESTADDGROUPMEMBER, out.toString().contains(TESTADDGROUPMEMBER));
+        
+        removeGroupMemberAfterTest(TESTADDGROUPMEMBER, TEST_GROUP1, false);
     }
 
     @ImportTestContent(files = { "AddGroupMemberToolIT_group1.xml", "AddGroupMemberToolIT_group2.xml" })
     @Test
     public void addGroupTest() throws FatalToolException, ArgumentException {
         List<String> args = new ArrayList<String>();
-        args.add("AddGroupMemberToolIT_Group1");
+        args.add(TEST_GROUP1);
 
         HashMap<String, List<String>> options = new HashMap<String, List<String>>();
         options.put("group", Arrays.asList(new String[] { "AddGroupMemberToolIT_Group2" }));
@@ -81,8 +84,8 @@ public class AddGroupMemberToolIT extends AbstractIntegrationTestBase {
         arguments.setOptionString("loginpassword", "sysadmin");
 
         Main.execute(new AddGroupMemberTool(), context, arguments);
-        assertTrue(out.toString().contains("AddGroupMemberToolIT_Group1"));
-        removeGroupMemberAfterTest("AddGroupMemberToolIT_Group1", "AddGroupMemberToolIT_Group2", true);
+        assertTrue("Tool output did not contain: " + TEST_GROUP1, out.toString().contains(TEST_GROUP1));
+        removeGroupMemberAfterTest(TEST_GROUP1, "AddGroupMemberToolIT_Group2", true);
     }
 
     private void removeGroupMemberAfterTest(String groupMember, String groupName, boolean isGroup) {
