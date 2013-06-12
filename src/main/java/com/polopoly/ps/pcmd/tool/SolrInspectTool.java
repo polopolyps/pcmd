@@ -27,85 +27,85 @@ public class SolrInspectTool implements Tool<SolrInspectParameters>, RequiresSol
     private boolean verbose = false;
     private boolean resolveExternalId = true;
 
-
-	@Override
-	public void execute(PolopolyContext context, SolrInspectParameters  parameters)
-			throws FatalToolException {
-		verbose = parameters.verbose();
+    @Override
+    public void execute(PolopolyContext context, SolrInspectParameters parameters) throws FatalToolException {
+        verbose = parameters.verbose();
         resolveExternalId = parameters.getResolveIds();
-        
-		String componentName = "search_solrClient" + capitalize(parameters.getIndexName());
+
+        String componentName = "search_solrClient" + capitalize(parameters.getIndexName());
         if (verbose) {
             System.err.println("searching index: " + componentName);
         }
-        
-        SolrSearchClient solrSearchClient = (SolrSearchClient) context.getApplication().getApplicationComponent(componentName);
-		if(solrSearchClient == null || context.getPolicyCMServer() == null) {
+
+        SolrSearchClient solrSearchClient = context.getSolrSearchClient(parameters.getIndexName());
+        if (solrSearchClient == null || context.getPolicyCMServer() == null) {
             StringBuilder sb = new StringBuilder();
-            throw new FatalToolException(componentName + " or CMServer is not avaible, available indices are: " + sb.toString());
+            throw new FatalToolException(componentName + " or CMServer is not avaible, available indices are: "
+                                         + sb.toString());
         }
-		
-		Iterator<ContentId> it = parameters.getContentIds();
-		while (it.hasNext()) {
-			try {
-				inspectContentId(solrSearchClient, it.next(), context);
-    		} catch (SolrServerException e) {
-    			System.err.println("Could not generate completely due to SolrServerException"+ e.getMessage());
-    		} catch (ServiceNotAvailableException e) {
-    			System.err.println("Could not generate completely due to ServiceNotAvailableException"+ e.getMessage());
-    		}
-		}
-	}
 
-	@Override
-	public SolrInspectParameters createParameters() {
-		return new SolrInspectParameters();
-	}
+        Iterator<ContentId> it = parameters.getContentIds();
+        while (it.hasNext()) {
+            try {
+                inspectContentId(solrSearchClient, it.next(), context);
+            } catch (SolrServerException e) {
+                System.err.println("Could not generate completely due to SolrServerException" + e.getMessage());
+            } catch (ServiceNotAvailableException e) {
+                System.err
+                    .println("Could not generate completely due to ServiceNotAvailableException" + e.getMessage());
+            }
+        }
+    }
 
-	@Override
-	public String getHelp() {
-		return "Return indexed fields of a series of content IDs";
-	}
-	
-	private void inspectContentId(SolrSearchClient searchClient, ContentId contentId, PolopolyContext context) throws SolrServerException, ServiceNotAvailableException {
-		String contentIdQuery = "contentId:" + contentId.getContentId().getContentIdString();
-		SolrQuery query = new SolrQuery(contentIdQuery); 
-		SearchResultImpl result = (SearchResultImpl)searchClient.search(query, Integer.MAX_VALUE);
- 
-	    
-		SearchResultPage resultPage = result.getPage(0);
-		if(resultPage != null){
-			List<QueryResponse> resps = resultPage.getQueryResponses();
-						
-			for(QueryResponse r : resps) {
-				SolrDocumentList sdls = r.getResults();	
-				if(sdls.size() < 1){
-					System.out.println("No index document for:" + contentId.getContentId().getContentIdString());
-					System.out.println("");
-				}
-				
-				for (SolrDocument sd : sdls) {
-					String cid = (String) sd.getFieldValue("contentId");
-					if(!StringUtil.isEmpty(cid)){
-						if (resolveExternalId) {
-							ContentId id = ContentIdFactory.createContentId(cid);
-			                System.out.println(AbstractContentIdField.get(id, context));
-			            } else {
-			                System.out.println(cid);
-			            }
-					}
-							
-					for (String field : sd.getFieldNames()) {
-						 System.out.println("          "+ field + ": " + sd.getFieldValue(field));
-					}
-							
-					System.out.println("");
-					System.out.println("");
-				}
-			}
-		}else{
-			System.out.println("No index document for:" + contentId.getContentId().getContentIdString());
-		}
-	}
+    @Override
+    public SolrInspectParameters createParameters() {
+        return new SolrInspectParameters();
+    }
+
+    @Override
+    public String getHelp() {
+        return "Return indexed fields of a series of content IDs";
+    }
+
+    private void inspectContentId(SolrSearchClient searchClient, ContentId contentId, PolopolyContext context)
+        throws SolrServerException, ServiceNotAvailableException {
+        String contentIdQuery = "contentId:" + contentId.getContentId().getContentIdString();
+        SolrQuery query = new SolrQuery(contentIdQuery);
+        SearchResultImpl result = (SearchResultImpl) searchClient.search(query, Integer.MAX_VALUE);
+
+        SearchResultPage resultPage = result.getPage(0);
+        if (resultPage != null) {
+            List<QueryResponse> resps = resultPage.getQueryResponses();
+
+            for (QueryResponse r : resps) {
+                SolrDocumentList sdls = r.getResults();
+                if (sdls.size() < 1) {
+                    System.out.println("No index document for:" + contentId.getContentId().getContentIdString());
+                    System.out.println("");
+                }
+
+                for (SolrDocument sd : sdls) {
+                    String cid = (String) sd.getFieldValue("contentId");
+                    if (!StringUtil.isEmpty(cid)) {
+                        if (resolveExternalId) {
+                            ContentId id = ContentIdFactory.createContentId(cid);
+                            System.out.println(AbstractContentIdField.get(id, context));
+                        } else {
+                            System.out.println(cid);
+                        }
+                    }
+
+                    for (String field : sd.getFieldNames()) {
+                        System.out.println("          " + field + ": " + sd.getFieldValue(field));
+                    }
+
+                    System.out.println("");
+                    System.out.println("");
+                }
+            }
+        } else {
+            System.out.println("No index document for:" + contentId.getContentId().getContentIdString());
+        }
+    }
 
 }

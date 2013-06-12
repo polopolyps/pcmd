@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<batch xmlns="http://www.polopoly.com/polopoly/cm/xmlio">
+
+  <!-- article -->
+  <content>
+    <metadata>
+      <contentid>
+        <major>Article</major>
+        <externalid>com.polopoly.pcmd.tool.WorkflowActionsToolIT.article</externalid>
+      </contentid>
+      <input-template>
+        <major>InputTemplate</major>
+        <externalid>example.StandardArticle</externalid>
+      </input-template>
+      <security-parent>
+        <major>Department</major>
+        <externalid>WorkflowActions.d</externalid>
+      </security-parent>
+    </metadata>
+    <component group="polopoly.Content" name="name">Workflow Test Article 1</component>
+    <component group="polopoly.ContentLists" name="elements/slotElements">slotElements</component>
+    <component group="polopoly.ContentLists" name="rightColumn/slotElements">slotElements</component>
+    <component group="polopoly.ContentLists" name="images">images</component>
+    <component group="polopoly.ContentLists" name="polopoly.Toc">default</component>
+    <component group="polopoly.ContentLists" name="topimages">topimages</component>
+    <component group="p.Inbox" name="showContent">true</component>
+    <component group="publishedDate" name="defaultFormat">2013-06-11 07:53</component>
+    <component group="publishedDate" name="date">1370930012193</component>
+    <component group="publishedDate" name="userFormat">2013-06-11 07:53</component>
+    <component group="p.Content.state" name="onlineState">true</component>
+    <component group="createdDate" name="defaultFormat">2013-06-11 07:53</component>
+    <component group="createdDate" name="date">1370930012193</component>
+    <component group="createdDate" name="userFormat">2013-06-11 07:53</component>
+    <component group="p.AssociatedUsers" name="associatedUsers">sysadmin</component>
+    <component group="modifiedDate" name="defaultFormat">2013-06-11 07:53</component>
+    <component group="modifiedDate" name="date">1370930012194</component>
+    <component group="modifiedDate" name="userFormat">2013-06-11 07:53</component>
+  </content>
+
+  <content>
+    <metadata>
+      <contentid>
+        <major>Article</major>
+        <externalid>com.polopoly.pcmd.tool.WorkflowActionsToolIT.article2</externalid>
+      </contentid>
+      <input-template>
+        <major>InputTemplate</major>
+        <externalid>example.StandardArticle</externalid>
+      </input-template>
+      <security-parent>
+        <major>Department</major>
+        <externalid>GreenfieldTimes.d</externalid>
+      </security-parent>
+    </metadata>
+    <component group="polopoly.Content" name="name">Workflow Test Article 2</component>
+    <component group="polopoly.ContentLists" name="elements/slotElements">slotElements</component>
+    <component group="polopoly.ContentLists" name="rightColumn/slotElements">slotElements</component>
+    <component group="polopoly.ContentLists" name="images">images</component>
+    <component group="polopoly.ContentLists" name="polopoly.Toc">default</component>
+    <component group="polopoly.ContentLists" name="topimages">topimages</component>
+    <component group="p.Inbox" name="showContent">true</component>
+    <component group="publishedDate" name="defaultFormat">2013-06-11 07:53</component>
+    <component group="publishedDate" name="date">1370930012193</component>
+    <component group="publishedDate" name="userFormat">2013-06-11 07:53</component>
+    <component group="p.Content.state" name="onlineState">true</component>
+    <component group="createdDate" name="defaultFormat">2013-06-11 07:53</component>
+    <component group="createdDate" name="date">1370930012193</component>
+    <component group="createdDate" name="userFormat">2013-06-11 07:53</component>
+    <component group="p.AssociatedUsers" name="associatedUsers">sysadmin</component>
+    <component group="modifiedDate" name="defaultFormat">2013-06-11 07:53</component>
+    <component group="modifiedDate" name="date">1370930012194</component>
+    <component group="modifiedDate" name="userFormat">2013-06-11 07:53</component>
+  </content>
+
+</batch>
