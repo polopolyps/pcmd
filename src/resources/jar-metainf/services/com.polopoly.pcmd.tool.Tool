@@ -5,6 +5,7 @@ com.polopoly.ps.pcmd.tool.CreateGroupTool
 com.polopoly.ps.pcmd.tool.DeleteTool
 com.polopoly.ps.pcmd.tool.DeleteVersionTool
 com.polopoly.ps.pcmd.tool.ExportFilesTool
+com.polopoly.ps.pcmd.tool.ExportTool
 com.polopoly.ps.pcmd.tool.GraphContentTool
 com.polopoly.ps.pcmd.tool.GroovyTool
 com.polopoly.ps.pcmd.tool.GroupTool
