@@ -112,6 +112,12 @@ UEsDBBQABgAIAAAAIQDd/JU3ZgEAACAFAAATAAgCW0NvbnRlbnRfVHlwZXNdLnhtbCCiBAIooAAC AAA
    <file encoding="base64" name="menu/standard/file/flashfile/Dummy video.flv">
 RkxW453453525NZXRhRGF0YQg54545lP 3ztkWgAJc3RhcnR0aW1lAAAAAAAAAAAAAA10b3RhbGR1cmF0aW9uAEBjyU/fO2RaAAV3aWR0aABA
    </file> 
+   <contentref group="categorization[department.categorydimension.subject]" name="0">
+<contentid>
+<major>Department</major>
+<minor>181</minor>
+</contentid>
+</contentref>
   </content>
   
 </batch>  
