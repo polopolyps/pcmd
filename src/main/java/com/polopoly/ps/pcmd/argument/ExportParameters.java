@@ -51,24 +51,25 @@ public class ExportParameters extends ListExportableParameters implements Parame
 
         super.getHelp(help);
 
-        /*
-         * help.addOption(ALL_OPTION, new BooleanParser(),
-         * "Whether to export all exportable objects (if not specified, the objects to be exported will be expected on standard in or as arguments)"
-         * );
-         */
+        /* 
+          help.addOption(ALL_OPTION, new BooleanParser(), 
+          "Whether to export all exportable objects (if not specified, the objects to be exported will be " + 
+          "expected on standard in or as arguments)"
+        */
 
-        help.addOption(EXPORT_PRESENT_OPTION,
-                       new BooleanParser(),
-                       "Whether to export objects even though they are part of the project content or the Polopoly installation (defaults to false).");
+        help.addOption(EXPORT_PRESENT_OPTION, new BooleanParser(),
+                "Whether to export objects even though they are part of the project content or the Polopoly " + 
+                       "installation (defaults to false).");
 
         help.addOption(FILTER_REFERENCES, new BooleanParser(),
-                       "Whether to remove references to content that is neither project content nor part of the export (defaults to true).");
+        		"Whether to remove references to content that is neither project content nor part of the export " +
+        				"(defaults to true).");
 
-        /*
-         * help.addOption(INCLUDE_REFERRERS_OPTION, new BooleanParser(),
-         * "Whether to search for and include all content that has references to the specified content (will only retain content that is project content if "
-         * + EXPORT_PRESENT_OPTION + " is true).");
-         */
+        
+         help.addOption(INCLUDE_REFERRERS_OPTION, new BooleanParser(),
+        		 "Whether to search for and include all content that has references to the specified content (" + 
+        				 "will only retain content that is project content if " + EXPORT_PRESENT_OPTION + " is true).");
+        
         help.addOption(TEXT_OPTION, new BooleanParser(), "Whether to export the content in text format.");
     }
 

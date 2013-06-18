@@ -65,14 +65,7 @@ public class ExportToolIT extends AbstractIntegrationTestBase {
 
     @Before
     public void setup() throws CMException, ArgumentException {
-
         context = new PolopolyContext(userServer, cmServer);
-        exportFile(defaultVideo, "", "");
-        exportFile(filterRefOffArticle, "", "");
-        exportFile(projectContentArticle, "", "");
-        exportFile(dotContentArticle, "textformat", "true");
-        exportFile(defaultPolopolySiteTemplate, "exportpresent", "true");
-        exportFile(defaultPolopolyPageTemplate, "exportpresent", "false");
     }
 
     @After
@@ -89,20 +82,17 @@ public class ExportToolIT extends AbstractIntegrationTestBase {
                 try {
                     File file = new File(filePath);
                     FileDeleteStrategy.FORCE.delete(file);
-                    System.out.println("File " + filePath + " removed...");
 
                     if (!isPolopolyTemplate(externalId)) {
                         File folderDir = new File(filePath.substring(0, filePath.lastIndexOf("/")));
                         if (folderDir.exists() && folderDir.list().length == 0) {
                             FileDeleteStrategy.FORCE.delete(folderDir);
-                            System.out.println("Template folder " + folderDir + " removed...");
                         }
                     }
 
                     File contentDirFile = new File(contentDir);
                     if (contentDirFile.exists() && contentDirFile.list().length == 0) {
                         FileDeleteStrategy.FORCE.delete(contentDirFile);
-                        System.out.println("Base content folder " + contentDirFile + " removed...");
                     }
 
                 } catch (IOException e) {
@@ -140,7 +130,8 @@ public class ExportToolIT extends AbstractIntegrationTestBase {
     }
 
     @Test
-    public void testDefaultExport() throws CMException, IOException {
+    public void testDefaultExport() throws CMException, IOException, ArgumentException {
+    	exportFile(defaultVideo, "", "");
 
         Map<String, String> fileDetail = getFile(defaultVideo, "content", false);
         File file = new File(fileDetail.get("filePath"));
@@ -150,7 +141,8 @@ public class ExportToolIT extends AbstractIntegrationTestBase {
     }
 
     @Test
-    public void testFilterReferencesTurnOff() throws CMException, IOException {
+    public void testFilterReferencesTurnOff() throws CMException, IOException, ArgumentException {
+    	exportFile(filterRefOffArticle, "", "");
 
         Map<String, String> fileDetail = getFile(filterRefOffArticle, "content", false);
         File file = new File(fileDetail.get("filePath"));
@@ -162,7 +154,8 @@ public class ExportToolIT extends AbstractIntegrationTestBase {
     }
 
     @Test
-    public void testTextFormat() throws CMException, IOException {
+    public void testTextFormat() throws CMException, IOException, ArgumentException {
+    	exportFile(dotContentArticle, "textformat", "true");
 
         Map<String, String> fileDetail = getFile(dotContentArticle, "content", true);
 
@@ -173,6 +166,8 @@ public class ExportToolIT extends AbstractIntegrationTestBase {
 
     @Test
     public void testProjectContent() throws ArgumentException, CMException, IOException {
+    	exportFile(projectContentArticle, "", "");
+    	
         StringBuffer err = new StringBuffer();
         System.setErr(new PrintStream(new StringBufferOutputStream(err)));
 
@@ -198,9 +193,11 @@ public class ExportToolIT extends AbstractIntegrationTestBase {
 
         assertTrue(file.isFile());
     }
-
+    
     @Test
-    public void testExportPresentTurnedOn() throws IOException, CMException {
+    public void testExportPresentTurnedOn() throws IOException, CMException, ArgumentException {
+    	exportFile(defaultPolopolySiteTemplate, "exportpresent", "true");
+    	 
         Map<String, String> fileDetail = getFile(defaultPolopolySiteTemplate, "system", false);
 
         File file = new File(fileDetail.get("filePath"));
@@ -208,7 +205,9 @@ public class ExportToolIT extends AbstractIntegrationTestBase {
     }
 
     @Test
-    public void testExportPresentTurnedOff() throws IOException, CMException {
+    public void testExportPresentTurnedOff() throws IOException, CMException, ArgumentException {
+    	exportFile(defaultPolopolyPageTemplate, "exportpresent", "false");
+    	 
         Map<String, String> fileDetail = getFile(defaultPolopolyPageTemplate, "system", false);
 
         File file = new File(fileDetail.get("filePath"));
