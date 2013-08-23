@@ -22,7 +22,7 @@ public class ProjectContentFilterFactory {
         System.err.println(Plural.count(projectContentFilter.getPresentIds(), "object")
                            + " were product or project content.");
 
-        return new OrContentIdFilter(new HotdeployStatusFilter(server), new MajorFilter(Major.MAJOR_CONFIG),
+        return new OrContentIdFilter(new MajorFilter(Major.MAJOR_CONFIG),
             new SecurityRootDepartmentFilter(), new InputTemplateFilter(server), projectContentFilter);
     }
 

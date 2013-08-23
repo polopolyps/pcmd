@@ -15,7 +15,6 @@ import com.polopoly.ps.pcmd.field.content.AbstractContentIdField;
 import com.polopoly.ps.pcmd.tool.export.AcceptanceCollectingContentIdFilter;
 import com.polopoly.ps.pcmd.tool.xml.export.filteredcontent.ExcludeMetadataVersionFilter;
 import com.polopoly.ps.pcmd.tool.xml.export.filteredcontent.FilteredAllContentFinder;
-import com.polopoly.ps.pcmd.tool.xml.export.filteredcontent.HotdeployStatusFilter;
 import com.polopoly.ps.pcmd.tool.xml.export.filteredcontent.InputTemplateFilter;
 import com.polopoly.ps.pcmd.tool.xml.export.filteredcontent.MajorFilter;
 import com.polopoly.ps.pcmd.tool.xml.export.filteredcontent.NegatingContentIdFilter;
@@ -66,8 +65,7 @@ public class ListExportableTool implements Tool<ListExportableParameters> {
 
         finder.addFilter(new ExcludeMetadataVersionFilter());
         finder.addFilter(new NegatingContentIdFilter(new OrContentIdFilter(new MajorFilter(Major.CONTENT),
-            new MajorFilter(Major.MAJOR_CONFIG), new InputTemplateFilter(context.getPolicyCMServer()),
-            new HotdeployStatusFilter(context.getPolicyCMServer()), new SecurityRootDepartmentFilter(),
+            new MajorFilter(Major.MAJOR_CONFIG), new InputTemplateFilter(context.getPolicyCMServer()), new SecurityRootDepartmentFilter(),
             collectingFilter)));
 
         try {
