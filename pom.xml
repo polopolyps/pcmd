@@ -11,7 +11,7 @@
 	<name>Polopoly Command Tool</name>
 
 	<properties>
-		<polopoly.version>10.8.0</polopoly.version>
+		<polopoly.version>10.6.0-bc91117</polopoly.version>
 		<solr.version>3.6.0</solr.version>
 	</properties>
 
