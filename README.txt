@@ -11,9 +11,9 @@ So to use PCMD on your local installation you should
 
 1. download the pcmd assembly ZIP file from nexus. 
 
-To get the latest (SNAPSHOT) version of the distribution use this link: http://goo.gl/IDaUt 
+To get the latest released version of the distribution use this link: http://goo.gl/EFUOpA
 
-(The full link is: http://maven.polopoly.com/nexus/service/local/artifact/maven/redirect?r=professional-services-snapshots&g=com.polopoly.ps.tools&a=pcmd&v=LATEST&c=distribution&e=zip)
+(The full link is: http://maven.polopoly.com/nexus/service/local/artifact/maven/redirect?r=professional-services&g=com.polopoly.ps.tools&a=pcmd&v=LATEST&c=distribution&e=zip)
 
 2. Unpack the zip file in a directory on your local computer.
 
