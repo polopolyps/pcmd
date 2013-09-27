@@ -5,21 +5,27 @@
 /_/    \____/_/  /_/_____/   
 
 HOW TO INSTALL PCMD 
-To run pcmd on your local polopoly installation you do NOT need to download the pcmd source! PCMD produces an assembly artifact when built and this assembly is deployed to the maven.polopoly.com nexus repository. 
+To run pcmd on your local polopoly installation you do NOT need to download the pcmd source! PCMD produces assembly artifacts when built and these are deployed to the maven.polopoly.com nexus repository. 
 
 So to use PCMD on your local installation you should 
 
-1. download the pcmd assembly ZIP file from nexus. 
+1. download the pcmd assembly ZIP file matching your Polopoly version from nexus. 
 
-To get the latest released version of the distribution use this link: http://goo.gl/EFUOpA
+For Polopoly 10.8.1-fp1:
+The full link is: http://maven.polopoly.com/nexus/service/local/artifact/maven/redirect?r=professional-services&g=com.polopoly.ps.tools&a=pcmd&v=LATEST&c=distribution-10.8.1-fp1&e=zip
 
-(The full link is: http://maven.polopoly.com/nexus/service/local/artifact/maven/redirect?r=professional-services&g=com.polopoly.ps.tools&a=pcmd&v=LATEST&c=distribution&e=zip)
+For Polopoly 10.8.1:
+The full link is: http://maven.polopoly.com/nexus/service/local/artifact/maven/redirect?r=professional-services&g=com.polopoly.ps.tools&a=pcmd&v=LATEST&c=distribution-10.8.1&e=zip
+
+For Polopoly 10.6.1:
+The full link is: http://maven.polopoly.com/nexus/service/local/artifact/maven/redirect?r=professional-services&g=com.polopoly.ps.tools&a=pcmd&v=LATEST&c=distribution-10.6.1&e=zip
+
+For Polopoly 10.6.0:
+The full link is: http://maven.polopoly.com/nexus/service/local/artifact/maven/redirect?r=professional-services&g=com.polopoly.ps.tools&a=pcmd&v=LATEST&c=distribution-10.6.0&e=zip
 
 2. Unpack the zip file in a directory on your local computer.
 
-3. Locate the polopoly.jar file used by the Polopoly installation that you want to use with pcmd and copy it to the "lib" folder at the location of the unzipped distribution file. 
-
-The polopoly.jar file is actually named polopoly-[polopoly version].jar and will be packaged into your project webapps and also be part of your local maven repository. 
+3. Should you be using a certain fixpack version of Polopoly that does not fully match the Polopoly versions above you will need to replace the polopoly.jar file in the lib-folder of the unpacked zip file with the one used in your system. If you are running Polopoly 10.6.1-fp6 for instance, you need to download the 10.6.1 version of the pcmd distribution and replace the polopoly-10.6.0.jar file with your system's polopoly-10.6.0-fp6 after unpacking the zip. 
 
 4. Add the pcmd binary located in the "bin" directory to your PATH to be able to run pcmd from anywhere in the filesystem. See HOW TO INSTALL PCMD ON THE PATH below.
 
