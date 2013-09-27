@@ -25,7 +25,7 @@ The full link is: http://maven.polopoly.com/nexus/service/local/artifact/maven/r
 
 2. Unpack the zip file in a directory on your local computer.
 
-3. Should you be using a certain fixpack version of Polopoly that does not fully match the Polopoly versions above you will need to replace the polopoly.jar file in the lib-folder of the unpacked zip file with the one used in your system. If you are running Polopoly 10.6.1-fp6 for instance, you need to download the 10.6.1 version of the pcmd distribution and replace the polopoly-10.6.0.jar file with your system's polopoly-10.6.0-fp6 after unpacking the zip. 
+3. Should you be using a certain fixpack version of Polopoly that does not fully match the Polopoly versions above you will need to replace the polopoly.jar file in the lib-folder of the unpacked zip file with the one used in your system. If you are running Polopoly 10.6.1-fp6 for instance, you need to download the 10.6.1 version of the pcmd distribution and replace the polopoly-10.6.1.jar file with your system's polopoly-10.6.1-fp6 after unpacking the zip. 
 
 4. Add the pcmd binary located in the "bin" directory to your PATH to be able to run pcmd from anywhere in the filesystem. See HOW TO INSTALL PCMD ON THE PATH below.
 
