@@ -159,7 +159,7 @@
 					<descriptors>
 						<descriptor>src/assemble/distribution.xml</descriptor>
 					</descriptors>
-					<finalName>pcmd-client-${project.version}</finalName>
+					<finalName>pcmd-client-${project.version}-${polopoly.version}</finalName>
 				</configuration>
 			</plugin>
 			<plugin>
