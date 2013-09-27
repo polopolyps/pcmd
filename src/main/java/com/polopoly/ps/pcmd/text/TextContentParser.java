@@ -138,7 +138,6 @@ public class TextContentParser {
             currentContent.setInputTemplate(new ExternalIdReference(fields[1]));
         } else if (prefix.equals(NAME_PREFIX)) {
             assertFields(2, fields);
-            // TODO: replace with constants.
             currentContent.setComponent(CONTENT_ATTRG_SYSTEM, CONTENT_ATTR_NAME, fields[1]);
         } else if (prefix.equals(SECURITY_PARENT_PREFIX)) {
             assertFields(2, fields);

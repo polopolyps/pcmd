@@ -20,6 +20,9 @@
       <includes>
         <include>*.jar</include>
       </includes>
+      <excludes>
+      	<exclude>polopoly*.jar</exclude>
+      </excludes>
     </fileSet>
     <fileSet>
       <directory>${basedir}</directory>
