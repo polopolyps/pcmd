@@ -4,7 +4,7 @@
 
 	<groupId>com.polopoly.ps.tools</groupId>
 	<artifactId>pcmd</artifactId>
-	<version>2.3</version>
+	<version>2.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Polopoly Command Tool</name>
@@ -17,7 +17,6 @@
 
 	<scm>
     	<developerConnection>scm:git:git://github.com/polopolyps/pcmd</developerConnection>
-  	  <tag>RELEASE-2.3</tag>
   </scm>
 
 	<distributionManagement>
