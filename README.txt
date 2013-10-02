@@ -14,9 +14,6 @@ So to use PCMD on your local installation you should
 For Polopoly 10.8.1-fp1:
 The full link is: http://maven.polopoly.com/nexus/service/local/artifact/maven/redirect?r=professional-services&g=com.polopoly.ps.tools&a=pcmd&v=LATEST&c=distribution-10.8.1-fp1&e=zip
 
-For Polopoly 10.8.1:
-The full link is: http://maven.polopoly.com/nexus/service/local/artifact/maven/redirect?r=professional-services&g=com.polopoly.ps.tools&a=pcmd&v=LATEST&c=distribution-10.8.1&e=zip
-
 For Polopoly 10.6.1:
 The full link is: http://maven.polopoly.com/nexus/service/local/artifact/maven/redirect?r=professional-services&g=com.polopoly.ps.tools&a=pcmd&v=LATEST&c=distribution-10.6.1&e=zip
 
