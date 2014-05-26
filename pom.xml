@@ -10,8 +10,8 @@
 	<name>Polopoly Command Tool</name>
 
 	<properties>
-		<polopoly.version>10.6.0-bc91117</polopoly.version>
-		<solr.version>3.6.0</solr.version>
+		<polopoly.version>10.10.0</polopoly.version>
+		<solr.version>4.5.0</solr.version>
     	<project.scm.id>polopolyps.github.server</project.scm.id>
 	</properties>
 
@@ -57,8 +57,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 					<encoding>UTF-8</encoding>
 					<compilerArgument>-Xlint:all</compilerArgument>
 					<showDeprecation>true</showDeprecation>

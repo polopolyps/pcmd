@@ -68,4 +68,9 @@ public class InputTemplateUtilImpl extends ContentUtilImpl implements InputTempl
             throws CMException {
         inputTemplate.setViewerId(contextName, outputTemplateId);
     }
+
+	@Override
+	public int getMajor() throws CMException {
+		return inputTemplate.getMajor();
+	}
 }
