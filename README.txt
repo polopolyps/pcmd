@@ -9,7 +9,10 @@ To run pcmd on your local polopoly installation you do NOT need to download the 
 
 So to use PCMD on your local installation you should 
 
-1. download the pcmd assembly ZIP file matching your Polopoly version from nexus. 
+1. download the pcmd assembly ZIP file matching your Polopoly version from nexus.
+
+For Polopoly 10.10.0:
+The full link is: http://maven.polopoly.com/nexus/service/local/repositories/professional-services/content/com/polopoly/ps/tools/pcmd/2.4/pcmd-2.4-distribution-10.10.0.zip
 
 For Polopoly 10.8.1-fp1:
 The full link is: http://maven.polopoly.com/nexus/service/local/repositories/professional-services/content/com/polopoly/ps/tools/pcmd/2.3/pcmd-2.3-distribution-10.8.1-fp1.zip
@@ -50,15 +53,15 @@ If you want to connect to a different server or use a different login name or
 use a different password you can set the following environment variables:
 
 -- Set the POLOPOLY_SERVER environment variable to connect to another server:
-$�export POLOPOLY_SERVER=192.168.101.135
+$export POLOPOLY_SERVER=192.168.101.135
 
 -- Set the POLOPOLY_USER environment variable to change the polopoly user 
 -- (sysadmin is used by default):
-$�export POLOPOLY_USER=brian
+$export POLOPOLY_USER=brian
 
 -- Set the POLOPOLY_PASSWORD environment variable to change the polopoly user's password 
 -- (sysadmin is used by default):
-$�export POLOPOLY_PASSWORD=brianspassword
+$export POLOPOLY_PASSWORD=brianspassword
 
 
 HOW TO ADD CUSTOM TOOL
