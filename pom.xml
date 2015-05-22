@@ -10,7 +10,7 @@
 	<name>Polopoly Command Tool</name>
 
 	<properties>
-		<polopoly.version>10.10.0</polopoly.version>
+		<polopoly.version>10.12.0</polopoly.version>
 		<solr.version>4.5.0</solr.version>
     	<project.scm.id>polopolyps.github.server</project.scm.id>
 	</properties>
