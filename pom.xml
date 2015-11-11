@@ -4,13 +4,13 @@
 
 	<groupId>com.polopoly.ps.tools</groupId>
 	<artifactId>pcmd</artifactId>
-	<version>2.5</version>
+	<version>2.6</version>
 	<packaging>jar</packaging>
 
 	<name>Polopoly Command Tool</name>
 
 	<properties>
-		<polopoly.version>10.12.0</polopoly.version>
+		<polopoly.version>10.14.0</polopoly.version>
 		<solr.version>4.5.0</solr.version>
     	<project.scm.id>polopolyps.github.server</project.scm.id>
 	</properties>
