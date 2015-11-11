@@ -11,6 +11,9 @@ So to use PCMD on your local installation you should
 
 1. download the pcmd assembly ZIP file matching your Polopoly version from nexus.
 
+For Polopoly 10.12.0:
+The full link is: http://maven.polopoly.com/nexus/service/local/repositories/professional-services/content/com/polopoly/ps/tools/pcmd/2.5/pcmd-2.5-distribution-10.12.0.zip
+
 For Polopoly 10.10.0:
 The full link is: http://maven.polopoly.com/nexus/service/local/repositories/professional-services/content/com/polopoly/ps/tools/pcmd/2.4/pcmd-2.4-distribution-10.10.0.zip
 
