@@ -45,7 +45,7 @@ public class SolrTool implements Tool<SolrParameters>, RequiresSolr {
         	SolrSearchClient solrSearchClient = context.getSolrSearchClient(indexName);
     		if(solrSearchClient == null || context.getPolicyCMServer() == null) {
                 StringBuilder sb = new StringBuilder();
-                throw new FatalToolException(indexName + " or CMServer is not avaible, available indices are: " + sb.toString());
+                throw new FatalToolException(indexName + " or CMServer is not available, available indices are: " + sb.toString());
             }
     		
     		try {
