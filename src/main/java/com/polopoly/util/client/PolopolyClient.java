@@ -29,6 +29,7 @@ import com.polopoly.cm.client.ContentFilterSettings;
 import com.polopoly.cm.client.EjbCmClient;
 import com.polopoly.cm.client.HttpContentRepositoryClient;
 import com.polopoly.cm.client.HttpEnvironment;
+import com.polopoly.cm.client.HttpFileServiceClient;
 import com.polopoly.cm.client.HttpUserServiceClient;
 import com.polopoly.cm.client.UserServiceClient;
 import com.polopoly.cm.client.filter.ContentFilter;
@@ -62,6 +63,8 @@ public class PolopolyClient {
 	private boolean attachSolrSearchClient = true;
 
 	private boolean attachPollService = false;
+	
+	private boolean attachHttpFileService = false;
 
 	private boolean attachLRUSynchronizedUpdateCache = false;
 
@@ -183,6 +186,7 @@ public class PolopolyClient {
 		StatisticsClient statisticsClient = null;
 		UDPLogMsgClient logMsgClient = null;
 		PollClient pollClient = null;
+		HttpFileServiceClient httpFileClient = null;
 
 		try {
 			ConnectionProperties connectionProperties = new ConnectionProperties(new URL(connectionUrl));
@@ -237,6 +241,11 @@ public class PolopolyClient {
 
 				app.addApplicationComponent(cache);
 			}
+			
+			 if (isAttachHttpFileService()) {
+	                httpFileClient = new HttpFileServiceClient();
+	                app.addApplicationComponent(httpFileClient);
+	            }
 
 			logMsgClient = new UDPLogMsgClient();
 			app.addApplicationComponent(logMsgClient);
@@ -408,6 +417,14 @@ public class PolopolyClient {
 		this.attachPollService = attachPollService;
 	}
 
+	public void setAttachHttpFileService(boolean attachHttpFileService) {
+	     this.attachHttpFileService = attachHttpFileService;
+	}
+
+	public boolean isAttachHttpFileService() {
+		return attachHttpFileService;
+	}	
+	
 	public boolean isAttachPollService() {
 		return this.attachPollService;
 	}
