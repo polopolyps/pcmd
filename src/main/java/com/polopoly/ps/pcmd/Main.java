@@ -15,6 +15,7 @@ import com.polopoly.ps.pcmd.argument.Parameters;
 import com.polopoly.ps.pcmd.tool.DoesNotRequireRunningPolopoly;
 import com.polopoly.ps.pcmd.tool.HelpParameters;
 import com.polopoly.ps.pcmd.tool.HelpTool;
+import com.polopoly.ps.pcmd.tool.RequiresHttpFileService;
 import com.polopoly.ps.pcmd.tool.RequiresIndexServer;
 import com.polopoly.ps.pcmd.tool.RequiresPollServer;
 import com.polopoly.ps.pcmd.tool.RequiresSolr;
@@ -177,6 +178,7 @@ public class Main {
                 client.setAttachPollService(tool instanceof RequiresPollServer);
                 client.setAttachSolrSearchClient(tool instanceof RequiresSolr);
                 client.setAttachPollService(tool instanceof RequiresPollServer);
+                client.setAttachHttpFileService(tool instanceof RequiresHttpFileService);
 
                 new ClientFromArgumentsConfigurator(client, arguments).configure();
                 try {

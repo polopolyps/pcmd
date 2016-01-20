@@ -20,6 +20,7 @@ import com.polopoly.cm.client.CMRuntimeException;
 import com.polopoly.cm.client.CMServer;
 import com.polopoly.cm.client.CmClient;
 import com.polopoly.cm.client.EjbCmClient;
+import com.polopoly.cm.client.HttpFileServiceClient;
 import com.polopoly.cm.client.InputTemplate;
 import com.polopoly.cm.client.UserData;
 import com.polopoly.cm.client.impl.exceptions.EJBFinderException;
@@ -79,6 +80,8 @@ public class PolopolyContext {
     private CMServer cmServer;
 
     private UserServer userServer;
+    
+    private HttpFileServiceClient httpFileServiceClient;
 
     private static Map<String, SolrSearchClient> createDefaultIndexMap(SolrSearchClient internalIndexClient,
                                                                        SolrSearchClient publicIndexClient) {
@@ -94,13 +97,15 @@ public class PolopolyContext {
             (PollClient) application.getApplicationComponent(PollClient.DEFAULT_COMPOUND_NAME),
             createDefaultIndexMap((SolrSearchClient) application.getApplicationComponent("search_solrClientInternal"),
                                   (SolrSearchClient) application
-                                      .getApplicationComponent(SolrSearchClient.DEFAULT_COMPOUND_NAME)));
+                                      .getApplicationComponent(SolrSearchClient.DEFAULT_COMPOUND_NAME)),
+            (HttpFileServiceClient) application.getApplicationComponent(HttpFileServiceClient.DEFAULT_COMPOUND_NAME));
 
         this.application = application;
     }
-
+    
+    
     public PolopolyContext(CmClient cmClient, RmiSearchClient searchClient, PollClient pollClient,
-                           Map<String, SolrSearchClient> solrSearchClients) {
+                           Map<String, SolrSearchClient> solrSearchClients, HttpFileServiceClient httpFileServiceClient) {
         this.client = cmClient;
 
         if (cmClient != null) {
@@ -111,6 +116,7 @@ public class PolopolyContext {
         this.pollClient = pollClient;
         this.searchClient = searchClient;
         this.solrSearchClients = solrSearchClients;
+        this.httpFileServiceClient = httpFileServiceClient;
     }
 
     public PolopolyContext(UserServer userServer, PolicyCMServer server) {
@@ -151,6 +157,8 @@ public class PolopolyContext {
         this.server = context.server;
         this.pollClient = context.pollClient;
         this.solrSearchClients = context.solrSearchClients;
+        this.httpFileServiceClient = context.httpFileServiceClient;
+
     }
 
     public CMServer getCMServer() {
@@ -227,6 +235,14 @@ public class PolopolyContext {
         }
 
         return searchClient;
+    }
+    
+    public HttpFileServiceClient getHttpFileServiceClient() throws ServiceUnattachedException {
+        if (httpFileServiceClient == null) {
+            throw new ServiceUnattachedException("HttpFileServiceClient service");
+        }
+
+        return httpFileServiceClient;
     }
 
     public Policy createPolicy(int major, String inputTemplate) throws PolicyCreateException {
