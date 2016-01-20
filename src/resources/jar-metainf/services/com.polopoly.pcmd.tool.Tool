@@ -34,3 +34,4 @@ com.polopoly.ps.pcmd.tool.PollVoteTool
 com.polopoly.ps.pcmd.tool.PollResultTool
 com.polopoly.ps.pcmd.tool.MonitorTool
 com.polopoly.ps.pcmd.tool.StatisticsInspectTool
+com.polopoly.ps.pcmd.tool.ReindexTool
