@@ -197,7 +197,7 @@ public class ReindexTool implements Tool<ReindexParameters> {
 
     @Override
     public String getHelp() {
-        return "Use to reindex all the contents or to reindex only some contentIds.";
+        return "Use to reindex all the contents or to reindex only some contentIds. (sse http://support.atex.com/confluence/display/PolopolyMaster/How+to+work+with+the+Index+server)";
     }
 
 }
