@@ -5,3 +5,6 @@ target
 *~
 .settings/**/*
 .settings
+.idea
+*.iml
+.java-version
