@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<name>Polopoly Command Tool - Client</name>
+	<artifactId>${artifactId}</artifactId>
+	<groupId>${groupId}</groupId>
+	<packaging>jar</packaging>
+
+	<version>${version}</version>
+
+	<properties>
+	<log4j.version>2.5</log4j.version>
+	<polopoly.version>10.14.0</polopoly.version>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.polopoly</groupId>
+			<artifactId>polopoly</artifactId>
+			<version>${polopoly.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.polopoly</groupId>
+			<artifactId>polopoly</artifactId>
+			<classifier>api</classifier>
+			<version>${polopoly.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.polopoly.ps.tools</groupId>
+			<artifactId>pcmd</artifactId>
+			<version>3.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+
+		<dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.17</version>
+    </dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-jul</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-jcl</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>polopoly-ps</id>
+			<name>Polopoly PS</name>
+			<url>http://maven.polopoly.com/nexus/content/groups/polopoly-ps</url>
+		</repository>
+	</repositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>1.10</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>assemble</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<programs>
+						<program>
+							<mainClass>com.polopoly.ps.pcmd.Main</mainClass>
+							<id>pcmd</id>
+							<jvmSettings>
+								<extraArguments>
+									<extraArgument>-Dlog4j.configurationFile=$BASEDIR/conf/log4j.properties</extraArgument>
+									<extraArgument>-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager</extraArgument>
+									<extraArgument>-Xms128m</extraArgument>
+									<extraArgument>-Xmx128m</extraArgument>
+								</extraArguments>
+							</jvmSettings>
+						</program>
+					</programs>
+					<configurationDirectory>conf</configurationDirectory>
+					<copyConfigurationDirectory>true</copyConfigurationDirectory>
+					<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+					<assembleDirectory>${project.build.directory}/pcmd</assembleDirectory>
+					<logsDirectory>logs</logsDirectory>
+					<repositoryLayout>flat</repositoryLayout>
+					<repositoryName>lib</repositoryName>
+					<useWildcardClassPath>true</useWildcardClassPath>
+					<platforms>
+						<platform>all</platform>
+					</platforms>
+					<unixScriptTemplate>${basedir}/src/main/script/unixBinTemplate</unixScriptTemplate>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<descriptor>src/main/assembly/dist-assembler.xml</descriptor>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>UTF-8</encoding>
+					<compilerArgument>-Xlint:all</compilerArgument>
+					<showDeprecation>true</showDeprecation>
+					<showWarnings>true</showWarnings>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

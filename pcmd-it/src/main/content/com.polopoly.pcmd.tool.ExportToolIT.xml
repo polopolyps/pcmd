@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<batch xmlns="http://www.polopoly.com/polopoly/cm/xmlio">
+  <!--  video  -->
+ <!--  <content>
+    <metadata>
+      <contentid>
+        <major>Article</major>
+        <externalid>com.polopoly.pcmd.tool.ExportToolIT.video</externalid>
+      </contentid>
+      <input-template>
+        <major>InputTemplate</major>
+        <externalid>example.Video</externalid>
+      </input-template>
+      <security-parent>
+        <major>Department</major>
+        <externalid>GreenfieldTimes.d</externalid>
+      </security-parent>
+   </metadata>
+   <component group="polopoly.Content" name="name">Dummy video</component>
+   <component group="file" name="subField">flashfile</component>
+   <component group="file/flashfile" name="fileName">Dummy video.flv</component>
+   <component group="file/flashfile" name="path">menu/standard/file/flashfile</component>
+   <component group="image" name="templateAppletStateChecksum">596059604</component>
+   <component group="p.ImageManager/namespaces" name="image">image</component>
+   <file encoding="base64" name="menu/standard/file/flashfile/Dummy video.flv">
+RkxW453453525NZXRhRGF0YQg54545lP 3ztkWgAJc3RhcnR0aW1lAAAAAAAAAAAAAA10b3RhbGR1cmF0aW9uAEBjyU/fO2RaAAV3aWR0aABA
+   </file> 
+  </content>
+  
+   article 
+   <content>
+    <metadata>  
+      <contentid>
+        <major>Article</major>
+        <externalid>com.polopoly.pcmd.tool.ExportToolIT.article2</externalid>
+      </contentid>
+      <input-template>
+        <major>InputTemplate</major>
+        <externalid>example.StandardArticle</externalid>
+      </input-template>
+      <security-parent>
+        <major>Department</major>
+        <externalid>GreenfieldTimes.d</externalid>
+      </security-parent>
+    </metadata>
+    <component group="titleFontSize" name="value">34</component>
+    <component group="author" name="value">Wikipedia</component>
+    <component group="body" name="value">
+    <![CDATA[He is currently manager of Napoli.
+Born in Madrid, Benítez played football throughout his youth and joined the Real Madrid academy. He mixed his university studies with his football career at lower division Spanish teams. He joined Real Madrid's coaching staff at the age of 26, going on to work as the under 19 and reserve team coach, and assistant manager for the senior team. Benítez moved away from Real Madrid, but management spells at Real Valladolid and Osasuna were short-lived and unsuccessful.
+Benítez guided Segunda División side Extremadura back to the Primera División in his first season in 1997, but the team was relegated the following season. He left the club, taking a brief break from football before returning to coach Tenerife in 2000. Benítez was appointed coach of Valencia and he proved himself to be amongst the top Spanish managers by winning La Liga in the 2001–02 season—Don Balón and El País named him Manager of the Year. In 2004, another La Liga league title and a UEFA Cup victory were added. However, a disagreement between Benítez and the club director over team investment caused the Spaniard to switch to English Premier League club Liverpool.
+Benítez was a high achiever in his first season as he guided Liverpool to victory in the UEFA Champions League in 2005, the highest honour in European club football. He also won the FA Cup in 2006 and reached the 2007 Champions League Final, but remained unable to win the Premier League, with Liverpool's best performance under Benítez a second place finish in 2008–09. He parted company with Liverpool in June 2010 and subsequently managed Inter Milan, whom he guided to the Supercoppa Italiana and FIFA Club World Cup titles, but he was dismissed midway through the 2010–11 season. In November 2012 he was appointed interim manager of Chelsea for the remainder of the season, and won the 2013 Europa League title.]]>
+    </component>
+    <component group="polopoly.Content" name="name">Rafael Benitez Second Article</component>
+    <component group="polopoly.ContentLists" name="elements/slotElements">slotElements</component>
+    <component group="polopoly.ContentLists" name="rightColumn/slotElements">slotElements</component>
+    <component group="polopoly.ContentLists" name="images">images</component>
+    <component group="polopoly.ContentLists" name="topimages">topimages</component>
+    <component group="polopoly.ContentLists" name="polopoly.Toc">default</component>
+    <component group="p.Inbox" name="showContent">true</component>
+    <component group="lead" name="value">Rafael Benítez Maudes (born 16 April 1960) is a Spanish football manager, and former player.</component>
+    <component group="publishedDate" name="defaultFormat">2013-04-08 03:16</component>
+    <component group="publishedDate" name="date">1365383767190</component>
+    <component group="publishedDate" name="userFormat">2013-04-08 03:16</component>
+    <component group="p.Content.state" name="onlineState">true</component>
+    <component group="createdDate" name="defaultFormat">2013-04-08 03:16</component>
+    <component group="createdDate" name="date">1365383767191</component>
+    <component group="createdDate" name="userFormat">2013-04-08 03:16</component>
+    <component group="modifiedDate" name="defaultFormat">2013-04-08 03:16</component>
+    <component group="modifiedDate" name="date">1365383767191</component>
+    <component group="modifiedDate" name="userFormat">2013-04-08 03:16</component>
+    <component group="p.AssociatedUsers" name="associatedUsers">sysadmin</component>
+  </content> -->
+  
+  <!-- <content>
+    <metadata>  
+      <contentid>
+        <major>Article</major>
+        <externalid>com.polopoly.pcmd.tool.ExportToolIT.article</externalid>
+      </contentid>
+      <input-template>
+        <major>InputTemplate</major>
+        <externalid>example.StandardArticle</externalid>
+      </input-template>
+      <security-parent>
+        <major>Department</major>
+        <externalid>GreenfieldTimes.d</externalid>
+      </security-parent>
+    </metadata>
+    <component group="titleFontSize" name="value">34</component>
+    <component group="author" name="value">Wikipedia</component>
+    <component group="body" name="value">
+    <![CDATA[He is currently manager of Napoli.
+Born in Madrid, Benítez played football throughout his youth and joined the Real Madrid academy. He mixed his university studies with his football career at lower division Spanish teams. He joined Real Madrid's coaching staff at the age of 26, going on to work as the under 19 and reserve team coach, and assistant manager for the senior team. Benítez moved away from Real Madrid, but management spells at Real Valladolid and Osasuna were short-lived and unsuccessful.
+Benítez guided Segunda División side Extremadura back to the Primera División in his first season in 1997, but the team was relegated the following season. He left the club, taking a brief break from football before returning to coach Tenerife in 2000. Benítez was appointed coach of Valencia and he proved himself to be amongst the top Spanish managers by winning La Liga in the 2001–02 season—Don Balón and El País named him Manager of the Year. In 2004, another La Liga league title and a UEFA Cup victory were added. However, a disagreement between Benítez and the club director over team investment caused the Spaniard to switch to English Premier League club Liverpool.
+Benítez was a high achiever in his first season as he guided Liverpool to victory in the UEFA Champions League in 2005, the highest honour in European club football. He also won the FA Cup in 2006 and reached the 2007 Champions League Final, but remained unable to win the Premier League, with Liverpool's best performance under Benítez a second place finish in 2008–09. He parted company with Liverpool in June 2010 and subsequently managed Inter Milan, whom he guided to the Supercoppa Italiana and FIFA Club World Cup titles, but he was dismissed midway through the 2010–11 season. In November 2012 he was appointed interim manager of Chelsea for the remainder of the season, and won the 2013 Europa League title.]]>
+    </component>
+    <component group="polopoly.Content" name="name">Rafael Benitez</component>
+    <component group="polopoly.ContentLists" name="elements/slotElements">slotElements</component>
+    <component group="polopoly.ContentLists" name="rightColumn/slotElements">slotElements</component>
+    <component group="polopoly.ContentLists" name="images">images</component>
+    <component group="polopoly.ContentLists" name="topimages">topimages</component>
+    <component group="polopoly.ContentLists" name="polopoly.Toc">default</component>
+    <component group="p.Inbox" name="showContent">true</component>
+    <component group="lead" name="value">Rafael Benítez Maudes (born 16 April 1960) is a Spanish football manager, and former player.</component>
+    <component group="publishedDate" name="defaultFormat">2013-04-08 03:16</component>
+    <component group="publishedDate" name="date">1365383767190</component>
+    <component group="publishedDate" name="userFormat">2013-04-08 03:16</component>
+    <component group="p.Content.state" name="onlineState">true</component>
+    <component group="createdDate" name="defaultFormat">2013-04-08 03:16</component>
+    <component group="createdDate" name="date">1365383767191</component>
+    <component group="createdDate" name="userFormat">2013-04-08 03:16</component>
+    <component group="modifiedDate" name="defaultFormat">2013-04-08 03:16</component>
+    <component group="modifiedDate" name="date">1365383767191</component>
+    <component group="modifiedDate" name="userFormat">2013-04-08 03:16</component>
+    <component group="p.AssociatedUsers" name="associatedUsers">sysadmin</component>
+    <contentref group="relatedContent_created" name="created">
+      <contentid>
+        <major>Article</major>
+        <externalid>com.polopoly.pcmd.tool.ExportToolIT.article2</externalid>
+      </contentid>
+      
+    </contentref>
+    <contentref group="polopoly.Toc" name="0">
+      <contentid>
+        <major>Article</major>
+        <externalid>com.polopoly.pcmd.tool.ExportToolIT.article2</externalid>
+      </contentid>
+    </contentref>
+  </content> -->
+  
+<!--    <content>
+    <metadata>  
+      <contentid>
+        <major>Article</major>
+        <externalid>com.polopoly.pcmd.tool.ExportToolIT.article3</externalid>
+      </contentid>
+      <input-template>
+        <major>InputTemplate</major>
+        <externalid>example.StandardArticle</externalid>
+      </input-template>
+      <security-parent>
+        <major>Department</major>
+        <externalid>GreenfieldTimes.d</externalid>
+      </security-parent>
+    </metadata>
+    <component group="titleFontSize" name="value">34</component>
+    <component group="author" name="value">Wikipedia</component>
+    <component group="body" name="value">
+    <![CDATA[He is currently manager of Napoli.
+Born in Madrid, Benítez played football throughout his youth and joined the Real Madrid academy. He mixed his university studies with his football career at lower division Spanish teams. He joined Real Madrid's coaching staff at the age of 26, going on to work as the under 19 and reserve team coach, and assistant manager for the senior team. Benítez moved away from Real Madrid, but management spells at Real Valladolid and Osasuna were short-lived and unsuccessful.
+Benítez guided Segunda División side Extremadura back to the Primera División in his first season in 1997, but the team was relegated the following season. He left the club, taking a brief break from football before returning to coach Tenerife in 2000. Benítez was appointed coach of Valencia and he proved himself to be amongst the top Spanish managers by winning La Liga in the 2001–02 season—Don Balón and El País named him Manager of the Year. In 2004, another La Liga league title and a UEFA Cup victory were added. However, a disagreement between Benítez and the club director over team investment caused the Spaniard to switch to English Premier League club Liverpool.
+Benítez was a high achiever in his first season as he guided Liverpool to victory in the UEFA Champions League in 2005, the highest honour in European club football. He also won the FA Cup in 2006 and reached the 2007 Champions League Final, but remained unable to win the Premier League, with Liverpool's best performance under Benítez a second place finish in 2008–09. He parted company with Liverpool in June 2010 and subsequently managed Inter Milan, whom he guided to the Supercoppa Italiana and FIFA Club World Cup titles, but he was dismissed midway through the 2010–11 season. In November 2012 he was appointed interim manager of Chelsea for the remainder of the season, and won the 2013 Europa League title.]]>
+    </component>
+    <component group="polopoly.Content" name="name">Rafael Benitez Third Article</component>
+    <component group="polopoly.ContentLists" name="elements/slotElements">slotElements</component>
+    <component group="polopoly.ContentLists" name="rightColumn/slotElements">slotElements</component>
+    <component group="polopoly.ContentLists" name="images">images</component>
+    <component group="polopoly.ContentLists" name="topimages">topimages</component>
+    <component group="polopoly.ContentLists" name="polopoly.Toc">default</component>
+    <component group="p.Inbox" name="showContent">true</component>
+    <component group="lead" name="value">Rafael Benítez Maudes (born 16 April 1960) is a Spanish football manager, and former player.</component>
+    <component group="publishedDate" name="defaultFormat">2013-04-08 03:16</component>
+    <component group="publishedDate" name="date">1365383767190</component>
+    <component group="publishedDate" name="userFormat">2013-04-08 03:16</component>
+    <component group="p.Content.state" name="onlineState">true</component>
+    <component group="createdDate" name="defaultFormat">2013-04-08 03:16</component>
+    <component group="createdDate" name="date">1365383767191</component>
+    <component group="createdDate" name="userFormat">2013-04-08 03:16</component>
+    <component group="modifiedDate" name="defaultFormat">2013-04-08 03:16</component>
+    <component group="modifiedDate" name="date">1365383767191</component>
+    <component group="modifiedDate" name="userFormat">2013-04-08 03:16</component>
+    <component group="p.AssociatedUsers" name="associatedUsers">sysadmin</component>
+  </content> -->
+  
+</batch>  
