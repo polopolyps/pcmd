@@ -1,5 +1,6 @@
 package com.polopoly.ps.pcmd;
 
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -152,8 +153,17 @@ public class Main {
         if (!unusedParameters.isEmpty()) {
             throw new ArgumentException("The following specified parameters were not recognized: " + unusedParameters);
         }
-
+        context.getLogger().debug("Executing tool: " + ToolRetriever.getToolName(tool.getClass()));
+      
+        context.getLogger().debug("Arguments: " + arguments);
+        long starts = System.currentTimeMillis();
+     
         tool.execute(context, parameters);
+        
+        long ends = System.currentTimeMillis();
+        
+        long total = ends- starts;
+        context.getLogger().debug("Finished: " +  " Took: " + total + " ms");
     }
 
     public static <T extends Parameters> void execute(Tool<T> tool, PolopolyContext context, Arguments arguments,

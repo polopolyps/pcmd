@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.polopoly.cm.ContentId;
@@ -40,6 +41,9 @@ public class DefaultArguments implements Arguments {
 			unusedParameters.add(getUnusedArgumentString(i));
 		}
 	}
+	
+	
+	
 
 	private String getUnusedArgumentString(int i) {
 		return "argument " + (i + 1);
@@ -129,6 +133,17 @@ public class DefaultArguments implements Arguments {
 			throw e;
 		}
 	}
+	
+//	public List<String> getOptions() {
+//		ArrayList<String> optionsList = new ArrayList<String>();
+//		Set<Entry<String, List<String>>> entrySet = options.entrySet();
+//		 for (Entry<String, List<String>> entry : entrySet) {
+//			 entry.getKey();
+//			 optionsList.add(entry.getKey());
+//		}
+//		 
+//		 return optionsList;
+//	}
 
 	@SuppressWarnings("unchecked")
 	public <T> List<T> getOptions(String name, Parser<T> parser)
@@ -136,7 +151,7 @@ public class DefaultArguments implements Arguments {
 		try {
 			List<String> optionStrings = getOptionStrings(name);
 
-			List<T> result = new ArrayList();
+			List<T> result = new ArrayList<T>();
 
 			for (String optionString : optionStrings) {
 				result.add(parser.parse(optionString));
@@ -195,6 +210,7 @@ public class DefaultArguments implements Arguments {
 			return defaultValue;
 		}
 	}
+	
 
 	private Iterator<ContentId> stdInContentIdIterator = new FetchingIterator<ContentId>() {
 		private BufferedReader reader = new BufferedReader(
@@ -238,6 +254,9 @@ public class DefaultArguments implements Arguments {
 			}
 		}
 	};
+	
+	
+	
 
 	public Iterator<ContentId> getStdInContentIds() {
 		return stdInContentIdIterator;
@@ -283,4 +302,28 @@ public class DefaultArguments implements Arguments {
 	public Set<String> getUnusedParameters() {
 		return unusedParameters;
 	}
+
+
+
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("DefaultArguments [options=");
+		builder.append(options);
+		builder.append(", unusedParameters=");
+		builder.append(unusedParameters);
+		builder.append(", arguments=");
+		builder.append(arguments);
+		builder.append(", context=");
+		builder.append(context);
+		builder.append(", toolName=");
+		builder.append(toolName);
+		builder.append(", stdInContentIdIterator=");
+		builder.append(stdInContentIdIterator);
+		builder.append("]");
+		return builder.toString();
+	}
+
+	
 }

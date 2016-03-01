@@ -29,6 +29,7 @@ import com.polopoly.cm.client.ContentFilterSettings;
 import com.polopoly.cm.client.EjbCmClient;
 import com.polopoly.cm.client.HttpContentRepositoryClient;
 import com.polopoly.cm.client.HttpEnvironment;
+import com.polopoly.cm.client.HttpFileServiceClient;
 import com.polopoly.cm.client.HttpUserServiceClient;
 import com.polopoly.cm.client.UserServiceClient;
 import com.polopoly.cm.client.filter.ContentFilter;
@@ -62,6 +63,8 @@ public class PolopolyClient {
 	private boolean attachSolrSearchClient = true;
 
 	private boolean attachPollService = false;
+	
+	private boolean attachHttpFileService = false;
 
 	private boolean attachLRUSynchronizedUpdateCache = false;
 
@@ -78,6 +81,16 @@ public class PolopolyClient {
 	private PolopolyClientLogger logger = new PolopolyClientLogger() {
 		public void info(String logMessage) {
 			javaUtilLogger.log(Level.INFO, logMessage);
+		}
+
+		@Override
+		public void debug(String logMessage) {
+			//nothing
+		}
+
+		@Override
+		public void error(String logMessage) {
+			// nothing
 		}
 	};
 
@@ -183,8 +196,10 @@ public class PolopolyClient {
 		StatisticsClient statisticsClient = null;
 		UDPLogMsgClient logMsgClient = null;
 		PollClient pollClient = null;
+		HttpFileServiceClient httpFileClient = null;
 
 		try {
+			getLogger().debug("Connection properties" + connectionUrl);
 			ConnectionProperties connectionProperties = new ConnectionProperties(new URL(connectionUrl));
 
 			ManagedBeanRegistry registry = new JMXManagedBeanRegistry(ManagementFactory.getPlatformMBeanServer());
@@ -229,6 +244,12 @@ public class PolopolyClient {
 				statisticsClient = new StatisticsClient();
 				app.addApplicationComponent(statisticsClient);
 			}
+			
+			
+		    if (isAttachHttpFileService()) {
+                httpFileClient = new HttpFileServiceClient();
+                app.addApplicationComponent(httpFileClient);
+            }
 
 			if (isAttachLRUSynchronizedUpdateCache()) {
 				LRUSynchronizedUpdateCache cache = new LRUSynchronizedUpdateCache();
@@ -247,7 +268,7 @@ public class PolopolyClient {
 			// Init.
 			app.init();
 			
-			PolopolyContext context = new PolopolyContext(app);
+			PolopolyContext context = new PolopolyContext(app, getLogger());
 
 			login(context);
 
@@ -367,7 +388,7 @@ public class PolopolyClient {
 		UserId userId = user.getUserId();
 		context.getPolicyCMServer().setCurrentCaller(new NonLoggedInCaller(userId, null, null, userName));
 
-		logger.info("No password provided. Set caller to user \"" + userName + "\" but did not log in.");
+		logger.debug("No password provided. Set caller to user \"" + userName + "\" but did not log in.");
 	}
 
 	private void loginUserWithPassword(PolopolyContext context) throws Exception {
@@ -376,7 +397,7 @@ public class PolopolyClient {
 
 		context.getPolicyCMServer().setCurrentCaller(caller);
 
-		logger.info("Logged in user \"" + userName + "\".");
+		logger.debug("Logged in user \"" + userName + "\".");
 	}
 
 	private void login(PolopolyContext context) throws ConnectException {
@@ -418,6 +439,14 @@ public class PolopolyClient {
 
 	public boolean isAttachSearchService() {
 		return attachSearchService;
+	}
+	
+	public void setAttachHttpFileService(boolean attachHttpFileService) {
+		this.attachHttpFileService = attachHttpFileService;
+	}
+
+	public boolean isAttachHttpFileService() {
+		return attachHttpFileService;
 	}
 
 	public void setAttachLRUSynchronizedUpdateCache(boolean attachLRUSynchronizedUpdateCache) {

@@ -13,9 +13,11 @@ public abstract class AbstractContentIdIterator<T> extends FetchingIterator<T> {
     protected boolean stopOnException;
     protected long startTime;
     protected int count;
+	private PolopolyContext context;
 
     protected AbstractContentIdIterator(PolopolyContext context, Iterator<? extends ContentId> contentIds) {
         this(context, contentIds, false);
+		this.context = context;
     }
 
     protected AbstractContentIdIterator(PolopolyContext context, Iterator<? extends ContentId> contentIds, boolean stopOnException) {
@@ -41,7 +43,7 @@ public abstract class AbstractContentIdIterator<T> extends FetchingIterator<T> {
 
     public void printInfo(PrintStream out) {
         if (count > 10) {
-            out.println(count + " content object(s) in " + Math.round((System.currentTimeMillis() - startTime)/1000) + " s.");
+        	  context.getLogger().info(count + " content object(s) in " + Math.round((System.currentTimeMillis() - startTime)/1000) + " s.");
         }
     }
 }

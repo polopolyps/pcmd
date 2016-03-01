@@ -18,10 +18,11 @@ import com.polopoly.cm.client.ContentRead;
 import com.polopoly.cm.client.UserData;
 import com.polopoly.cm.client.WorkflowAware;
 import com.polopoly.pcmd.tool.Tool;
-import com.polopoly.ps.pcmd.argument.ContentIdListParameters;
+import com.polopoly.ps.pcmd.argument.InspectParameters;
 import com.polopoly.ps.pcmd.field.content.AbstractContentIdField;
 import com.polopoly.ps.pcmd.field.content.ContentRefField;
 import com.polopoly.ps.pcmd.parser.ContentFieldListParser;
+import com.polopoly.ps.pcmd.text.ComponentValueParser;
 import com.polopoly.user.server.Group;
 import com.polopoly.user.server.GroupId;
 import com.polopoly.user.server.UserId;
@@ -32,14 +33,14 @@ import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.contentid.MajorStrings;
 import com.polopoly.util.contentlist.ContentListUtil;
 
-public class InspectTool implements Tool<ContentIdListParameters> {
+public class InspectTool implements Tool<InspectParameters> {
 	private static final char FIELD_VALUE_SEPARATOR = ':';
 
-	public ContentIdListParameters createParameters() {
-		return new ContentIdListParameters();
+	public InspectParameters createParameters() {
+		return new InspectParameters();
 	}
 
-	public void execute(PolopolyContext context, ContentIdListParameters parameters) {
+	public void execute(PolopolyContext context, InspectParameters parameters) {
 		ContentIdToContentIterator it =
 			new ContentIdToContentIterator(context, parameters.getContentIds(), parameters.isStopOnException());
 
@@ -65,7 +66,7 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 
 				printLoginName(context, content);
 
-				printComponents(content);
+				printComponents(parameters,  content);
 
 				printContentReferences(context, content, contentUtil);
 
@@ -74,13 +75,13 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 				if (parameters.isStopOnException()) {
 					throw new CMRuntimeException(e);
 				} else {
-					System.err.println(content.getContentId().getContentIdString() + ": " + e);
+					context.getLogger().error(content.getContentId().getContentIdString() + ": " + e);
 				}
 			} catch (IOException e) {
 				if (parameters.isStopOnException()) {
 					throw new CMRuntimeException(e);
 				} else {
-					System.err.println(content.getContentId().getContentIdString() + ": " + e);
+					context.getLogger().error(content.getContentId().getContentIdString() + ": " + e);
 				}
 			}
 		}
@@ -184,7 +185,7 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 		}
 	}
 
-	private String[] printComponents(ContentRead content) throws CMException {
+	private String[] printComponents(InspectParameters parameters, ContentRead content) throws CMException {
 		String[] groups = content.getComponentGroupNames();
 
 		Arrays.sort(groups);
@@ -196,6 +197,10 @@ public class InspectTool implements Tool<ContentIdListParameters> {
 
 			for (String name : names) {
 				String value = content.getComponent(group, name);
+				
+				if(parameters.isEscaped()) {
+					 value = new ComponentValueParser().escape(value);
+				}
 
 				// Name already printed at top of content.
 				if (group.equals("polopoly.Content") && name.equals("name")) {

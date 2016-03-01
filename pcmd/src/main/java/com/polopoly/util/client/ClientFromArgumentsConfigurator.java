@@ -65,11 +65,23 @@ public class ClientFromArgumentsConfigurator {
 				public void info(String logMessage) {
 					System.err.println(logMessage);
 				}
+
+				@Override
+				public void debug(String logMessage) {
+					System.err.println("DEBUG: " +logMessage);
+					
+				}
+
+				@Override
+				public void error(String logMessage) {
+					System.err.println("ERROR: " + logMessage);
+				}
 			});
 		}
 		
 		String index = arguments.getOptionString(INDEX, "notset");
 		if(!index.equals("notset")) {
+			client.getLogger().info("Setting aditional index: " + index);
 			client.addAdditionalIndex(index);
 		}
 			
@@ -85,5 +97,6 @@ public class ClientFromArgumentsConfigurator {
 		help.addOption(POLICY_CACHE, new IntegerParser(), "The size of the policy cache of the client.");
 		help.addOption(CONTENT_CACHE, new IntegerParser(), "The size of the content cache of the client.");
 		help.addOption(PERSISTENCE_CACHE_DIR, new CreatingDirectoryParser(), "Enable persistence cache.");
+		help.addOption(VERBOSE, null, "Enable verbose mode.");
 	}
 }

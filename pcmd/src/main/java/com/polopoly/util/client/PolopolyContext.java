@@ -80,6 +80,8 @@ public class PolopolyContext {
 
     private UserServer userServer;
 
+	private PolopolyClientLogger polopolyClientLogger;
+
     private static Map<String, SolrSearchClient> createDefaultIndexMap(SolrSearchClient internalIndexClient,
                                                                        SolrSearchClient publicIndexClient) {
         Map<String, SolrSearchClient> result = new HashMap<String, SolrSearchClient>();
@@ -87,8 +89,29 @@ public class PolopolyContext {
         result.put(INTERNAL_INDEX_NAME, internalIndexClient);
         return Collections.unmodifiableMap(result);
     }
+    
+    
+    public   PolopolyContext(Application application) {
+    	this(application, new PolopolyClientLogger() {
+			
+			@Override
+			public void info(String logMessage) {
+				//nothing goes here
+			}
+			
+			@Override
+			public void error(String logMessage) {
+				//nothing goes here
+			}
+			
+			@Override
+			public void debug(String logMessage) {
+				//nothing goes here
+			}
+		});
+    }
 
-    public PolopolyContext(Application application) {
+    public PolopolyContext(Application application, PolopolyClientLogger polopolyClientLogger) {
         this((CmClient) application.getApplicationComponent(EjbCmClient.DEFAULT_COMPOUND_NAME),
             (RmiSearchClient) application.getApplicationComponent(RmiSearchClient.DEFAULT_COMPOUND_NAME),
             (PollClient) application.getApplicationComponent(PollClient.DEFAULT_COMPOUND_NAME),
@@ -97,6 +120,7 @@ public class PolopolyContext {
                                       .getApplicationComponent(SolrSearchClient.DEFAULT_COMPOUND_NAME)));
 
         this.application = application;
+		this.polopolyClientLogger = polopolyClientLogger;
     }
 
     public PolopolyContext(CmClient cmClient, RmiSearchClient searchClient, PollClient pollClient,
@@ -491,5 +515,9 @@ public class PolopolyContext {
         }
         return client;
     }
+
+	public PolopolyClientLogger getLogger() {
+		return polopolyClientLogger;
+	}
 
 }

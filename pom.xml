@@ -24,6 +24,7 @@
   </modules>
   <scm>
     <url>https://github.com/polopolyps/pcmd</url>
+    <connection>scm:git:https://github.com/polopolyps/pcmd.git</connection>
     <developerConnection>scm:git:https://github.com/polopolyps/pcmd.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
@@ -83,6 +84,7 @@
           <version>2.5.3</version>
           <configuration>
             <autoVersionSubmodules>true</autoVersionSubmodules>
+            <tagNameFormat>RELEASE@{project.version}</tagNameFormat>
           </configuration>
         </plugin>
         <plugin>
@@ -98,5 +100,21 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-changelog-plugin</artifactId>
+        <version>2.3</version>
+         <configuration>
+          <type>tag</type>
+          <tags>
+            <tag implementation="java.lang.String">RELEASE-2.0</tag>
+            <tag implementation="java.lang.String">RELEASE-2.3</tag>
+            <tag implementation="java.lang.String">pcmd-top-3.0</tag>
+          </tags>
+        </configuration>
+      </plugin>
+    
+    </plugins>
   </build>
 </project>
