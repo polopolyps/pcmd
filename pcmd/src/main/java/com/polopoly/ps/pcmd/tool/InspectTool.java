@@ -50,7 +50,8 @@ public class InspectTool implements Tool<InspectParameters> {
 			try {
 				ContentUtil contentUtil = util(content, context.getPolicyCMServer());
 
-				printId(content);
+				boolean skipNumericalId = parameters.isSkipNumericalId();
+				printId(content, skipNumericalId);
 
 				printMajor(content);
 
@@ -100,13 +101,15 @@ public class InspectTool implements Tool<InspectParameters> {
 		}
 	}
 
-	private ExternalContentId printId(ContentRead content) throws CMException {
+	private ExternalContentId printId(ContentRead content, Boolean skipNumericalId) throws CMException {
 		ExternalContentId externalId = content.getExternalId();
 
 		if (externalId != null) {
 			System.out.println(ContentFieldListParser.ID + PREFIX_FIELD_SEPARATOR + externalId.getExternalId());
-			System.out.println(ContentFieldListParser.NUMERICAL_ID + PREFIX_FIELD_SEPARATOR
-								+ content.getContentId().getContentIdString());
+			if(!skipNumericalId) {
+				System.out.println(ContentFieldListParser.NUMERICAL_ID + PREFIX_FIELD_SEPARATOR
+						+ content.getContentId().getContentIdString());
+			}
 		} else {
 			System.out.println(ContentFieldListParser.ID + PREFIX_FIELD_SEPARATOR
 								+ content.getContentId().getContentIdString());

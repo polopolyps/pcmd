@@ -17,12 +17,15 @@ public abstract class AbstractContentIdIterator<T> extends FetchingIterator<T> {
 
     protected AbstractContentIdIterator(PolopolyContext context, Iterator<? extends ContentId> contentIds) {
         this(context, contentIds, false);
+        if(context == null) {
+        		throw new IllegalArgumentException("Context cannot be null");
+        }
 		this.context = context;
     }
 
     protected AbstractContentIdIterator(PolopolyContext context, Iterator<? extends ContentId> contentIds, boolean stopOnException) {
         this(context.getPolicyCMServer(), contentIds);
-
+        this.context = context;
         this.stopOnException = stopOnException;
     }
 
@@ -41,9 +44,12 @@ public abstract class AbstractContentIdIterator<T> extends FetchingIterator<T> {
         return stopOnException;
     }
 
-    public void printInfo(PrintStream out) {
-        if (count > 10) {
-        	  context.getLogger().info(count + " content object(s) in " + Math.round((System.currentTimeMillis() - startTime)/1000) + " s.");
-        }
-    }
+	public void printInfo(PrintStream out) {
+		if (count > 10) {
+			if (context != null) {
+				context.getLogger().info(count + " content object(s) in " + Math.round((System.currentTimeMillis() - startTime) / 1000) + " s.");
+			}
+
+		}
+	}
 }
