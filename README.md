@@ -61,7 +61,7 @@ You can create a maven project that can create a custom distribution for your pr
 mvn archetype:generate                                 \
   -DarchetypeGroupId=com.polopoly.ps.tools             \
   -DarchetypeArtifactId=pcmd-client-archetype-simple   \
-  -DarchetypeVersion=beta.3.0                         \
+  -DarchetypeVersion=beta.3.2                         \
   -DgroupId=my.groupid                                 \
   -DartifactId=pcmd-client
 ```
