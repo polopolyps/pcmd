@@ -8,7 +8,7 @@
   <parent>
     <groupId>com.polopoly.ps.tools</groupId>
     <artifactId>pcmd-top</artifactId>
-    <version>3.2-SNAPSHOT</version>
+    <version>beta.3.2</version>
   </parent>
   <name>Polopoly Command Tool - Jar</name>
 
