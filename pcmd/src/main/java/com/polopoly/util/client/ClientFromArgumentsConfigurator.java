@@ -61,22 +61,7 @@ public class ClientFromArgumentsConfigurator {
 		}
 
 		if (arguments.getFlag(VERBOSE, false)) {
-			client.setLogger(new PolopolyClientLogger() {
-				public void info(String logMessage) {
-					System.err.println(logMessage);
-				}
-
-				@Override
-				public void debug(String logMessage) {
-					System.err.println("DEBUG: " +logMessage);
-					
-				}
-
-				@Override
-				public void error(String logMessage) {
-					System.err.println("ERROR: " + logMessage);
-				}
-			});
+			client.setLogger(new DebugSystemOuputLogger());
 		}
 		
 		String index = arguments.getOptionString(INDEX, "notset");

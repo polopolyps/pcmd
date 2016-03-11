@@ -1,6 +1,9 @@
 package com.polopoly.util.client;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.lang.management.ManagementFactory;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -16,6 +19,8 @@ import java.util.logging.Logger;
 
 import javax.ejb.FinderException;
 
+import org.apache.commons.io.IOUtils;
+
 import com.polopoly.application.ConnectionProperties;
 import com.polopoly.application.ConnectionPropertiesConfigurationException;
 import com.polopoly.application.IllegalApplicationStateException;
@@ -29,7 +34,6 @@ import com.polopoly.cm.client.ContentFilterSettings;
 import com.polopoly.cm.client.EjbCmClient;
 import com.polopoly.cm.client.HttpContentRepositoryClient;
 import com.polopoly.cm.client.HttpEnvironment;
-import com.polopoly.cm.client.HttpFileServiceClient;
 import com.polopoly.cm.client.HttpUserServiceClient;
 import com.polopoly.cm.client.UserServiceClient;
 import com.polopoly.cm.client.filter.ContentFilter;
@@ -38,6 +42,8 @@ import com.polopoly.cm.search.index.RmiSearchClient;
 import com.polopoly.management.ManagedBeanRegistry;
 import com.polopoly.management.jmx.JMXManagedBeanRegistry;
 import com.polopoly.poll.client.PollClient;
+import com.polopoly.ps.pcmd.ApplicationComponentProvider;
+import com.polopoly.ps.pcmd.util.ApplicationComponentProviderRetriever;
 import com.polopoly.search.solr.SolrIndexName;
 import com.polopoly.search.solr.SolrSearchClient;
 import com.polopoly.statistics.client.StatisticsClient;
@@ -60,11 +66,9 @@ public class PolopolyClient {
 
 	private boolean attachStatisticsService = true;
 
-	private boolean attachSolrSearchClient = true;
-
 	private boolean attachPollService = false;
 	
-	private boolean attachHttpFileService = false;
+	
 
 	private boolean attachLRUSynchronizedUpdateCache = false;
 
@@ -93,10 +97,6 @@ public class PolopolyClient {
 			// nothing
 		}
 	};
-
-	public boolean isAttachSolrSearchClient() {
-		return attachSolrSearchClient;
-	}
 
 	public String getApplicationName() {
 		return applicationName;
@@ -146,15 +146,35 @@ public class PolopolyClient {
 			connection.connect();
 
 			if (connection.getResponseCode() >= 400 && connection.getResponseCode() < 600) {
+				connection.disconnect();
 				return false;
 			}
-
+			
+			 InputStream inputStream = connection.getInputStream();
+			 String string = IOUtils.toString(inputStream);
+			 
+			 BufferedReader bufferedReader = new BufferedReader(new StringReader(string));
+			 
+			 logger.debug("Connection Properties URL: " + url);
+			 logger.debug("------------------------------------------------------------------------------------------------------------------");
+			 String line = null;  
+			 while ((line = bufferedReader.readLine()) != null)  
+			 {  
+				 if(!line.startsWith("#") && !line.isEmpty()) {
+					 logger.debug(line);
+				 }
+			 } 
+			 
+			 logger.debug("------------------------------------------------------------------------------------------------------------------");
+			 
+             connection.disconnect();
+           
 			return true;
 		} catch (MalformedURLException e) {
 			javaUtilLogger.log(Level.WARNING, "URL(" + url + ") is invalid: " + e.getMessage(), e);
 		} catch (IOException e) {
 			// fine. not available.
-		}
+		} 
 
 		return false;
 	}
@@ -185,6 +205,8 @@ public class PolopolyClient {
 			// if the URL does not contain a slash or colon, it's not a URL but
 			// just the server name
 			connectionUrl = getConnectionPropertiesUrl(connectionUrl);
+		} else {
+			testConnection(connectionUrl);
 		}
 
 		for (ConnectListener listener : getConnectListeners()) {
@@ -196,16 +218,15 @@ public class PolopolyClient {
 		StatisticsClient statisticsClient = null;
 		UDPLogMsgClient logMsgClient = null;
 		PollClient pollClient = null;
-		HttpFileServiceClient httpFileClient = null;
 
 		try {
-			getLogger().debug("Connection properties" + connectionUrl);
+			
 			ConnectionProperties connectionProperties = new ConnectionProperties(new URL(connectionUrl));
 
 			ManagedBeanRegistry registry = new JMXManagedBeanRegistry(ManagementFactory.getPlatformMBeanServer());
 
 			final StandardApplication app = new StandardApplication(applicationName);
-
+			
 			cmClient = createClient(connectionProperties, app);
 
 			setUpCmClient(cmClient);
@@ -228,8 +249,6 @@ public class PolopolyClient {
 			}
 
 			if (isAttachSolrSearchClient()) {
-				createSolrSearchClient(cmClient, app, "public");
-				createSolrSearchClient(cmClient, app, "internal");
 				for (String index : additionalIndexes) {
 					createSolrSearchClient(cmClient, app, index);
 				}
@@ -240,17 +259,14 @@ public class PolopolyClient {
 				app.addApplicationComponent(pollClient);
 			}
 
+			
+			
 			if (isAttachStatisticsService()) {
 				statisticsClient = new StatisticsClient();
 				app.addApplicationComponent(statisticsClient);
 			}
 			
-			
-		    if (isAttachHttpFileService()) {
-                httpFileClient = new HttpFileServiceClient();
-                app.addApplicationComponent(httpFileClient);
-            }
-
+		
 			if (isAttachLRUSynchronizedUpdateCache()) {
 				LRUSynchronizedUpdateCache cache = new LRUSynchronizedUpdateCache();
 
@@ -262,6 +278,16 @@ public class PolopolyClient {
 			logMsgClient = new UDPLogMsgClient();
 			app.addApplicationComponent(logMsgClient);
 
+			List<ApplicationComponentProvider> applicationComponentProviders = ApplicationComponentProviderRetriever.getApplicationComponentProviders();
+			for (ApplicationComponentProvider applicationComponentProvider : applicationComponentProviders) {
+				try {
+				applicationComponentProvider.add(app);
+				logger.debug("Added application compoment: "+ applicationComponentProvider);
+				} catch(IllegalApplicationStateException e) {
+					logger.error(e.getMessage());
+				}
+			}
+			
 			// Read connection properties.
 			app.readConnectionProperties(connectionProperties);
 			
@@ -283,6 +309,11 @@ public class PolopolyClient {
 			throw new ConnectException("Error connecting to Polopoly server with connection URL " + connectionUrl
 										+ ": " + e, e);
 		}
+	}
+
+	@Deprecated
+	private boolean isAttachSolrSearchClient() {
+		return true;
 	}
 
 	protected CmClientBase createClient(ConnectionProperties connectionProperties, final StandardApplication application) throws IllegalArgumentException, ConnectionPropertiesConfigurationException, IllegalApplicationStateException {
@@ -441,14 +472,6 @@ public class PolopolyClient {
 		return attachSearchService;
 	}
 	
-	public void setAttachHttpFileService(boolean attachHttpFileService) {
-		this.attachHttpFileService = attachHttpFileService;
-	}
-
-	public boolean isAttachHttpFileService() {
-		return attachHttpFileService;
-	}
-
 	public void setAttachLRUSynchronizedUpdateCache(boolean attachLRUSynchronizedUpdateCache) {
 		this.attachLRUSynchronizedUpdateCache = attachLRUSynchronizedUpdateCache;
 	}
@@ -463,9 +486,7 @@ public class PolopolyClient {
 	protected void setUpLRUSynchronizedUpdateCache(LRUSynchronizedUpdateCache cache) {
 	}
 
-	public void setAttachSolrSearchClient(boolean attachSolrSearchClient) {
-		this.attachSolrSearchClient = attachSolrSearchClient;
-	}
+
 
 	/**
 	 * Add additional index. A common usecase would be a userindex in which case

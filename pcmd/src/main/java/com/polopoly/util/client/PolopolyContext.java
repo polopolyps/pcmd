@@ -117,14 +117,14 @@ public class PolopolyContext {
             (PollClient) application.getApplicationComponent(PollClient.DEFAULT_COMPOUND_NAME),
             createDefaultIndexMap((SolrSearchClient) application.getApplicationComponent("search_solrClientInternal"),
                                   (SolrSearchClient) application
-                                      .getApplicationComponent(SolrSearchClient.DEFAULT_COMPOUND_NAME)));
+                                      .getApplicationComponent(SolrSearchClient.DEFAULT_COMPOUND_NAME)), polopolyClientLogger );
 
         this.application = application;
 		this.polopolyClientLogger = polopolyClientLogger;
     }
 
     public PolopolyContext(CmClient cmClient, RmiSearchClient searchClient, PollClient pollClient,
-                           Map<String, SolrSearchClient> solrSearchClients) {
+                           Map<String, SolrSearchClient> solrSearchClients, PolopolyClientLogger polopolyClientLogger) {
         this.client = cmClient;
 
         if (cmClient != null) {
@@ -135,6 +135,7 @@ public class PolopolyContext {
         this.pollClient = pollClient;
         this.searchClient = searchClient;
         this.solrSearchClients = solrSearchClients;
+        this.polopolyClientLogger = polopolyClientLogger;
     }
 
     public PolopolyContext(UserServer userServer, PolicyCMServer server) {

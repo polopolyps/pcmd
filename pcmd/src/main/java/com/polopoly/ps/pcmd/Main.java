@@ -16,6 +16,7 @@ import com.polopoly.ps.pcmd.argument.Parameters;
 import com.polopoly.ps.pcmd.tool.DoesNotRequireRunningPolopoly;
 import com.polopoly.ps.pcmd.tool.HelpParameters;
 import com.polopoly.ps.pcmd.tool.HelpTool;
+import com.polopoly.ps.pcmd.tool.RequiresHttpFileService;
 import com.polopoly.ps.pcmd.tool.RequiresIndexServer;
 import com.polopoly.ps.pcmd.tool.RequiresPollServer;
 import com.polopoly.ps.pcmd.tool.RequiresSolr;
@@ -65,8 +66,6 @@ public class Main {
                 PcmdPolopolyClient client = new PcmdPolopolyClient();
                 client.setAttachStatisticsService(tool instanceof RequiresStatisticsServer);
                 client.setAttachSearchService(tool instanceof RequiresIndexServer);
-                client.setAttachPollService(tool instanceof RequiresPollServer);
-                client.setAttachSolrSearchClient(tool instanceof RequiresSolr);
                 client.setAttachPollService(tool instanceof RequiresPollServer);
 
                 new ClientFromArgumentsConfigurator(client, arguments).configure();
@@ -182,12 +181,11 @@ public class Main {
         if (reconfigurePCMDclient) {
             if (!(tool instanceof DoesNotRequireRunningPolopoly)) {
                 PcmdPolopolyClient client = new PcmdPolopolyClient();
+                //Those are for specific tools
                 client.setAttachStatisticsService(tool instanceof RequiresStatisticsServer);
                 client.setAttachSearchService(tool instanceof RequiresIndexServer);
                 client.setAttachPollService(tool instanceof RequiresPollServer);
-                client.setAttachSolrSearchClient(tool instanceof RequiresSolr);
-                client.setAttachPollService(tool instanceof RequiresPollServer);
-
+               
                 new ClientFromArgumentsConfigurator(client, arguments).configure();
                 try {
                     context = client.connect();

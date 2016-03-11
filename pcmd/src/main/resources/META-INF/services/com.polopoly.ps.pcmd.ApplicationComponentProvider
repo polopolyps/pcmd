@@ -1,0 +1,3 @@
+com.polopoly.pcmd.application.HttpFileServiceClientApplicationComponentProvider
+com.polopoly.pcmd.application.SolrInternalSearchClientApplicationComponentProvider
+com.polopoly.pcmd.application.SolrPublicSearchClientApplicationComponentProvider

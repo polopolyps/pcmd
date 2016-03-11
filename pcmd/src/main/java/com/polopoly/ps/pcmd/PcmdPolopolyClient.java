@@ -76,6 +76,7 @@ public class PcmdPolopolyClient extends PolopolyClient {
 
     public void setPersistenceCacheDir(File persistenceCacheDir) {
         this.persistenceCacheDir = persistenceCacheDir;
-
     }
+    
+    
 }
