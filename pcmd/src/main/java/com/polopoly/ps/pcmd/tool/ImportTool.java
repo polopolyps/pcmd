@@ -22,6 +22,7 @@ import com.polopoly.cm.xml.DocumentImporter;
 import com.polopoly.cm.xml.DocumentImporterFactory;
 import com.polopoly.cm.xml.io.DispatchingDocumentImporter;
 import com.polopoly.pcmd.tool.Tool;
+import com.polopoly.ps.contentimporter.ContentImportHandlerException;
 import com.polopoly.ps.contentimporter.StandardContentImportHandler;
 import com.polopoly.ps.contentimporter.hotdeploy.file.DeploymentFile;
 import com.polopoly.ps.contentimporter.hotdeploy.xml.bootstrap.Bootstrap;
@@ -71,11 +72,11 @@ public class ImportTool implements Tool<ImportParameters> {
                         System.out.println("Finish import zip file");
                     }
                 } catch (FileNotFoundException e) {
-                    System.err.println(e.getMessage());
+                	throw new FatalToolException(e);
                 } catch (IOException e) {
-                    System.err.println(e.getMessage());
+                 	throw new FatalToolException(e);
                 } catch (Exception e) {
-                    System.err.println(e.getMessage());
+                 	throw new FatalToolException(e);
                 }
             }
 
@@ -98,21 +99,25 @@ public class ImportTool implements Tool<ImportParameters> {
                     bootstrapFiles.add(new File(temporaryBootstrapFile).toURI().toURL());
                     DocumentImporter importer =
                         DocumentImporterFactory.getDocumentImporter(context.getPolicyCMServer());
-                    StandardContentImportHandler importHandler = new StandardContentImportHandler(importer);
-                    importHandler.importContent(bootstrapFiles);
-                    importHandler.importContentByImportOrder(resources);
+                    StandardContentImportHandler importHandler = new StandardContentImportHandler(importer) {
+					};
+					importHandler.importContent(bootstrapFiles);
+                    
+                    importHandler.importContentByImportOrder(resources);              
                     File tempFile = new File(temporaryBootstrapFile);
 
                     FileDeleteStrategy.FORCE.delete(tempFile);
                     System.out.println(temporaryBootstrapFile + " removed...");
 
-                } catch (IOException e1) {
-                    System.err.println(e1.getMessage());
+                } catch (IOException e) {
+                 	throw new FatalToolException(e);
                 } catch (CMException e) {
-                    System.err.println(e.getMessage());
+                    throw new FatalToolException(e);
                 } catch (ParserConfigurationException e) {
-                    System.err.println(e.getMessage());
-                }
+                 	throw new FatalToolException(e);
+                } catch (ContentImportHandlerException e) {
+                 	throw new FatalToolException(e);
+				}
 
             } else {
                 try {
@@ -121,10 +126,12 @@ public class ImportTool implements Tool<ImportParameters> {
                     StandardContentImportHandler importHandler = new StandardContentImportHandler(importer);
                     importHandler.importContent(resources);
                 } catch (CMException e) {
-                    System.err.println(e.getMessage());
+                 	throw new FatalToolException(e);
                 } catch (ParserConfigurationException e) {
-                    System.err.println(e.getMessage());
-                }
+                 	throw new FatalToolException(e);
+                } catch (ContentImportHandlerException e) {
+                 	throw new FatalToolException(e);
+				}
             }
 
         }
