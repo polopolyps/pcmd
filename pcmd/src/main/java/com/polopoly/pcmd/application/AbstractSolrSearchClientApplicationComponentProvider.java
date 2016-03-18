@@ -15,7 +15,7 @@ public abstract class AbstractSolrSearchClientApplicationComponentProvider imple
 		CmClient cmClient = (CmClient) appication.getApplicationComponent(CmClientBase.DEFAULT_COMPONENT_NAME);
 		SolrSearchClient searchClient = new SolrSearchClient(SolrSearchClient.DEFAULT_MODULE_NAME, "solrClient" + getIndexName(),
 				cmClient);
-		searchClient.setIndexName(new SolrIndexName(getIndexName()));
+		searchClient.setIndexName(new SolrIndexName(getIndexName().toLowerCase()));
 		appication.addApplicationComponent(searchClient);
 	}
 	
