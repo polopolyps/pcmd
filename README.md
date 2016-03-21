@@ -5,16 +5,16 @@ Polopoly Command Tool (Pcmd) is a collection of utilities for accessing basic Po
 
 | Polopoly version| Distribution        
 | ------------- |-------------|                                                   
-| 10.10.0       | [pcmd-client-10.10.0-beta.3.2-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.10.0/beta.3.2/pcmd-client-10.10.0-beta.3.2-standalone.zip)            |
-| 10.10.1       | [pcmd-client-10.10.1-beta.3.2-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.10.1/beta.3.2/pcmd-client-10.10.1-beta.3.2-standalone.zip)              | 
-| 10.10.1-fp1   | [pcmd-client-10.10.1-fp1-beta.3.2-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.10.1-fp1/beta.3.2/pcmd-client-10.10.1-fp1-beta.3.2-standalone.zip)              |
-| 10.10.1-fp2   | [pcmd-client-10.10.1-fp2-beta.3.2-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.10.1-fp2/beta.3.2/pcmd-client-10.10.1-fp2-beta.3.2-standalone.zip)   |
-| 10.10.1-fp3   | [pcmd-client-10.10.1-fp3-beta.3.2-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.10.1-fp3/beta.3.2/pcmd-client-10.10.1-fp3-beta.3.2-standalone.zip)  |
-| 10.12.0       | [pcmd-client-10.12.0-beta.3.2-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.12.0/beta.3.2/pcmd-client-10.12.0-beta.3.2-standalone.zip)               |
-| 10.12.0-fp1   | [pcmd-client-10.12.0-fp1-beta.3.2-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.12.0-fp1/beta.3.2/pcmd-client-10.12.0-fp1-beta.3.2-standalone.zip)   |
-| 10.14.0       | [pcmd-client-10.14.0-beta.3.2-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.14.0/beta.3.2/pcmd-client-10.14.0-beta.3.2-standalone.zip)               |
-| 10.14.0-fp1   | [pcmd-client-10.14.0-fp1-beta.3.2-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.14.0-fp1/beta.3.2/pcmd-client-10.14.0-fp1-beta.3.2-standalone.zip)  |
-| 10.16.0   | [pcmd-client-10.16-beta.3.2-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.16/beta.3.2/pcmd-client-10.16-beta.3.2-standalone.zip)  |
+| 10.10.0       | [pcmd-client-10.10.0-beta.3.2.1.1-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.10.0/beta.3.2.1/pcmd-client-10.10.0-beta.3.2.1-standalone.zip)            |
+| 10.10.1       | [pcmd-client-10.10.1-beta.3.2.1-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.10.1/beta.3.2.1/pcmd-client-10.10.1-beta.3.2.1-standalone.zip)              | 
+| 10.10.1-fp1   | [pcmd-client-10.10.1-fp1-beta.3.2.1-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.10.1-fp1/beta.3.2.1/pcmd-client-10.10.1-fp1-beta.3.2.1-standalone.zip)              |
+| 10.10.1-fp2   | [pcmd-client-10.10.1-fp2-beta.3.2.1-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.10.1-fp2/beta.3.2.1/pcmd-client-10.10.1-fp2-beta.3.2.1-standalone.zip)   |
+| 10.10.1-fp3   | [pcmd-client-10.10.1-fp3-beta.3.2.1-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.10.1-fp3/beta.3.2.1/pcmd-client-10.10.1-fp3-beta.3.2.1-standalone.zip)  |
+| 10.12.0       | [pcmd-client-10.12.0-beta.3.2.1-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.12.0/beta.3.2.1/pcmd-client-10.12.0-beta.3.2.1-standalone.zip)               |
+| 10.12.0-fp1   | [pcmd-client-10.12.0-fp1-beta.3.2.1-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.12.0-fp1/beta.3.2.1/pcmd-client-10.12.0-fp1-beta.3.2.1-standalone.zip)   |
+| 10.14.0       | [pcmd-client-10.14.0-beta.3.2.1-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.14.0/beta.3.2.1/pcmd-client-10.14.0-beta.3.2.1-standalone.zip)               |
+| 10.14.0-fp1   | [pcmd-client-10.14.0-fp1-beta.3.2.1-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.14.0-fp1/beta.3.2.1/pcmd-client-10.14.0-fp1-beta.3.2.1-standalone.zip)  |
+| 10.16.0   | [pcmd-client-10.16-beta.3.2.1-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.16/beta.3.2.1/pcmd-client-10.16-beta.3.2.1-standalone.zip)  |
 
 ##Getting started
 
@@ -61,7 +61,7 @@ You can create a maven project that can create a custom distribution for your pr
 mvn archetype:generate                                 \
   -DarchetypeGroupId=com.polopoly.ps.tools             \
   -DarchetypeArtifactId=pcmd-client-archetype-simple   \
-  -DarchetypeVersion=beta.3.2                         \
+  -DarchetypeVersion=beta.3.2.1                         \
   -DgroupId=my.groupid                                 \
   -DartifactId=pcmd-client
 ```
