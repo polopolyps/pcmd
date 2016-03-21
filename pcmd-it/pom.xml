@@ -18,6 +18,11 @@
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
       </resource>
+      
+      <resource>
+      <directory>src/main/content</directory>
+    
+    </resource>
     </resources>
 
     <plugins>
@@ -54,11 +59,6 @@
         <version>${polopoly.version}</version>
         <configuration>
           <generatePluginXml>false</generatePluginXml>
-          <username>${import.username}</username>
-          <password>${import.password}</password>
-          <logImport>true</logImport>
-          <connectionPropertiesUrl>${polopoly.connection-properties}</connectionPropertiesUrl>
-          <scanIntervalSeconds>${polopoly.import-scanIntervalSeconds}</scanIntervalSeconds>
         </configuration>
         <executions>
           <execution>
@@ -73,6 +73,8 @@
       </plugin>
 
     </plugins>
+    
+ 
   </build>
 
   <dependencies>
@@ -96,10 +98,11 @@
     </dependency>
     
     
-    <dependency>
+   <dependency>
       <groupId>com.polopoly</groupId>
-      <artifactId>testbase</artifactId>
-      <version>1.1</version>
+      <artifactId>testnext</artifactId>
+      <version>2.0.0</version>
+      <type>pom</type>
     </dependency>
 
     <dependency>

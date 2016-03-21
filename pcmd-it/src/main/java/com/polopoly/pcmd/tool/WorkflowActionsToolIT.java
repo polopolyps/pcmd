@@ -24,14 +24,16 @@ import com.polopoly.ps.pcmd.Main;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.WorkflowActionsTool;
-import com.polopoly.testbase.ImportTestContent;
+import com.polopoly.testnext.base.ImportTestContent;
 import com.polopoly.user.server.UserServer;
 import com.polopoly.util.client.PolopolyContext;
 
-@ImportTestContent(files = { "com.polopoly.pcmd.tool.WorkflowActionsToolIT.xml", 
-		                     "com.polopoly.pcmd.tool.WorkflowActionsToolITArticle.xml"}, 
-                   waitUntilContentsAreIndexed = { "com.polopoly.pcmd.tool.WorkflowActionsToolIT.article", 
-	                                               "com.polopoly.pcmd.tool.WorkflowActionsToolIT.article2" })
+//@ImportTestContent(files = { "com.polopoly.pcmd.tool.WorkflowActionsToolIT.xml", 
+//		                     "com.polopoly.pcmd.tool.WorkflowActionsToolITArticle.xml"}, 
+//                   waitUntilContentsAreIndexed = { "com.polopoly.pcmd.tool.WorkflowActionsToolIT.article", 
+//	                                               "com.polopoly.pcmd.tool.WorkflowActionsToolIT.article2" })
+
+@ImportTestContent
 public class WorkflowActionsToolIT extends AbstractIntegrationTestBase {
 	
 	private PolopolyContext context;

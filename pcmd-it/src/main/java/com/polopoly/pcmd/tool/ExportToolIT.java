@@ -31,7 +31,7 @@ import com.polopoly.ps.pcmd.Main;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.ExportTool;
-import com.polopoly.testbase.ImportTestContent;
+import com.polopoly.testnext.base.ImportTestContent;
 import com.polopoly.user.server.UserServer;
 import com.polopoly.util.client.PolopolyContext;
 
@@ -43,7 +43,7 @@ import com.polopoly.util.client.PolopolyContext;
  * false
  * 
  */
-@ImportTestContent(files = "com.polopoly.pcmd.tool.ExportToolIT.xml")
+@ImportTestContent(files = {"templates/pcmd.Video.xml" , "com.polopoly.pcmd.tool.ExportToolIT.xml"})
 public class ExportToolIT extends AbstractIntegrationTestBase {
 
     private PolopolyContext context;
@@ -150,7 +150,7 @@ public class ExportToolIT extends AbstractIntegrationTestBase {
         String content = getFileContent(file);
 
         assertNotNull(content);
-        assertTrue(content.contains("<externalid>export.7."));
+        assertTrue("Was " + content, content.contains("<externalid>export.7."));
     }
 
     @Test

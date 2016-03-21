@@ -22,9 +22,10 @@ import com.polopoly.ps.pcmd.Main;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.GroovyTool;
-import com.polopoly.testbase.ImportTestContent;
+import com.polopoly.testnext.base.ImportTestContent;
 import com.polopoly.user.server.UserServer;
 import com.polopoly.util.client.PolopolyContext;
+
 
 public class GroovyToolIT extends AbstractIntegrationTestBase {
 
@@ -62,12 +63,12 @@ public class GroovyToolIT extends AbstractIntegrationTestBase {
     @Test
     public void createTest() throws ArgumentException {
         List<String> args = new ArrayList<String>();
-        args.add("policy.setChildValue(\"name\", \"First Groovy Article\"); "
-                 + "policy.setChildValue('author','The Groovy Editor')");
+        args.add("policy.setComponent(\"name\", \"value\", \"First Groovy Article\"); "
+                 + "policy.setComponent(\"author\", \"value\", \"The Groovy Editor\")");
 
         Map<String, List<String>> options = new HashMap<String, List<String>>();
         options.put("create", Arrays.asList("1"));
-        options.put("inputtemplate", Arrays.asList("example.StandardArticle"));
+        options.put("inputtemplate", Arrays.asList("pcmd.StandardArticle"));
 
         DefaultArguments arguments = new DefaultArguments("GroovyTool", options, args);
         arguments.setContext(context);
@@ -93,12 +94,14 @@ public class GroovyToolIT extends AbstractIntegrationTestBase {
     @Test
     public void createQuietTest() throws ArgumentException {
         List<String> args = new ArrayList<String>();
-        args.add("policy.setChildValue(\"name\", \"A second Groovy Article\");"
-                 + "policy.setChildValue(\"author\",\"The Groovy Editor\")");
+        args.add("policy.setComponent(\"name\", \"A second Groovy Article\");"
+                 + "policy.setComponent(\"author\",\"The Groovy Editor\")");
+        
+        //new StandardArticlePolicy().setComponent(name, value);
 
         Map<String, List<String>> options = new HashMap<String, List<String>>();
         options.put("create", Arrays.asList("1"));
-        options.put("inputtemplate", Arrays.asList("example.StandardArticle"));
+        options.put("inputtemplate", Arrays.asList("pcmd.StandardArticle"));
         options.put("quiet", Arrays.asList("true"));
 
         DefaultArguments arguments = new DefaultArguments("GroovyTool", options, args);
@@ -115,7 +118,7 @@ public class GroovyToolIT extends AbstractIntegrationTestBase {
         System.err.println("Original Author is: " + getAuthor(GroovyToolIT.class.getName() + ".article"));
 
         List<String> args = new ArrayList<String>();
-        args.add("policy.setChildValue(\"author\", \"The Grooviest Editor ever\")");
+        args.add("policy.setComponent(\"author\", \"value\", \"The Grooviest Editor ever\")");
         args.add(GroovyToolIT.class.getName() + ".article");
 
         Map<String, List<String>> options = new HashMap<String, List<String>>();
@@ -127,7 +130,7 @@ public class GroovyToolIT extends AbstractIntegrationTestBase {
         Main.execute(new GroovyTool(), context, arguments);
 
         String modifiedArticle = getAuthor(GroovyToolIT.class.getName() + ".article");
-        assertTrue(modifiedArticle.contains("The Grooviest Editor ever"));
+        assertTrue("was" + modifiedArticle,modifiedArticle.contains("The Grooviest Editor ever"));
     }
 
 }

@@ -518,6 +518,28 @@ public class PolopolyContext {
     }
 
 	public PolopolyClientLogger getLogger() {
+		if(polopolyClientLogger == null) {
+			logger.info("Not logger was provided using a standard sysout logger");
+			return new PolopolyClientLogger() {
+				
+				@Override
+				public void info(String logMessage) {
+					System.out.println(logMessage);
+				}
+				
+				@Override
+				public void error(String logMessage) {
+					System.err.println(logMessage);
+					
+				}
+				
+				@Override
+				public void debug(String logMessage) {
+					System.err.println(logMessage);
+					
+				}
+			};
+		}
 		return polopolyClientLogger;
 	}
 

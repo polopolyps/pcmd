@@ -1,5 +1,5 @@
 id:com.polopoly.pcmd.tool.AclToolIT.article
-inputtemplate:example.StandardArticle
+inputtemplate:pcmd.StandardArticle
 major:1
 name:com.polopoly.pcmd.tool.AclToolIT.article
 securityparent:p.siteengine.Sites.d

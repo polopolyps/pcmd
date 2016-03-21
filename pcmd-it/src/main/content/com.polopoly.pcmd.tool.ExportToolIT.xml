@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <batch xmlns="http://www.polopoly.com/polopoly/cm/xmlio">
   <!--  video  -->
- <!--  <content>
+   <content>
     <metadata>
       <contentid>
         <major>Article</major>
@@ -9,11 +9,11 @@
       </contentid>
       <input-template>
         <major>InputTemplate</major>
-        <externalid>example.Video</externalid>
+        <externalid>pcmd.Video</externalid>
       </input-template>
       <security-parent>
         <major>Department</major>
-        <externalid>GreenfieldTimes.d</externalid>
+        <externalid>p.GlobalSiteDepartment</externalid>
       </security-parent>
    </metadata>
    <component group="polopoly.Content" name="name">Dummy video</component>
@@ -27,7 +27,6 @@ RkxW453453525NZXRhRGF0YQg54545lP 3ztkWgAJc3RhcnR0aW1lAAAAAAAAAAAAAA10b3RhbGR1cmF
    </file> 
   </content>
   
-   article 
    <content>
     <metadata>  
       <contentid>
@@ -36,11 +35,11 @@ RkxW453453525NZXRhRGF0YQg54545lP 3ztkWgAJc3RhcnR0aW1lAAAAAAAAAAAAAA10b3RhbGR1cmF
       </contentid>
       <input-template>
         <major>InputTemplate</major>
-        <externalid>example.StandardArticle</externalid>
+        <externalid>pcmd.StandardArticle</externalid>
       </input-template>
       <security-parent>
         <major>Department</major>
-        <externalid>GreenfieldTimes.d</externalid>
+        <externalid>p.GlobalSiteDepartment</externalid>
       </security-parent>
     </metadata>
     <component group="titleFontSize" name="value">34</component>
@@ -70,9 +69,9 @@ Benítez was a high achiever in his first season as he guided Liverpool to victo
     <component group="modifiedDate" name="date">1365383767191</component>
     <component group="modifiedDate" name="userFormat">2013-04-08 03:16</component>
     <component group="p.AssociatedUsers" name="associatedUsers">sysadmin</component>
-  </content> -->
+  </content> 
   
-  <!-- <content>
+  <content>
     <metadata>  
       <contentid>
         <major>Article</major>
@@ -80,11 +79,11 @@ Benítez was a high achiever in his first season as he guided Liverpool to victo
       </contentid>
       <input-template>
         <major>InputTemplate</major>
-        <externalid>example.StandardArticle</externalid>
+        <externalid>pcmd.StandardArticle</externalid>
       </input-template>
       <security-parent>
         <major>Department</major>
-        <externalid>GreenfieldTimes.d</externalid>
+        <externalid>p.GlobalSiteDepartment</externalid>
       </security-parent>
     </metadata>
     <component group="titleFontSize" name="value">34</component>
@@ -127,9 +126,8 @@ Benítez was a high achiever in his first season as he guided Liverpool to victo
         <externalid>com.polopoly.pcmd.tool.ExportToolIT.article2</externalid>
       </contentid>
     </contentref>
-  </content> -->
-  
-<!--    <content>
+  </content> 
+     <content>
     <metadata>  
       <contentid>
         <major>Article</major>
@@ -137,11 +135,11 @@ Benítez was a high achiever in his first season as he guided Liverpool to victo
       </contentid>
       <input-template>
         <major>InputTemplate</major>
-        <externalid>example.StandardArticle</externalid>
+        <externalid>pcmd.StandardArticle</externalid>
       </input-template>
       <security-parent>
         <major>Department</major>
-        <externalid>GreenfieldTimes.d</externalid>
+        <externalid>p.GlobalSiteDepartment</externalid>
       </security-parent>
     </metadata>
     <component group="titleFontSize" name="value">34</component>
@@ -171,6 +169,6 @@ Benítez was a high achiever in his first season as he guided Liverpool to victo
     <component group="modifiedDate" name="date">1365383767191</component>
     <component group="modifiedDate" name="userFormat">2013-04-08 03:16</component>
     <component group="p.AssociatedUsers" name="associatedUsers">sysadmin</component>
-  </content> -->
+  </content> 
   
 </batch>  

@@ -18,7 +18,7 @@ import com.polopoly.ps.pcmd.Main;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.AclTool;
-import com.polopoly.testbase.ImportTestContent;
+import com.polopoly.testnext.base.ImportTestContent;
 import com.polopoly.user.server.UserServer;
 import com.polopoly.util.client.PolopolyContext;
 

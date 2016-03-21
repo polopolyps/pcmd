@@ -24,7 +24,7 @@ import com.polopoly.ps.pcmd.Main;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.VersionsTool;
-import com.polopoly.testbase.ImportTestContent;
+import com.polopoly.testnext.base.ImportTestContent;
 import com.polopoly.util.client.PolopolyContext;
 
 public class VersionsToolIT extends AbstractIntegrationTestBase {
@@ -41,8 +41,7 @@ public class VersionsToolIT extends AbstractIntegrationTestBase {
         System.setOut(new PrintStream(new StringBufferOutputStream(out)));
     }
     
-    @ImportTestContent(files = { "com.polopoly.pcmd.tool.VersionsToolIT.article1.content" }, 
-    		           waitUntilContentsAreIndexed = { "com.polopoly.pcmd.tool.VersionsToolIT.article1" })
+    @ImportTestContent(files = {"templates/image.xml","templates/standardArticle.xml", "com.polopoly.pcmd.tool.VersionsToolIT.article1.content"})
     @Test
     public void checkWithSymbolicVersions() throws FatalToolException, ArgumentException {
     	String testArticle = "com.polopoly.pcmd.tool.VersionsToolIT.article1"; 

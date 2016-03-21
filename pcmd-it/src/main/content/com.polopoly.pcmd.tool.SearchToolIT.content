@@ -1,5 +1,5 @@
 id:.article
-inputtemplate:example.StandardArticle
+inputtemplate:pcmd.StandardArticle
 major:1
 securityparent:GreenfieldTimes.d
 name:com.polopoly.pcmd.tool.SearchToolIT

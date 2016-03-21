@@ -20,7 +20,7 @@ import com.polopoly.ps.pcmd.Main;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.GraphContentTool;
-import com.polopoly.testbase.ImportTestContent;
+import com.polopoly.testnext.base.ImportTestContent;
 import com.polopoly.util.client.PolopolyContext;
 
 @ImportTestContent(files = { "com.polopoly.pcmd.tool.GraphContentToolIT.xml" })

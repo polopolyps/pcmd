@@ -21,7 +21,7 @@ import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.SolrTool;
 import com.polopoly.search.solr.PostFilteredSolrSearchClient;
 import com.polopoly.search.solr.SolrSearchClient;
-import com.polopoly.testbase.ImportTestContent;
+import com.polopoly.testnext.base.ImportTestContent;
 import com.polopoly.util.client.PolopolyContext;
 
 @ImportTestContent(waitUntilContentsAreIndexed = { "com.polopoly.pcmd.tool.SolrToolIT.article" })

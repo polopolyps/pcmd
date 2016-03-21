@@ -34,98 +34,7 @@
         <artifactId>appassembler-maven-plugin</artifactId>
       </plugin>
       
-             <plugin>
-        <groupId>com.polopoly.extensions</groupId>
-        <artifactId>p-maven-plugin</artifactId>
-        <version>${polopoly.version}</version>
-        <configuration>
-        <waitForJetty>true</waitForJetty>
-        <waitForJboss>true</waitForJboss>
-        <workDirectory>${polopoly.work-dir}</workDirectory>
-                    <generatePluginXml>false</generatePluginXml>
-                    <optionalPolopolyDir>true</optionalPolopolyDir>
-                    <failOnMissingContentDataJarFile>false</failOnMissingContentDataJarFile>
-                    <username>${import.username}</username>
-                    <password>${import.password}</password>
-                    <logImport>true</logImport>
-                    <connectionPropertiesUrl>${polopoly.connection-properties}</connectionPropertiesUrl>
-                    <scanIntervalSeconds>${polopoly.import-scanIntervalSeconds}</scanIntervalSeconds>
-        </configuration>
-       <!--   <executions>
-              <execution>
-              <id>import</id>
-                <goals>
-                  <goal>import-scan</goal>
-                </goals>
-                <phase>pre-integration-test</phase>
-              </execution>
-            </executions>-->
-      </plugin>
-
-      <plugin>
-        <groupId>com.polopoly.jboss</groupId>
-        <artifactId>jboss-maven-plugin</artifactId>
-        <version>${jboss-plugin.version}</version>
-        <configuration>
-          <environments>
-            <environment>
-              <name>connectionPropertiesFile</name>
-              <value>${basedir}/../src/main/configuration/connection.properties</value>
-            </environment>
-            <environment>
-              <name>p.ejbConfigurationUrl</name>
-              <value>${basedir}/../src/main/configuration/ejb-configuration.properties</value>
-            </environment>
-          </environments>
-          <bindAddress>0.0.0.0</bindAddress>
-          <startOptions>-Djboss.web.port=${jboss.web.port}
-            -Dtemporary-file-service-directory=${polopoly.work-dir}/file-storage-server/tmp
-            -Dcontent-file-service-directory=${polopoly.work-dir}/file-storage-server/content
-            -Dp.connectionPropertiesUrl=${polopoly.connection-properties}</startOptions>
-          <jbossHome>${polopoly.work-dir}/embedded-jboss</jbossHome>
-          <logToConsole>true</logToConsole>
-          <jbossDistribution>
-            <groupId>com.polopoly.jboss</groupId>
-            <artifactId>slim-jboss-4.0.5</artifactId>
-            <version>${jboss-slim.version}</version>
-            <type>zip</type>
-          </jbossDistribution>
-          <serverPatches>
-            <serverPatch>
-              <groupId>com.polopoly</groupId>
-              <artifactId>jboss-derby-database</artifactId>
-              <version>${polopoly-db.version}</version>
-              <type>zip</type>
-            </serverPatch>
-          </serverPatches>
-          <deployments>
-            <deployment>
-              <groupId>com.polopoly</groupId>
-              <artifactId>cm-server</artifactId>
-              <version>${polopoly.version}</version>
-              <type>ear</type>
-            </deployment>
-            <deployment>
-              <groupId>com.polopoly</groupId>
-              <artifactId>connection-properties</artifactId>
-              <version>${polopoly.version}</version>
-              <type>war</type>
-            </deployment>
-            <deployment>
-              <groupId>com.polopoly</groupId>
-              <artifactId>content-hub</artifactId>
-              <version>${polopoly.version}</version>
-              <type>war</type>
-            </deployment>
-            <deployment>
-              <groupId>com.polopoly</groupId>
-              <artifactId>file-storage-server</artifactId>
-              <version>${polopoly.version}</version>
-              <type>war</type>
-            </deployment>
-          </deployments>
-        </configuration>
-      </plugin>
+            
 
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -150,26 +59,8 @@
             <groupId>com.polopoly.jboss</groupId>
             <artifactId>jboss-maven-plugin</artifactId>
             <version>${jboss-plugin.version}</version>
-            <executions>
-              <execution>
-              <id>start</id>
-                <goals>
-                  <goal>start</goal>
-                </goals>
-                <phase>pre-integration-test</phase>
-              </execution>
-               <execution>
-               <id>stop</id>
-                <goals>
-                  <goal>stop</goal>
-                </goals>
-                <phase>post-integration-test</phase>
-              </execution>
-            </executions>
+            
           </plugin>
-          
-       
-          
           <plugin>
             <artifactId>maven-failsafe-plugin</artifactId>
           </plugin>

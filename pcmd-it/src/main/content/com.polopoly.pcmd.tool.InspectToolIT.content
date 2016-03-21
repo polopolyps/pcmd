@@ -1,4 +1,4 @@
 id:.article
-inputtemplate:example.StandardArticle
+inputtemplate:pcmd.StandardArticle
 major:1
 name:com.polopoly.pcmd.tool.InspectToolIT

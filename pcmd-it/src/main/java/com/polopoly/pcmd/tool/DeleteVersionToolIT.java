@@ -23,7 +23,7 @@ import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.DeleteTool;
 import com.polopoly.ps.pcmd.tool.DeleteVersionTool;
 import com.polopoly.ps.pcmd.tool.InspectTool;
-import com.polopoly.testbase.ImportTestContent;
+import com.polopoly.testnext.base.ImportTestContent;
 import com.polopoly.user.server.UserServer;
 import com.polopoly.util.client.PolopolyContext;
 

@@ -1,4 +1,4 @@
 id:com.polopoly.pcmd.tool.DeleteVersionToolIT.article1
-inputtemplate:example.StandardArticle
+inputtemplate:pcmd.StandardArticle
 major:1
 name:com.polopoly.pcmd.tool.DeleteVersionToolIT.article1

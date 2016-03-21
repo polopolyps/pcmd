@@ -15,6 +15,7 @@
     <project.scm.id>polopolyps.github.server</project.scm.id>
     <github.global.server>polopolyps.github.server</github.global.server>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
   <modules>
     <module>pcmd</module>
@@ -108,9 +109,11 @@
          <configuration>
           <type>tag</type>
           <tags>
-            <tag implementation="java.lang.String">RELEASE-2.0</tag>
-            <tag implementation="java.lang.String">RELEASE-2.3</tag>
-            <tag implementation="java.lang.String">pcmd-top-3.0</tag>
+          <tag implementation="java.lang.String">beta.3.2.1</tag>
+          <tag implementation="java.lang.String">beta.3.2</tag>
+          <tag implementation="java.lang.String">pcmd-top-3.0</tag>     
+          <tag implementation="java.lang.String">RELEASE-2.3</tag>
+          <tag implementation="java.lang.String">RELEASE-2.0</tag>
           </tags>
         </configuration>
       </plugin>

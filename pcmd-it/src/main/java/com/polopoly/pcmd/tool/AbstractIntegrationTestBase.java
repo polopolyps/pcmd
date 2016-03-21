@@ -2,8 +2,8 @@ package com.polopoly.pcmd.tool;
 
 import org.junit.runner.RunWith;
 
-import com.polopoly.testbase.ImportTestContent;
-import com.polopoly.testbase.TestBaseRunner;
+import com.polopoly.testnext.base.ImportTestContent;
+import com.polopoly.testnj.TestNJRunner;
 import com.polopoly.user.server.Caller;
 import com.polopoly.user.server.User;
 import com.polopoly.user.server.UserId;
@@ -11,7 +11,7 @@ import com.polopoly.user.server.UserServer;
 
 
 @ImportTestContent
-@RunWith(TestBaseRunner.class)
+@RunWith(TestNJRunner.class)
 public abstract class AbstractIntegrationTestBase {
 	
 	public static final String DEFAULT_USER = "sysadmin";

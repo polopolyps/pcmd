@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template-definition version="1.0" xmlns="http://www.polopoly.com/polopoly/cm/app/xml">
-  <input-template name="example.StandardArticle" label="cm.template.p.siteengine.StandardArticle.it">
+  <input-template name="pcmd.StandardArticle" label="cm.template.p.siteengine.StandardArticle.it">
     <policy>com.polopolyps.pcmd.test.StandardArticlePolicy</policy>
     <editor>com.polopoly.cm.app.widget.OAjaxTopPolicyWidget</editor>
     <viewer>com.polopoly.cm.app.widget.OAjaxTopPolicyWidget</viewer>
