@@ -13,7 +13,7 @@
       </input-template>
       <security-parent>
         <major>Department</major>
-        <externalid>GreenfieldTimes.d</externalid> 
+        <externalid>p.GlobalSiteDepartment</externalid> 
       </security-parent>
     </metadata>
     <component group="httpImage" name="templateAppletStateChecksum">941110496</component>
@@ -58,7 +58,7 @@
       </input-template>
       <security-parent>
         <major>Department</major>
-        <externalid>GreenfieldTimes.d</externalid> 
+        <externalid>p.GlobalSiteDepartment</externalid> 
       </security-parent>
     </metadata>
   </content> -->
@@ -76,7 +76,7 @@
       </input-template>
       <security-parent>
         <major>Department</major>
-        <externalid>GreenfieldTimes.d</externalid>
+        <externalid>p.GlobalSiteDepartment</externalid>
       </security-parent>
     </metadata>
     <component group="polopoly.Content" name="name">Dummy Doc</component>
@@ -100,7 +100,7 @@ UEsDBBQABgAIAAAAIQDd/JU3ZgEAACAFAAATAAgCW0NvbnRlbnRfVHlwZXNdLnhtbCCiBAIooAAC AAA
       </input-template>
       <security-parent>
         <major>Department</major>
-        <externalid>GreenfieldTimes.d</externalid>
+        <externalid>p.GlobalSiteDepartment</externalid>
       </security-parent>
    </metadata>
    <component group="polopoly.Content" name="name">Dummy video</component>

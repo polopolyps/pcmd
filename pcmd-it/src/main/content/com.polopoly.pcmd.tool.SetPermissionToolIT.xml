@@ -9,7 +9,7 @@
         <externalid>6001</externalid><!-- A unique integer value -->
       </contentid>
       <security-parent>
-        <externalid>GreenfieldTimes.d</externalid>
+        <externalid>p.GlobalSiteDepartment</externalid>
       </security-parent>
     </metadata>
     <value name="loginName">testtooluser</value>

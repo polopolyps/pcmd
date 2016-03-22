@@ -49,7 +49,7 @@
       </input-template>
       <security-parent>
         <major>Department</major>
-        <externalid>GreenfieldTimes.d</externalid>
+        <externalid>p.GlobalSiteDepartment</externalid>
       </security-parent>
     </metadata>
     <component group="polopoly.Content" name="name">Workflow Test Article 2</component>

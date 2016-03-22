@@ -8,7 +8,7 @@
         <externalid>10001</externalid>
       </contentid>
       <security-parent>
-        <externalid>GreenfieldTimes.d</externalid>
+        <externalid>p.GlobalSiteDepartment</externalid>
       </security-parent>
     </metadata>
     <value name="loginName">checkpermissiontooluser1</value>

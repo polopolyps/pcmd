@@ -78,7 +78,7 @@ public class PolopolyContext {
 
     private CMServer cmServer;
 
-    private UserServer userServer;
+    private  UserServer userServer;
 
 	private PolopolyClientLogger polopolyClientLogger;
 
@@ -132,6 +132,7 @@ public class PolopolyContext {
             this.cmServer = cmClient.getCMServer();
         }
 
+        this.userServer = cmClient.getUserServer();
         this.pollClient = pollClient;
         this.searchClient = searchClient;
         this.solrSearchClients = solrSearchClients;
@@ -151,7 +152,7 @@ public class PolopolyContext {
         this.server = Require.require(server);
         if (solrSearchClients != null)
             this.solrSearchClients = solrSearchClients;
-
+        		
         // get the CM server from the policy CM server.
         PolicyCMServer atServer = server;
 
@@ -173,6 +174,7 @@ public class PolopolyContext {
         this.application = context.application;
         this.searchClient = context.searchClient;
         this.client = context.client;
+        this.userServer = context.getUserServer();
         this.server = context.server;
         this.pollClient = context.pollClient;
         this.solrSearchClients = context.solrSearchClients;

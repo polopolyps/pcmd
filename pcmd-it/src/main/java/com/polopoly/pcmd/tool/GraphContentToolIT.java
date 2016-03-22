@@ -21,6 +21,7 @@ import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.GraphContentTool;
 import com.polopoly.testnext.base.ImportTestContent;
+import com.polopoly.user.server.UserServer;
 import com.polopoly.util.client.PolopolyContext;
 
 @ImportTestContent(files = { "com.polopoly.pcmd.tool.GraphContentToolIT.xml" })
@@ -31,10 +32,13 @@ public class GraphContentToolIT extends AbstractIntegrationTestBase {
 
     @Inject
     private PolicyCMServer cmServer;
+    
+    @Inject
+    private UserServer userServer;
 
     @Before
     public void setup() {
-        context = new PolopolyContext(cmServer);
+        context = new PolopolyContext(userServer, cmServer);
 
         out = new StringBuffer();
         System.setOut(new PrintStream(new StringBufferOutputStream(out)));
@@ -219,7 +223,7 @@ public class GraphContentToolIT extends AbstractIntegrationTestBase {
 
         Main.execute(new GraphContentTool(), context, arguments);
 
-        assertTrue(out.toString().contains("\"example.Image\" -> \"p.SelectableSubField\" [style = \"dotted\""));
+        assertTrue(out.toString().contains("\"pcmd.Image\" -> \"p.SelectableSubField\" [style = \"dotted\""));
         assertTrue(out.toString()
             .contains("\"com.polopoly.pcmd.tool.GraphContentToolIT.image\" -> \"subject-15093\" []"));
     }

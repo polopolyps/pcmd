@@ -25,6 +25,7 @@ import com.polopoly.ps.pcmd.argument.ArgumentException;
 import com.polopoly.ps.pcmd.argument.DefaultArguments;
 import com.polopoly.ps.pcmd.tool.ExportFilesTool;
 import com.polopoly.testnext.base.ImportTestContent;
+import com.polopoly.user.server.UserServer;
 import com.polopoly.util.client.PolopolyContext;
 import com.polopoly.util.content.ContentUtil;
 import com.polopoly.util.policy.Util;
@@ -38,6 +39,9 @@ public class ExportFilesToolIT extends AbstractIntegrationTestBase {
 
     @Inject
     private PolicyCMServer cmServer;
+    
+    @Inject
+    private UserServer userServer;
 
     private String imageExternalId = ExportFilesToolIT.class.getName() + ".image";
     private String emptyImageExternalId = ExportFilesToolIT.class.getName() + ".emptyimage";
@@ -46,7 +50,7 @@ public class ExportFilesToolIT extends AbstractIntegrationTestBase {
 
     @Before
     public void setup() throws CMException, ArgumentException {
-        context = new PolopolyContext(cmServer);
+        context = new PolopolyContext(userServer, cmServer);
 
         exportFile(imageExternalId); // image
         exportFile(docExternalId); // files
