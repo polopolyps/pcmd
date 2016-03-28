@@ -1,0 +1,10 @@
+language: java
+os:
+  - linux
+  - osx
+jdk:
+  - oraclejdk7
+script:
+  mvn clean install
+after_failure:
+  - cat target/surefire-reports/*.txt
