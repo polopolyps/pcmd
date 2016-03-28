@@ -1,5 +1,4 @@
 before_install: "git clone -b travis `git config --get remote.origin.url` target/travis"
-script: "mvn deploy --settings target/travis/settings.xml"
 branches:
   except:
   - travis
@@ -9,7 +8,7 @@ os:
 - osx
 jdk:
 - oraclejdk7
-script: mvn clean install
+script: mvn clean install --settings target/travis/settings.xml"
 after_failure:
 - cat target/surefire-reports/*.txt
 env:
