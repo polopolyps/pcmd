@@ -1,4 +1,4 @@
-#PCMD
+#PCMD[![Build Status](https://travis-ci.org/polopolyps/pcmd.svg?branch=master)](https://travis-ci.org/polopolyps/pcmd)
 Polopoly Command Tool (Pcmd) is a collection of utilities for accessing basic Polopoly functionality using the command line. Functionality includes searching for objects, inspecting their properties and modifying or deleting content. Coupled with the standard Linux command-line tools (e.g. grep) this gives powerful possibilities of quickly inspecting or modifying the server state.
 
 ##Standalone distributions
