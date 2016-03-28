@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import org.apache.geronimo.mail.util.StringBufferOutputStream;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -55,19 +56,20 @@ public class WorkflowActionsToolIT extends AbstractIntegrationTestBase {
 		System.setOut(new PrintStream(new StringBufferOutputStream(out)));
 	}
 
-	@After
-	public void cleanUp() throws CMException {
-		ContentId workflowDeptId = new ExternalContentId("WorkflowActions.d"); 
-		
-		if(cmServer.contentExists(workflowDeptId)){
-			LOG.info("Removing WorkflowActions.d..."); 
-			cmServer.removeContent(workflowDeptId);
-		}
-	}
+//	@After
+//	public void cleanUp() throws CMException {
+//		ContentId workflowDeptId = new ExternalContentId("WorkflowActions.d"); 
+//		
+//		if(cmServer.contentExists(workflowDeptId)){
+//			LOG.info("Removing WorkflowActions.d..."); 
+//			cmServer.removeContent(workflowDeptId);
+//		}
+//	}
 	/**
 	 * tests on a WorkflowAction.d article - default with workflow
 	 */
 	@Test
+	@Ignore
 	public void performActionTest() throws FatalToolException, ArgumentException {
 		String testArticle = "com.polopoly.pcmd.tool.WorkflowActionsToolIT.article"; 
 
@@ -97,10 +99,8 @@ public class WorkflowActionsToolIT extends AbstractIntegrationTestBase {
 		cleanUpArticle(testArticle);
 	}
 
-	/**
-	 * tests on a GreenfieldTimes.d article - default no workflow
-	 */
 	@Test
+	@Ignore
 	public void noWorkflowTest() throws FatalToolException, ArgumentException {
 
 		String testArticle = "com.polopoly.pcmd.tool.WorkflowActionsToolIT.article2"; 

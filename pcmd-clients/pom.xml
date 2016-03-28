@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <name>Polopoly Command Tool - Clients Top</name>
   <artifactId>pcmd-clients</artifactId>
@@ -17,19 +18,19 @@
     <jboss-slim.version>1.8</jboss-slim.version>
     <polopoly.jboss-web>http://localhost:${jboss.web.port}</polopoly.jboss-web>
     <jboss.web.port>8081</jboss.web.port>
-    <polopoly.work-path>work</polopoly.work-path>
+    <polopoly.work-path>target/work</polopoly.work-path>
     <polopoly.work-dir>${basedir}/${polopoly.work-path}</polopoly.work-dir>
     <polopoly.work-uri>${project.baseUri}/${polopoly.work-path}</polopoly.work-uri>
     <polopoly-db.version>${polopoly.version}</polopoly-db.version>
     <polopoly.connection-properties>${polopoly.jboss-web}/connection-properties/connection.properties</polopoly.connection-properties>
     <polopoly.import-scanIntervalSeconds>${polopoly.scanIntervalSeconds}</polopoly.import-scanIntervalSeconds>
     <import.password>sysadmin</import.password>
-     <import.username>sysadmin</import.username>
+    <import.username>sysadmin</import.username>
+    <jetty-plugin.version>7.4.5-polopoly-1.13</jetty-plugin.version>
   </properties>
-  
-  
 
   <modules>
+    <module>server-solr-indexer</module>
     <module>10.10.0</module>
     <module>10.10.1</module>
     <module>10.10.1-fp1</module>
@@ -45,24 +46,21 @@
   <dependencies>
     <dependency>
       <groupId>com.polopoly</groupId>
+      <artifactId>legacy-site-plugin</artifactId>
+      <version>${polopoly.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.polopoly</groupId>
       <artifactId>polopoly</artifactId>
       <version>${polopoly.version}</version>
       <scope>runtime</scope>
     </dependency>
-    
-    <!--   <dependency>
-                <artifactId>p-maven-plugin</artifactId>
-                <groupId>com.polopoly.extensions</groupId>
-                <version>${polopoly.version}</version>
-            </dependency> -->
-    
     <dependency>
       <groupId>com.polopoly</groupId>
       <artifactId>testbase</artifactId>
       <version>1.1</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>com.polopoly</groupId>
       <artifactId>polopoly</artifactId>
@@ -70,72 +68,50 @@
       <version>${polopoly.version}</version>
       <scope>provided</scope>
     </dependency>
-
     <dependency>
       <groupId>com.polopoly.ps.tools</groupId>
       <artifactId>pcmd</artifactId>
       <version>${project.version}</version>
     </dependency>
-    
-    <dependency>
-      <groupId>com.polopoly.ps.tools</groupId>
-      <artifactId>pcmd-it</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>com.polopoly.ps.tools</groupId>
-      <artifactId>pcmd-it</artifactId>
-      <classifier>contentdata</classifier>
-      <version>${project.version}</version>
-    </dependency>
-    
-      <dependency>
-        <groupId>commons-logging</groupId>
-        <artifactId>commons-logging</artifactId>
-        <version>1.0.4</version>
-      </dependency>
 
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.0.4</version>
+    </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
       <version>${log4j.version}</version>
     </dependency>
-
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>1.2.17</version>
     </dependency>
-
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-jul</artifactId>
       <version>${log4j.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-jcl</artifactId>
       <version>${log4j.version}</version>
     </dependency>
-
-    <dependency>
+<!--     <dependency>
       <groupId>com.polopoly.ps.tools</groupId>
       <artifactId>pcmd</artifactId>
       <type>test-jar</type>
       <version>${project.version}</version>
       <scope>test</scope>
-    </dependency>
-
+    </dependency> -->
   </dependencies>
-
   <build>
     <plugins>
-
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
-          <executions>
+        <executions>
           <execution>
             <id>unpack</id>
             <phase>process-test-classes</phase>
@@ -153,117 +129,189 @@
               </artifactItems>
             </configuration>
           </execution>
-        </executions> 
+        </executions>
       </plugin>
-
     </plugins>
     <pluginManagement>
       <plugins>
-       <plugin>
-        <groupId>com.polopoly.extensions</groupId>
-        <artifactId>p-maven-plugin</artifactId>
-        <version>${polopoly.version}</version>
-        <configuration>
-        <waitForJetty>true</waitForJetty>
-        <waitForJboss>true</waitForJboss>
-        <workDirectory>${polopoly.work-dir}</workDirectory>
-                    <generatePluginXml>false</generatePluginXml>
-                    <optionalPolopolyDir>true</optionalPolopolyDir>
-                    <failOnMissingContentDataJarFile>false</failOnMissingContentDataJarFile>
-                    <username>${import.username}</username>
-                    <password>${import.password}</password>
-                    <logImport>true</logImport>
-                    <connectionPropertiesUrl>${polopoly.connection-properties}</connectionPropertiesUrl>
-                    <scanIntervalSeconds>${polopoly.import-scanIntervalSeconds}</scanIntervalSeconds>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>com.polopoly.jboss</groupId>
-        <artifactId>jboss-maven-plugin</artifactId>
-        <version>${jboss-plugin.version}</version>
-        <configuration>
-        <daemon>true</daemon>
-        <stopPort>8005</stopPort>
-        <stopKey>STOP</stopKey>
-          <environments>
-            <environment>
-              <name>connectionPropertiesFile</name>
-              <value>${basedir}/../src/main/configuration/connection.properties</value>
-            </environment>
-            <environment>
-              <name>p.ejbConfigurationUrl</name>
-              <value>${basedir}/../src/main/configuration/ejb-configuration.properties</value>
-            </environment>
-          </environments>
-          <bindAddress>0.0.0.0</bindAddress>
-          <startOptions>-Djboss.web.port=${jboss.web.port}
-            -Dtemporary-file-service-directory=${polopoly.work-dir}/file-storage-server/tmp
-            -Dcontent-file-service-directory=${polopoly.work-dir}/file-storage-server/content
-            -Dp.connectionPropertiesUrl=${polopoly.connection-properties}</startOptions>
-          <jbossHome>${polopoly.work-dir}/embedded-jboss</jbossHome>
-          <logToConsole>true</logToConsole>
-          <jbossDistribution>
-            <groupId>com.polopoly.jboss</groupId>
-            <artifactId>slim-jboss-4.0.5</artifactId>
-            <version>${jboss-slim.version}</version>
-            <type>zip</type>
-          </jbossDistribution>
-          <serverPatches>
-            <serverPatch>
-              <groupId>com.polopoly</groupId>
-              <artifactId>jboss-derby-database</artifactId>
-              <version>${polopoly-db.version}</version>
+        <plugin>
+          <groupId>com.polopoly.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <version>${jetty-plugin.version}</version>
+          <configuration>
+            <scanIntervalSeconds>${polopoly.jetty-scanIntervalSeconds}</scanIntervalSeconds>
+            <loggingPropertiesFile>${basedir}/../src/test/jetty-conf/logging.properties</loggingPropertiesFile>
+            <jettyConfig>${basedir}/../src/test/jetty-conf/jetty-jmx.xml</jettyConfig>
+            <excludedWebApps>
+              <webApp>server-content-hub</webApp>
+            </excludedWebApps>
+            <connectors>
+              <connector
+                implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                <port>${jetty.port}</port>
+                <maxIdleTime>60000</maxIdleTime>
+                <requestHeaderSize>20000</requestHeaderSize>
+              </connector>
+            </connectors>
+            <systemProperties>
+              <systemProperty>
+                <name>org.eclipse.jetty.server.Request.maxFormContentSize</name>
+                <value>400000</value>
+              </systemProperty>
+              <systemProperty>
+                <name>polopoly.forcePreviewWithoutGui</name>
+                <value>true</value>
+              </systemProperty>
+              <systemProperty>
+                <name>clientCacheBaseDir</name>
+                <value>${polopoly.work-dir}/tmp</value>
+              </systemProperty>
+              <systemProperty>
+                <name>solr.solr.home</name>
+                <value>${basedir}/../src/test/solr-config/solr</value>
+              </systemProperty>
+              <systemProperty>
+                <name>reindexIfEmptyIndex</name>
+                <value>true</value>
+              </systemProperty>
+              <systemProperty>
+                <name>p.connectionPropertiesUrl</name>
+                <value>${polopoly.connection-properties}</value>
+              </systemProperty>
+              <systemProperty>
+                <name>fileserver.FileRepositoryPath</name>
+                <value>${polopoly.work-dir}/file_repository/</value>
+              </systemProperty>
+              <systemProperty>
+                <name>fileserver.ExecutionMode</name>
+                <value>${targetEnv}</value>
+              </systemProperty>
+            </systemProperties>
+            <externalArtifactContextHandlers>
+              <contextHandler
+                implementation="org.mortbay.jetty.plugin.JettyWebAppContext">
+                <warArtifact>
+                  <groupId>com.polopoly</groupId>
+                  <artifactId>solr-war</artifactId>
+                  <version>${polopoly.version}</version>
+                  <type>war</type>
+                </warArtifact>
+                <contextPath>/solr</contextPath>
+              </contextHandler>
+              <contextHandler
+                implementation="org.mortbay.jetty.plugin.JettyWebAppContext">
+                <warArtifact>
+                  <groupId>com.polopoly.ps.tools</groupId>
+                  <artifactId>server-solr-indexer</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                </warArtifact>
+                <contextPath>/textmining</contextPath>
+              </contextHandler>
+            </externalArtifactContextHandlers>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>com.polopoly.extensions</groupId>
+          <artifactId>p-maven-plugin</artifactId>
+          <version>${polopoly.version}</version>
+          <configuration>
+            <waitForJetty>true</waitForJetty>
+            <waitForJboss>true</waitForJboss>
+            <workDirectory>${polopoly.work-dir}</workDirectory>
+            <generatePluginXml>false</generatePluginXml>
+            <optionalPolopolyDir>true</optionalPolopolyDir>
+            <failOnMissingContentDataJarFile>false</failOnMissingContentDataJarFile>
+            <username>${import.username}</username>
+            <password>${import.password}</password>
+            <logImport>true</logImport>
+            <connectionPropertiesUrl>${polopoly.connection-properties}</connectionPropertiesUrl>
+            <scanIntervalSeconds>${polopoly.import-scanIntervalSeconds}</scanIntervalSeconds>
+          </configuration>
+          <executions>
+            <execution>
+              <id>p-it-start</id>
+              <goals>
+                <goal>start</goal>
+              </goals>
+              <phase>pre-integration-test</phase>
+            </execution>
+            <execution>
+              <id>p-it-stop</id>
+              <goals>
+                <goal>stop</goal>
+              </goals>
+              <phase>post-integration-test</phase>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>com.polopoly.jboss</groupId>
+          <artifactId>jboss-maven-plugin</artifactId>
+          <version>${jboss-plugin.version}</version>
+          <configuration>
+            <daemon>true</daemon>
+            <stopPort>8005</stopPort>
+            <stopKey>STOP</stopKey>
+            <environments>
+              <environment>
+                <name>connectionPropertiesFile</name>
+                <value>${basedir}/../src/main/configuration/connection.properties</value>
+              </environment>
+              <environment>
+                <name>p.ejbConfigurationUrl</name>
+                <value>${basedir}/../src/main/configuration/ejb-configuration.properties</value>
+              </environment>
+            </environments>
+            <bindAddress>0.0.0.0</bindAddress>
+            <startOptions>-Djboss.web.port=${jboss.web.port}
+              -Dtemporary-file-service-directory=${polopoly.work-dir}/file-storage-server/tmp
+              -Dcontent-file-service-directory=${polopoly.work-dir}/file-storage-server/content
+              -Dp.connectionPropertiesUrl=${polopoly.connection-properties}</startOptions>
+            <jbossHome>${polopoly.work-dir}/embedded-jboss</jbossHome>
+            <logToConsole>true</logToConsole>
+            <jbossDistribution>
+              <groupId>com.polopoly.jboss</groupId>
+              <artifactId>slim-jboss-4.0.5</artifactId>
+              <version>${jboss-slim.version}</version>
               <type>zip</type>
-            </serverPatch>
-          </serverPatches>
-          <deployments>
-            <deployment>
-              <groupId>com.polopoly</groupId>
-              <artifactId>cm-server</artifactId>
-              <version>${polopoly.version}</version>
-              <type>ear</type>
-            </deployment>
-            <deployment>
-              <groupId>com.polopoly</groupId>
-              <artifactId>connection-properties</artifactId>
-              <version>${polopoly.version}</version>
-              <type>war</type>
-            </deployment>
-            <deployment>
-              <groupId>com.polopoly</groupId>
-              <artifactId>content-hub</artifactId>
-              <version>${polopoly.version}</version>
-              <type>war</type>
-            </deployment>
-            <deployment>
-              <groupId>com.polopoly</groupId>
-              <artifactId>file-storage-server</artifactId>
-              <version>${polopoly.version}</version>
-              <type>war</type>
-            </deployment>
-          </deployments>
-        </configuration>
-        
-        <executions>
-              <execution>
-              <id>start</id>
-                <goals>
-                  <goal>start</goal>
-                </goals>
-                <phase>pre-integration-test</phase>
-              </execution>
-               <execution>
-               <id>stop</id>
-                <goals>
-                  <goal>stop</goal>
-                </goals>
-                <phase>post-integration-test</phase>
-              </execution>
-            </executions>
-        
-      </plugin>
-
+            </jbossDistribution>
+            <serverPatches>
+              <serverPatch>
+                <groupId>com.polopoly</groupId>
+                <artifactId>jboss-derby-database</artifactId>
+                <version>${polopoly-db.version}</version>
+                <type>zip</type>
+              </serverPatch>
+            </serverPatches>
+            <deployments>
+              <deployment>
+                <groupId>com.polopoly</groupId>
+                <artifactId>cm-server</artifactId>
+                <version>${polopoly.version}</version>
+                <type>ear</type>
+              </deployment>
+              <deployment>
+                <groupId>com.polopoly</groupId>
+                <artifactId>connection-properties</artifactId>
+                <version>${polopoly.version}</version>
+                <type>war</type>
+              </deployment>
+              <deployment>
+                <groupId>com.polopoly</groupId>
+                <artifactId>content-hub</artifactId>
+                <version>${polopoly.version}</version>
+                <type>war</type>
+              </deployment>
+              <deployment>
+                <groupId>com.polopoly</groupId>
+                <artifactId>file-storage-server</artifactId>
+                <version>${polopoly.version}</version>
+                <type>war</type>
+              </deployment>
+            </deployments>
+          </configuration>
+        </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
           <version>2.6</version>
@@ -279,8 +327,6 @@
             </execution>
           </executions>
         </plugin>
-
-
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>appassembler-maven-plugin</artifactId>
@@ -307,7 +353,6 @@
                   </extraArguments>
                 </jvmSettings>
               </program>
-
               <program>
                 <mainClass>com.polopoly.ps.pcmd.Main</mainClass>
                 <id>pcmdDebug</id>
@@ -338,8 +383,6 @@
             <unixScriptTemplate>${basedir}/../src/main/script/unixBinTemplate</unixScriptTemplate>
           </configuration>
         </plugin>
-
-
         <plugin>
           <artifactId>maven-dependency-plugin</artifactId>
           <executions>
@@ -362,7 +405,6 @@
             </execution>
           </executions>
         </plugin>
-
         <plugin>
           <artifactId>maven-failsafe-plugin</artifactId>
           <executions>
@@ -377,12 +419,33 @@
             </execution>
           </executions>
         </plugin>
-
       </plugins>
     </pluginManagement>
   </build>
 
-
+  <profiles>
+    <profile>
+      <id>IT</id>
+      <activation>
+        <property>
+          <name>it</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>com.polopoly.ps.tools</groupId>
+          <artifactId>pcmd-it</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.polopoly.ps.tools</groupId>
+          <artifactId>pcmd-it</artifactId>
+          <classifier>contentdata</classifier>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 
 
 

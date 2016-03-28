@@ -56,7 +56,7 @@ public class SetPermissionToolGroupIT extends AbstractIntegrationTestBase {
 
     public void createGroupPermission() throws ArgumentException {
         List<String> args = new ArrayList<String>();
-        args.add("GreenfieldTimes.d");
+        args.add("p.GlobalSiteDepartment");
 
         Map<String, List<String>> options = new HashMap<String, List<String>>();
         options.put("group", Arrays.asList("Test Tool Group"));
@@ -75,7 +75,9 @@ public class SetPermissionToolGroupIT extends AbstractIntegrationTestBase {
         // Group
         cmServer.setCurrentCaller(new Caller(new UserId("6001")));
 
-        assertTrue(cmServer.checkPermission(new ExternalContentId("GreenfieldTimes.d"), "2WRITE", false));
-        assertFalse(cmServer.checkPermission(new ExternalContentId("GreenfieldTimes.d"), "2READ", false));
+        
+        
+        assertTrue(cmServer.checkPermission(new ExternalContentId("p.GlobalSiteDepartment"), "2WRITE", false));
+        assertFalse(cmServer.checkPermission(new ExternalContentId("p.GlobalSiteDepartment"), "2READ", false));
     }
 }

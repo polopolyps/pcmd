@@ -1,33 +1,17 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<name>Polopoly Command Tool - ${polopoly.version}</name>
-	<artifactId>pcmd-client-10.10.1-fp1</artifactId>
-	<packaging>jar</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <name>Polopoly Command Tool - ${polopoly.version}</name>
+  <artifactId>pcmd-client-10.10.1-fp1</artifactId>
+  <packaging>jar</packaging>
 
-	<parent>
-		<groupId>com.polopoly.ps.tools</groupId>
-		<artifactId>pcmd-clients</artifactId>
-		<version>3.2-SNAPSHOT</version>
-	</parent>
+  <parent>
+    <groupId>com.polopoly.ps.tools</groupId>
+    <artifactId>pcmd-clients</artifactId>
+    <version>3.2-SNAPSHOT</version>
+  </parent>
 
-	<properties>
-		<polopoly.version>10.10.1-fp1</polopoly.version>
-  <jboss-plugin.version>1.28</jboss-plugin.version>
-    <jboss-slim.version>1.8</jboss-slim.version>
-    <polopoly.jboss-web>http://localhost:${jboss.web.port}</polopoly.jboss-web>
-    <jboss.web.port>8081</jboss.web.port>
-    <polopoly.work-path>work</polopoly.work-path>
-    <polopoly.work-dir>${basedir}/${polopoly.work-path}</polopoly.work-dir>
-    <polopoly.work-uri>${project.baseUri}/${polopoly.work-path}</polopoly.work-uri>
-    <polopoly-db.version>${polopoly.version}</polopoly-db.version>
-    <polopoly.connection-properties>${polopoly.jboss-web}/connection-properties/connection.properties</polopoly.connection-properties>
-    <polopoly.import-scanIntervalSeconds>${polopoly.scanIntervalSeconds}</polopoly.import-scanIntervalSeconds>
-    <import.password>sysadmin</import.password>
-     <import.username>sysadmin</import.username>
-     <jetty-plugin.version>7.4.5-polopoly-1.9</jetty-plugin.version>
-     <jetty.port>8080</jetty.port>
-  </properties>
 
   <build>
     <plugins>
@@ -35,158 +19,9 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>appassembler-maven-plugin</artifactId>
       </plugin>
-      
-             <plugin>
-        <groupId>com.polopoly.extensions</groupId>
-        <artifactId>p-maven-plugin</artifactId>
-        <version>${polopoly.version}</version>
-        <configuration>
-        <waitForJetty>true</waitForJetty>
-        <waitForJboss>true</waitForJboss>
-        <workDirectory>${polopoly.work-dir}</workDirectory>
-                    <generatePluginXml>false</generatePluginXml>
-                    <optionalPolopolyDir>true</optionalPolopolyDir>
-                    <failOnMissingContentDataJarFile>false</failOnMissingContentDataJarFile>
-                    <username>${import.username}</username>
-                    <password>${import.password}</password>
-                    <logImport>true</logImport>
-                    <connectionPropertiesUrl>${polopoly.connection-properties}</connectionPropertiesUrl>
-                    <scanIntervalSeconds>${polopoly.import-scanIntervalSeconds}</scanIntervalSeconds>
-        </configuration>
-       <!--   <executions>
-              <execution>
-              <id>import</id>
-                <goals>
-                  <goal>import-scan</goal>
-                </goals>
-                <phase>pre-integration-test</phase>
-              </execution>
-            </executions>-->
-      </plugin>
-
-    <!--   <plugin>
-        <groupId>com.polopoly.jboss</groupId>
-        <artifactId>jboss-maven-plugin</artifactId>
-        <configuration>
-          <environments>
-            <environment>
-              <name>connectionPropertiesFile</name>
-              <value>${basedir}/../src/main/configuration/connection.properties</value>
-            </environment>
-            <environment>
-              <name>p.ejbConfigurationUrl</name>
-              <value>${basedir}/../src/main/configuration/ejb-configuration.properties</value>
-            </environment>
-          </environments>
-          <bindAddress>0.0.0.0</bindAddress>
-          <startOptions>-Djboss.web.port=${jboss.web.port}
-            -Dtemporary-file-service-directory=${polopoly.work-dir}/file-storage-server/tmp
-            -Dcontent-file-service-directory=${polopoly.work-dir}/file-storage-server/content
-            -Dp.connectionPropertiesUrl=${polopoly.connection-properties}</startOptions>
-          <jbossHome>${polopoly.work-dir}/embedded-jboss</jbossHome>
-          <logToConsole>true</logToConsole>
-          <jbossDistribution>
-            <groupId>com.polopoly.jboss</groupId>
-            <artifactId>slim-jboss-4.0.5</artifactId>
-            <version>${jboss-slim.version}</version>
-            <type>zip</type>
-          </jbossDistribution>
-          <serverPatches>
-            <serverPatch>
-              <groupId>com.polopoly</groupId>
-              <artifactId>jboss-derby-database</artifactId>
-              <version>${polopoly-db.version}</version>
-              <type>zip</type>
-            </serverPatch>
-          </serverPatches>
-          <deployments>
-            <deployment>
-              <groupId>com.polopoly</groupId>
-              <artifactId>cm-server</artifactId>
-              <version>${polopoly.version}</version>
-              <type>ear</type>
-            </deployment>
-            <deployment>
-              <groupId>com.polopoly</groupId>
-              <artifactId>connection-properties</artifactId>
-              <version>${polopoly.version}</version>
-              <type>war</type>
-            </deployment>
-            <deployment>
-              <groupId>com.polopoly</groupId>
-              <artifactId>content-hub</artifactId>
-              <version>${polopoly.version}</version>
-              <type>war</type>
-            </deployment>
-            <deployment>
-              <groupId>com.polopoly</groupId>
-              <artifactId>file-storage-server</artifactId>
-              <version>${polopoly.version}</version>
-              <type>war</type>
-            </deployment>
-          </deployments>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>com.polopoly.jetty</groupId>
-        <artifactId>jetty-maven-plugin</artifactId>
-        <version>${jetty-plugin.version}</version>
-        <configuration>
-          <jettyConfig>${basedir}/../src/main/configuration/jetty-jmx.xml</jettyConfig>
-          <connectors>
-            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-              <port>${jetty.port}</port>
-              <maxIdleTime>60000</maxIdleTime>
-            </connector>
-          </connectors>
-          <scanIntervalSeconds>${polopoly.jetty-scanIntervalSeconds}</scanIntervalSeconds>
-          <loggingPropertiesFile>${basedir}/../src/main/configuration/logging.properties</loggingPropertiesFile>
-          <systemProperties>
-            <systemProperty>
-              <name>polopoly.forcePreviewWithoutGui</name>
-              <value>true</value>
-            </systemProperty>
-            <systemProperty>
-              <name>clientCacheBaseDir</name>
-              <value>${polopoly.work-dir}/tmp</value>
-            </systemProperty>
-            <systemProperty>
-              <name>statisticsBaseDirectory</name>
-              <value>${polopoly.work-dir}/stats</value>
-            </systemProperty>
-            <systemProperty>
-              <name>solr.solr.home</name>
-              <value>${polopoly.work-dir}/solr</value>
-            </systemProperty>
-            <systemProperty>
-              <name>reindexIfEmptyIndex</name>
-              <value>true</value>
-            </systemProperty>
-            <systemProperty>
-              <name>p.connectionPropertiesUrl</name>
-              <value>${polopoly.connection-properties}</value>
-            </systemProperty>
-          </systemProperties>
-          <externalArtifactContextHandlers>
-            <contextHandler implementation="org.mortbay.jetty.plugin.JettyWebAppContext">
-              <warArtifact>
-                <groupId>org.apache.solr</groupId>
-                <artifactId>solr</artifactId>
-                <version>${solr.version}</version>
-                <type>war</type>
-              </warArtifact>
-              <contextPath>/solr</contextPath>
-            </contextHandler>
-          </externalArtifactContextHandlers>
-        </configuration>
-      </plugin>
- -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
       </plugin>
-
-
-
     </plugins>
   </build>
 
@@ -201,28 +36,17 @@
       <build>
         <plugins>
           <plugin>
+            <groupId>com.polopoly.extensions</groupId>
+            <artifactId>p-maven-plugin</artifactId>
+          </plugin>
+          <plugin>
             <groupId>com.polopoly.jboss</groupId>
             <artifactId>jboss-maven-plugin</artifactId>
-            <executions>
-              <execution>
-              <id>start</id>
-                <goals>
-                  <goal>start</goal>
-                </goals>
-                <phase>pre-integration-test</phase>
-              </execution>
-               <execution>
-               <id>stop</id>
-                <goals>
-                  <goal>stop</goal>
-                </goals>
-                <phase>post-integration-test</phase>
-              </execution>
-            </executions>
           </plugin>
-          
-       
-          
+          <plugin>
+            <groupId>com.polopoly.jetty</groupId>
+            <artifactId>jetty-maven-plugin</artifactId>
+          </plugin>
           <plugin>
             <artifactId>maven-failsafe-plugin</artifactId>
           </plugin>

@@ -59,7 +59,7 @@ public class CheckPermissionToolIT extends AbstractIntegrationTestBase {
     @Test
     public void checkUserWithValidPermission() throws FatalToolException, ArgumentException {
         List<String> args = new ArrayList<String>();
-        args.add("GreenfieldTimes.d");
+        args.add("p.GlobalSiteDepartment");
 
         HashMap<String, List<String>> options = new HashMap<String, List<String>>();
         options.put("permission", Arrays.asList("1READ"));
@@ -77,7 +77,7 @@ public class CheckPermissionToolIT extends AbstractIntegrationTestBase {
     public void checkUserWithInvalidPermission() throws FatalToolException, ArgumentException {
     	
         List<String> args = new ArrayList<String>();
-        args.add("GreenfieldTimes.d");
+        args.add("p.GlobalSiteDepartment");
 
         HashMap<String, List<String>> options = new HashMap<String, List<String>>();
         options.put("permission", Arrays.asList("3WRITE"));

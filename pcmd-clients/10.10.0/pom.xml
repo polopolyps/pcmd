@@ -48,18 +48,19 @@
   <profiles>
     <profile>
       <id>IT</id>
-      <activation>
-        <property>
-          <name>it</name>
-        </property>
-      </activation>
       <build>
         <plugins>
           <plugin>
+            <groupId>com.polopoly.extensions</groupId>
+            <artifactId>p-maven-plugin</artifactId>
+          </plugin>
+          <plugin>
             <groupId>com.polopoly.jboss</groupId>
             <artifactId>jboss-maven-plugin</artifactId>
-            <version>${jboss-plugin.version}</version>
-            
+          </plugin>
+          <plugin>
+            <groupId>com.polopoly.jetty</groupId>
+            <artifactId>jetty-maven-plugin</artifactId>
           </plugin>
           <plugin>
             <artifactId>maven-failsafe-plugin</artifactId>
