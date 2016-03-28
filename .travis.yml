@@ -8,7 +8,7 @@ os:
 - osx
 jdk:
 - oraclejdk7
-script: mvn clean install --settings target/travis/settings.xml"
+script: "mvn clean install --settings target/travis/settings.xml"
 after_failure:
 - cat target/surefire-reports/*.txt
 env:
