@@ -7,7 +7,6 @@ branches:
 language: java
 os:
 - linux
-- osx
 jdk:
 - oraclejdk7
 after_failure:
