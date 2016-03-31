@@ -1,37 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template-definition version="1.0" xmlns="http://www.polopoly.com/polopoly/cm/app/xml">
-  <!-- Input template for image reference metadata for in-context editing -->
-  <input-template name="example.ImageRefMetaInContext" label="cm.template.p.siteengine.ImageRefMetaInContext.it">
-    <policy>com.polopoly.cm.policy.ReferenceMetaDataPolicy</policy>
-    <param name="editorContentListEntryWidget">example.content.OResourceContentListEntryPolicyWidget</param>
-    <param name="viewerContentListEntryWidget">example.content.OResourceContentListEntryPolicyWidget</param>
-    <field name="alttext" input-template="p.TextInput" label="cm.template.p.siteengine.ImageRefMetaInContext.it.AltText">
-      <param name="inlineHelp">true</param>
-      <help>If empty, image name will be used.</help>
-    </field>
-    <field name="imagetext" input-template="p.TextArea" label="cm.template.p.siteengine.ImageRefMetaInContext.it.ImageText">
-      <param name="rows">2</param>
-      <param name="cols">32</param>
-    </field>
-  </input-template>
-  <!-- Input template for image reference metadata (rarely used since we use in-context editing) -->
-  <input-template name="example.ImageRefMeta" label="cm.template.p.siteengine.ImageRefMeta.it">
-    <policy>com.polopoly.cm.policy.ReferenceMetaDataPolicy</policy>
-    <editor>com.polopoly.cm.app.widget.OTopPolicyWidget</editor>
-    <viewer>com.polopoly.cm.app.widget.OTopPolicyWidget</viewer>
-    <idparam name="contextInputTemplate:orchid_TOCENTRY">
-      <externalid>example.ImageRefMetaInContext</externalid>
-    </idparam>
-    <field name="alttext" input-template="p.TextInput" label="cm.template.p.siteengine.ImageRefMeta.it.AltText">
-      <param name="inlineHelp">true</param>
-      <help>Will fallback on image content name if not set</help>
-    </field>
-    <field name="imagetext" input-template="p.TextArea" label="cm.template.p.siteengine.ImageRefMeta.it.ImageText">
-      <param name="rows">2</param>
-      <param name="cols">32</param>
-    </field>
-  </input-template>
-  <input-template name="example.Image" label="cm.template.p.siteengine.Image.it">
+  <input-template name="pcmd.Image" label="cm.template.p.siteengine.Image.it">
     <policy>com.polopolyps.pcmd.test.ImagePolicy</policy>
     <editor>com.polopoly.cm.app.widget.OTopPolicyWidget</editor>
     <viewer>com.polopoly.cm.app.widget.OTopPolicyWidget</viewer>

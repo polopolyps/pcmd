@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template-definition version="1.0" xmlns="http://www.polopoly.com/polopoly/cm/app/xml">
+  <input-template name="pcmd.File" label="cm.template.example.File">
+    <policy>com.polopolyps.pcmd.test.FileResourcePolicy</policy>
+    <editor>com.polopoly.cm.app.widget.OTopPolicyWidget</editor>
+    <viewer>com.polopoly.cm.app.widget.OTopPolicyWidget</viewer>
+    <type>Article</type>
+    <param name="templateIcon">document.png</param>
+    <param name="renderTemplateIconInSelect">true</param>
+    <param name="ViewState_insert">false</param>
+    <param name="EditState_saveAndClose">true</param>
+    <param name="EditState_saveAndInsert">false</param>
+    <param name="EditState_saveAndFastInsert">false</param>
+    <param name="EditState_saveAndView">true</param>
+    <param name="EditNewState_saveAndClose">false</param>
+    <param name="EditNewState_saveAndInsert">true</param>
+    <param name="EditNewState_saveAndFastInsert">false</param>
+    <param name="EditNewState_saveAndView">false</param>
+    <param name="ViewState_copy">true</param>
+    <param name="cloneSecurityParent">currentOrHome</param>
+    <param name="titleOfNewContent">cm.template.example.File.new</param>
+    <layout name="menu" input-template="p.PageMenu">
+      <layout name="standard" input-template="p.Page" label="cm.general.General">
+        <field name="file" input-template="p.SimpleFileUpload" label="cm.template.example.File.FileUpload" required="true">
+        </field>
+
+        <field name="name" input-template="p.ContentName" label="cm.label.Title" required="true" />
+        <field name="lead" input-template="p.TextArea" label="cm.general.Description">
+          <param name="rows">3</param>
+          <param name="cols">50</param>
+          <param name="inlineHelp">true</param>
+          <help>cm.template.example.File.Description.help</help>
+        </field>
+
+        <field name="byline" input-template="p.TextInput" label="cm.general.Byline">
+          <param name="inlineHelp">true</param>
+          <help>cm.template.example.File.ByLine.help</help>
+        </field>
+
+        <field name="contact" input-template="p.TextInput" label="cm.general.Contact">
+          <param name="inlineHelp">true</param>
+          <help>cm.template.example.File.Contact.help</help>
+        </field>
+
+        <field name="licenseurl" input-template="p.TextInput" label="cm.template.example.File.LicenseURL">
+          <param name="inlineHelp">true</param>
+          <help>cm.template.example.File.LicenseURL.help</help>
+        </field>
+
+        <field name="categorization" input-template="p.siteengine.Content.Categorization" label="cm.general.Categorization">
+          <param name="categoryDimensionsAlias">sites</param>
+          <param name="inlineHelp">true</param>
+          <help>cm.template.example.File.Categorization.help</help>
+        </field>
+      </layout>
+      <layout name="advanced" input-template="p.Page" label="cm.general.Advanced">
+        <field name="parent" input-template="p.SecurityParentSelect" label="cm.label.HomeDepartment">
+          <param name="inlineHelp">true</param>
+          <help>cm.template.example.File.HomeDepartment.help</help>
+        </field>        
+      </layout>
+    </layout>
+    
+  </input-template>
+ 
+</template-definition>

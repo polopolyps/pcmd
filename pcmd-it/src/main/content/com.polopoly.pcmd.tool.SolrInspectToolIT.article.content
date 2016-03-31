@@ -2,4 +2,4 @@ id:com.polopoly.pcmd.tool.SolrInspectToolIT.article
 inputtemplate:pcmd.StandardArticle
 major:1
 name:com.polopoly.pcmd.tool.SolrInspectToolIT.article
-securityparent:p.siteengine.Sites.d
+securityparent:p.GlobalSiteDepartment

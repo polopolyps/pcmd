@@ -9,7 +9,7 @@ component:author:value:Andy Miller
 list:images:com.polopoly.pcmd.tool.SearchToolIT.image
 
 id:.image
-inputtemplate:example.Image
+inputtemplate:pcmd.Image
 major:1
 securityparent:p.GlobalSiteDepartment
 name:com.polopoly.pcmd.tool.SearchToolIT Image

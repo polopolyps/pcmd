@@ -1,6 +1,5 @@
-#id:com.polopoly.pcmd.tool.AclToolIT.image
-#inputtemplate:example.Image
-#securityparent:p.siteengine.Sites.d
-#component:imageType:subField:image
-#component:polopoly.Content:name:com.polopoly.pcmd.tool.AclToolIT.image
-#ref:polopoly.Content:inputTemplateId:example.Image
+id:com.polopoly.pcmd.tool.AclToolIT.image
+inputtemplate:pcmd.Image
+securityparent:p.GlobalSiteDepartment
+component:imageType:subField:image
+component:polopoly.Content:name:com.polopoly.pcmd.tool.AclToolIT.image

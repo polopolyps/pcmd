@@ -120,7 +120,7 @@
                 <param name="insertPosition">top</param>
                 <param name="major">1</param>
                 <idparam name="inputTemplateId">
-                  <externalid>example.Image</externalid>
+                  <externalid>pcmd.Image</externalid>
                 </idparam>
                 <param name="createWithSecurityParent">true</param>
                 <param name="securityParentAlias">content</param>
@@ -143,7 +143,7 @@
                 <param name="insertPosition">top</param>
                 <param name="major">1</param>
                 <idparam name="inputTemplateId">
-                  <externalid>example.Image</externalid>
+                  <externalid>pcmd.Image</externalid>
                 </idparam>
                 <param name="createWithSecurityParent">true</param>
                 <param name="securityParentAlias">content</param>
