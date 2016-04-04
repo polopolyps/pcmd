@@ -22,6 +22,13 @@
       <artifactId>solr-indexer</artifactId>
       <version>${polopoly.version}</version>
     </dependency>
+    
+     <dependency>
+      <groupId>com.polopoly.ps.tools</groupId>
+      <artifactId>pcmd-it</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
   </dependencies>
 
   <build>

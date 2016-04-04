@@ -1,0 +1,20 @@
+#PCMD[![Build Status](https://travis-ci.org/polopolyps/pcmd.svg?branch=master)](https://travis-ci.org/polopolyps/pcmd)
+Polopoly Command Tool (Pcmd) is a collection of utilities for accessing basic Polopoly functionality using the command line. Functionality includes searching for objects, inspecting their properties and modifying or deleting content. Coupled with the standard Linux command-line tools (e.g. grep) this gives powerful possibilities of quickly inspecting or modifying the server state.
+
+##Standalone distributions
+${project.name}
+
+
+| Polopoly version| Distribution        
+| ------------- |-------------|                                                   
+| 10.10.0       | [pcmd-client-10.10.0-${project.version}-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.10.0/${project.version}/pcmd-client-10.10.0-${project.version}-standalone.zip)            |
+| 10.10.1       | [pcmd-client-10.10.1-${project.version}-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.10.1/${project.version}/pcmd-client-10.10.1-${project.version}-standalone.zip)              | 
+| 10.10.1-fp1   | [pcmd-client-10.10.1-fp1-${project.version}-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.10.1-fp1/${project.version}/pcmd-client-10.10.1-fp1-${project.version}-standalone.zip)              |
+| 10.10.1-fp2   | [pcmd-client-10.10.1-fp2-${project.version}-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.10.1-fp2/${project.version}/pcmd-client-10.10.1-fp2-${project.version}-standalone.zip)   |
+| 10.10.1-fp3   | [pcmd-client-10.10.1-fp3-${project.version}-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.10.1-fp3/${project.version}/pcmd-client-10.10.1-fp3-${project.version}-standalone.zip)  |
+| 10.12.0       | [pcmd-client-10.12.0-${project.version}-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.12.0/${project.version}/pcmd-client-10.12.0-${project.version}-standalone.zip)               |
+| 10.12.0-fp1   | [pcmd-client-10.12.0-fp1-${project.version}-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.12.0-fp1/${project.version}/pcmd-client-10.12.0-fp1-${project.version}-standalone.zip)   |
+| 10.14.0       | [pcmd-client-10.14.0-${project.version}-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.14.0/${project.version}/pcmd-client-10.14.0-${project.version}-standalone.zip)               |
+| 10.14.0-fp1   | [pcmd-client-10.14.0-fp1-${project.version}-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.14.0-fp1/${project.version}/pcmd-client-10.14.0-fp1-${project.version}-standalone.zip)  |
+| 10.16.0   | [pcmd-client-10.16-${project.version}-standalone.zip](http://maven.polopoly.com/nexus/content/repositories/professional-services/com/polopoly/ps/tools/pcmd-client-10.16/${project.version}/pcmd-client-10.16-${project.version}-standalone.zip)  |
+

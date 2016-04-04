@@ -7,8 +7,33 @@
   <packaging>pom</packaging>
   <name>Polopoly Command Tool - TOP</name>
   <organization>
-    <name>Atex Polopoly PS</name>
+    <name>Atex</name>
+    <url>http://atex.com</url>
   </organization>
+  
+  <issueManagement>
+    <system>Jira</system>
+    <url>http://support.atex.com/jira/browse/GLOBALPS</url>
+  </issueManagement>
+  
+  
+  
+  <description>Polopoly Command Tool</description>
+  
+  <ciManagement>
+    <system>travis</system>
+    <url>https://travis-ci.org/polopolyps/pcmd</url>
+    <notifiers>
+      <notifier>
+        <type>slack</type>
+        <sendOnError>true</sendOnError>
+        <sendOnFailure>true</sendOnFailure>
+        <sendOnSuccess>false</sendOnSuccess>
+        <sendOnWarning>false</sendOnWarning>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+  
   <properties>
     <polopoly.version>10.14.0</polopoly.version>
     <solr.version>4.5.0</solr.version>
@@ -51,6 +76,17 @@
       <name>Polopoly PS</name>
       <url>http://maven.polopoly.com/nexus/content/groups/polopoly-ps</url>
     </repository>
+    
+    <repository>
+          <id>sonatype-forge</id>
+          <url>https://repository.sonatype.org/content/groups/forge</url>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+        </repository>
   </repositories>
 
   <pluginRepositories>
@@ -120,6 +156,11 @@
       </plugins>
     </pluginManagement>
     <plugins>
+    <plugin>    
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-site-plugin</artifactId>
+              <version>3.3</version>
+            </plugin>
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-changelog-plugin</artifactId>
@@ -140,12 +181,14 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
       </plugin>
+      
+      
 
     </plugins>
   </build>
   
   
-  <reporting>
+ <!--  <reporting>
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -153,6 +196,74 @@
         <version>3.0.3</version>
       </plugin>
     </plugins>
-  </reporting>
+  </reporting> -->
+  
+  
+  <profiles>
+  
+  <profile>
+  <id>site-deploy</id>
+  
+  <build>
+  <plugins>
+  
+  <plugin>
+    <!-- Deploy the web site -->
+    <groupId>com.github.github</groupId>
+    <artifactId>site-maven-plugin</artifactId>
+    <version>0.9</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>site</goal>
+            </goals>
+            <!-- select the Maven phase in which the plugin will be executed -->
+            <phase>site-deploy</phase>
+            <configuration>
+                <!-- Plugin configuration ges here -->
+
+                <server>github</server>
+
+                <!-- The commit message -->
+                <message>Building site for my project</message>
+                <!-- The location where the site is uploaded -->
+                <path>${site.path}</path>
+                <!-- Use merge or override the content -->
+                <merge>true</merge>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+  
+  </plugins>
+  
+  </build>
+  
+ 
+  
+  
+  </profile>
+  
+  </profiles>
+  
+   <!-- <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.6</version>
+        <reportSets>
+        <reportSet>
+        
+        <reports>
+        <report>index</report>
+        <report>dependency-info</report>
+        </reports>
+        </reportSet>
+        </reportSets>
+
+      </plugin>
+      </plugins>
+      </reporting> -->
   
 </project>

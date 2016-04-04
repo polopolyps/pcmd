@@ -26,6 +26,7 @@
     <polopoly.import-scanIntervalSeconds>${polopoly.scanIntervalSeconds}</polopoly.import-scanIntervalSeconds>
     <import.password>sysadmin</import.password>
     <import.username>sysadmin</import.username>
+    <jetty.port>8080</jetty.port>
     <jetty-plugin.version>7.4.5-polopoly-1.13</jetty-plugin.version>
   </properties>
 

@@ -224,7 +224,7 @@ public class GraphContentToolIT extends AbstractIntegrationTestBase {
         Main.execute(new GraphContentTool(), context, arguments);
 
         assertTrue(out.toString().contains("\"pcmd.Image\" -> \"p.SelectableSubField\" [style = \"dotted\""));
-        assertTrue(out.toString()
+        assertTrue("was: " + out.toString(), out.toString()
             .contains("\"com.polopoly.pcmd.tool.GraphContentToolIT.image\" -> \"subject-15093\" []"));
     }
 }

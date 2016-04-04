@@ -82,7 +82,7 @@ public class SolrInspectToolIT extends AbstractIntegrationTestBase {
         arguments.setContext(context);
 
         Main.execute(new SolrInspectTool(), context, arguments);
-        assertTrue(out.toString().contains("eventId"));
+        assertTrue("Output should have string eventId", out.toString().contains("eventId"));
     }
 
     @Test

@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<batch xmlns="http://www.polopoly.com/polopoly/cm/xmlio">
+  <content clear="true">
+    <metadata>
+      <contentid>
+        <major>AppConfig</major>
+        <externalid>p.IndexMapping-public-pcmd.StandardArticle</externalid>
+      </contentid>
+      <input-template>
+        <externalid>p.IndexMapping</externalid>
+      </input-template>
+    </metadata>
+    <component group="polopoly.Content" name="name">Public index mappings for pcmd Image</component>
+    <component group="mapping" name="name">title</component>
+  </content>
+  <content clear="true">
+    <metadata>
+      <contentid>
+        <major>AppConfig</major>
+        <externalid>p.IndexMapping-internal-pcmd.StandardArticle</externalid>
+      </contentid>
+      <input-template>
+        <externalid>p.IndexMapping</externalid>
+      </input-template>
+    </metadata>
+    <component group="polopoly.Content" name="name">Internal index mappings for contests</component>
+    <component group="mapping" name="name">title</component>
+  </content>
+  <content>
+    <metadata>
+      <contentid>
+        <major>AppConfig</major>
+        <externalid>p.PublicIndexDefinition</externalid>
+      </contentid>
+    </metadata>
+    <contentref group="mappers" name="pcmd.StandardArticle">
+      <contentid>
+        <externalid>p.IndexMapping-public-pcmd.StandardArticle</externalid>
+      </contentid>
+    </contentref>
+  </content>
+  <content>
+    <metadata>
+      <contentid>
+        <major>AppConfig</major>
+        <externalid>p.InternalIndexDefinition</externalid>
+      </contentid>
+    </metadata>
+    <contentref group="mappers" name="pcmd.StandardArticle">
+      <contentid>
+        <externalid>p.IndexMapping-internal-pcmd.StandardArticle</externalid>
+      </contentid>
+    </contentref>
+  </content>
+</batch>
