@@ -76,13 +76,13 @@ public class InspectTool implements Tool<InspectParameters> {
 				if (parameters.isStopOnException()) {
 					throw new CMRuntimeException(e);
 				} else {
-					context.getLogger().error(content.getContentId().getContentIdString() + ": " + e);
+					context.getLogger().error(content.getContentId().getContentIdString(), e);
 				}
 			} catch (IOException e) {
 				if (parameters.isStopOnException()) {
 					throw new CMRuntimeException(e);
 				} else {
-					context.getLogger().error(content.getContentId().getContentIdString() + ": " + e);
+					context.getLogger().error(content.getContentId().getContentIdString() , e);
 				}
 			}
 		}

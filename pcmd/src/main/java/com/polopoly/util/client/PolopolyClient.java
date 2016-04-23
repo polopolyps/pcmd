@@ -84,7 +84,7 @@ public class PolopolyClient {
 
 	private PolopolyClientLogger logger = new PolopolyClientLogger() {
 		public void info(String logMessage) {
-			javaUtilLogger.log(Level.INFO, logMessage);
+			System.out.println(logMessage);
 		}
 
 		@Override
@@ -93,8 +93,8 @@ public class PolopolyClient {
 		}
 
 		@Override
-		public void error(String logMessage) {
-			// nothing
+		public void error(String logMessage, Throwable e) {
+			System.err.println("ERROR:"+ logMessage + ";  execute  with the  --verbose flag for more info.");
 		}
 	};
 
@@ -284,7 +284,7 @@ public class PolopolyClient {
 				applicationComponentProvider.add(app);
 				logger.debug("Added application compoment: "+ applicationComponentProvider);
 				} catch(IllegalApplicationStateException e) {
-					logger.error(e.getMessage());
+					logger.error(e.getMessage(), e);
 				}
 			}
 			

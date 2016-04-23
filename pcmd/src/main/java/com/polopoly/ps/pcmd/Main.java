@@ -1,6 +1,5 @@
 package com.polopoly.ps.pcmd;
 
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,10 +15,8 @@ import com.polopoly.ps.pcmd.argument.Parameters;
 import com.polopoly.ps.pcmd.tool.DoesNotRequireRunningPolopoly;
 import com.polopoly.ps.pcmd.tool.HelpParameters;
 import com.polopoly.ps.pcmd.tool.HelpTool;
-import com.polopoly.ps.pcmd.tool.RequiresHttpFileService;
 import com.polopoly.ps.pcmd.tool.RequiresIndexServer;
 import com.polopoly.ps.pcmd.tool.RequiresPollServer;
-import com.polopoly.ps.pcmd.tool.RequiresSolr;
 import com.polopoly.ps.pcmd.tool.RequiresStatisticsServer;
 import com.polopoly.ps.pcmd.util.ToolRetriever;
 import com.polopoly.ps.pcmd.util.ToolRetriever.NoSuchToolException;
@@ -79,11 +76,8 @@ public class Main {
             try {
                 execute(tool, context, arguments);
             } catch (FatalToolException e) {
-                System.err.println(e.getMessage());
-
-                if (e.isPrintStackTrace() || arguments.getFlag(ClientFromArgumentsConfigurator.VERBOSE, false)) {
-                    e.printStackTrace();
-                }
+            	
+            	context.getLogger().error(e.getMessage(), e);
 
                 System.exit(e.getExitCode());
             } catch (CMRuntimeException e) {

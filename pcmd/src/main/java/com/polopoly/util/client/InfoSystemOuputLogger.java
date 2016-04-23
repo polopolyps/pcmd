@@ -3,7 +3,7 @@ package com.polopoly.util.client;
 public class InfoSystemOuputLogger extends DebugSystemOuputLogger {
 
 	public void info(String logMessage) {
-		System.err.println(logMessage);
+		System.out.println(logMessage);
 	}
 
 	@Override
@@ -12,7 +12,7 @@ public class InfoSystemOuputLogger extends DebugSystemOuputLogger {
 	}
 
 	@Override
-	public void error(String logMessage) {
+	public void error(String logMessage, Throwable e) {
 		System.err.println("ERROR: " + logMessage);
 	}
 

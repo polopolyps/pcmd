@@ -19,12 +19,12 @@
       <item name="Atex" href="http://atex.com" />
     </links>
 
-    <menu name="Maven 2.0">
+    <menu name="Maven 2.0" inherit="top">
       <item name="Introduction" href="index.html"/>
       <item name="Download" href="download.html"/>
     </menu>
 
-    <menu ref="reports"/>
+    <menu ref="reports" inherit="top"/>
 
 
   </body>

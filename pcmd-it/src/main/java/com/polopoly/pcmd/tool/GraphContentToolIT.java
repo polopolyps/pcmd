@@ -66,12 +66,12 @@ public class GraphContentToolIT extends AbstractIntegrationTestBase {
 
         Main.execute(new GraphContentTool(), context, arguments);
 
-        assertTrue(out.toString().contains("example.Image"));
+        assertTrue(out.toString().contains("pcmd.Image"));
         assertTrue(out.toString().contains("p.Column"));
         assertTrue(out.toString().contains("p.TreeCategory"));
         assertTrue(out.toString().contains("subject-15093"));
         assertTrue(out.toString().contains("p.TextInput"));
-        assertFalse(out.toString().contains("\"example.Image\" -> \"p.SelectableSubField\" [style = \"dotted\""));
+        assertFalse(out.toString().contains("\"pcmd.Image\" -> \"p.SelectableSubField\" [style = \"dotted\""));
         assertFalse(out.toString()
             .contains("\"com.polopoly.pcmd.tool.GraphContentToolIT.image\" -> \"subject-15093\" []"));
         assertFalse(err.toString()

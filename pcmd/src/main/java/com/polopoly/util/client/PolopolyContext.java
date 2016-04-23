@@ -100,7 +100,7 @@ public class PolopolyContext {
 			}
 			
 			@Override
-			public void error(String logMessage) {
+			public void error(String logMessage, Throwable e) {
 				//nothing goes here
 			}
 			
@@ -125,14 +125,16 @@ public class PolopolyContext {
 
     public PolopolyContext(CmClient cmClient, RmiSearchClient searchClient, PollClient pollClient,
                            Map<String, SolrSearchClient> solrSearchClients, PolopolyClientLogger polopolyClientLogger) {
-        this.client = cmClient;
+       
 
         if (cmClient != null) {
+        	    this.client = cmClient;
             this.server = cmClient.getPolicyCMServer();
             this.cmServer = cmClient.getCMServer();
+            this.userServer = cmClient.getUserServer();
         }
 
-        this.userServer = cmClient.getUserServer();
+      
         this.pollClient = pollClient;
         this.searchClient = searchClient;
         this.solrSearchClients = solrSearchClients;
@@ -530,7 +532,7 @@ public class PolopolyContext {
 				}
 				
 				@Override
-				public void error(String logMessage) {
+				public void error(String logMessage, Throwable e) {
 					System.err.println(logMessage);
 					
 				}

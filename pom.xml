@@ -212,10 +212,13 @@
     <groupId>com.github.github</groupId>
     <artifactId>site-maven-plugin</artifactId>
     <version>0.9</version>
+    
     <executions>
         <execution>
             <goals>
                 <goal>site</goal>
+                
+                
             </goals>
             <!-- select the Maven phase in which the plugin will be executed -->
             <phase>site-deploy</phase>
@@ -246,24 +249,29 @@
   
   </profiles>
   
-   <!-- <reporting>
+    <reporting>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.6</version>
+        <version>2.9</version>
         <reportSets>
         <reportSet>
-        
-        <reports>
-        <report>index</report>
-        <report>dependency-info</report>
+        <reports>     
+              <report>index</report>
+              <report>summary</report>      
+              <report>modules</report>
+              <report>dependency-info</report>
+              <report>dependencies</report>
+              <report>cim</report>
+              <report>issue-tracking</report>
+              <report>scm</report>
         </reports>
         </reportSet>
         </reportSets>
 
       </plugin>
       </plugins>
-      </reporting> -->
+      </reporting> 
   
 </project>

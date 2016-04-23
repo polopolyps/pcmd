@@ -9,12 +9,12 @@ public class DebugSystemOuputLogger implements PolopolyClientLogger {
 	@Override
 	public void debug(String logMessage) {
 		System.err.println("DEBUG: " + logMessage);
-
 	}
 
 	@Override
-	public void error(String logMessage) {
+	public void error(String logMessage, Throwable e) {
 		System.err.println("ERROR: " + logMessage);
+		e.printStackTrace(System.err);
 	}
 
 }

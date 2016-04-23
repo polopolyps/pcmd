@@ -1,6 +1,8 @@
 package com.polopoly.pcmd.tool;
 
+
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.PrintStream;
@@ -18,6 +20,7 @@ import com.google.inject.Inject;
 import com.polopoly.cm.ContentId;
 import com.polopoly.cm.ExternalContentId;
 import com.polopoly.cm.client.CMException;
+import com.polopoly.cm.policy.Policy;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.ps.pcmd.Main;
 import com.polopoly.ps.pcmd.argument.ArgumentException;
@@ -46,6 +49,8 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
     @Before
     public void setup() {
         context = new PolopolyContext(userServer, cmServer);
+        
+        
 
         out = new StringBuffer();
         System.setOut(new PrintStream(new StringBufferOutputStream(out)));
@@ -144,8 +149,14 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
                 .getPolicy(new ExternalContentId(SearchToolIT.class.getName() + ".article"));
 
         ContentId imageMetadataRef = articlePolicy.getContentReference("images", "0");
-
-        assertTrue(out.toString().contains(imageMetadataRef.getContentIdString()));
+        
+        assertNotNull(imageMetadataRef);
+        
+       String externalId = articlePolicy.getContent().getExternalId().getExternalId();
+        
+        
+        String string = out.toString();
+		assertTrue(string.contains(externalId));
     }
 
     @Test
@@ -193,8 +204,13 @@ public class SearchToolIT extends AbstractIntegrationTestBase {
                 .getPolicy(new ExternalContentId(SearchToolIT.class.getName() + ".article"));
 
         ContentId imageMetadataRef = articlePolicy.getContentReference("images", "0");
+        Policy policy = cmServer.getPolicy(imageMetadataRef.getContentId().getContentId());
+        
+        String externalId = policy.getContent().getExternalId().getExternalId();
 
-        assertTrue(out.toString().contains(imageMetadataRef.getContentIdString()));
+        String string = out.toString();
+        
+		assertTrue(string.contains(externalId));
     }
 
     @Test
