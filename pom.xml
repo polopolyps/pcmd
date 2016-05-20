@@ -10,16 +10,16 @@
     <name>Atex</name>
     <url>http://atex.com</url>
   </organization>
-  
+
   <issueManagement>
     <system>Jira</system>
     <url>http://support.atex.com/jira/browse/GLOBALPS</url>
   </issueManagement>
-  
-  
-  
+
+
+
   <description>Polopoly Command Tool</description>
-  
+
   <ciManagement>
     <system>travis</system>
     <url>https://travis-ci.org/polopolyps/pcmd</url>
@@ -33,7 +33,7 @@
       </notifier>
     </notifiers>
   </ciManagement>
-  
+
   <properties>
     <polopoly.version>10.14.0</polopoly.version>
     <solr.version>4.5.0</solr.version>
@@ -44,6 +44,7 @@
   </properties>
   <modules>
     <module>pcmd</module>
+    <module>components</module>
     <module>pcmd-it</module>
     <module>pcmd-clients</module>
     <module>pcmd-client-archetype-simple</module>
@@ -76,7 +77,7 @@
       <name>Polopoly PS</name>
       <url>http://maven.polopoly.com/nexus/content/groups/polopoly-ps</url>
     </repository>
-    
+
     <repository>
           <id>sonatype-forge</id>
           <url>https://repository.sonatype.org/content/groups/forge</url>
@@ -96,7 +97,7 @@
       <url>http://maven.polopoly.com/nexus/content/groups/polopoly-ps</url>
     </pluginRepository>
   </pluginRepositories>
-  
+
   <build>
     <pluginManagement>
       <plugins>
@@ -156,7 +157,7 @@
       </plugins>
     </pluginManagement>
     <plugins>
-    <plugin>    
+    <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-site-plugin</artifactId>
               <version>3.3</version>
@@ -176,18 +177,18 @@
           </tags>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
       </plugin>
-      
-      
+
+
 
     </plugins>
   </build>
-  
-  
+
+
  <!--  <reporting>
     <plugins>
       <plugin>
@@ -197,28 +198,28 @@
       </plugin>
     </plugins>
   </reporting> -->
-  
-  
+
+
   <profiles>
-  
+
   <profile>
   <id>site-deploy</id>
-  
+
   <build>
   <plugins>
-  
+
   <plugin>
     <!-- Deploy the web site -->
     <groupId>com.github.github</groupId>
     <artifactId>site-maven-plugin</artifactId>
     <version>0.9</version>
-    
+
     <executions>
         <execution>
             <goals>
                 <goal>site</goal>
-                
-                
+
+
             </goals>
             <!-- select the Maven phase in which the plugin will be executed -->
             <phase>site-deploy</phase>
@@ -237,18 +238,18 @@
         </execution>
     </executions>
 </plugin>
-  
+
   </plugins>
-  
+
   </build>
-  
- 
-  
-  
+
+
+
+
   </profile>
-  
+
   </profiles>
-  
+
     <reporting>
     <plugins>
       <plugin>
@@ -257,9 +258,9 @@
         <version>2.9</version>
         <reportSets>
         <reportSet>
-        <reports>     
+        <reports>
               <report>index</report>
-              <report>summary</report>      
+              <report>summary</report>
               <report>modules</report>
               <report>dependency-info</report>
               <report>dependencies</report>
@@ -272,6 +273,6 @@
 
       </plugin>
       </plugins>
-      </reporting> 
-  
+      </reporting>
+
 </project>

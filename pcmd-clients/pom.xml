@@ -42,6 +42,7 @@
     <module>10.14.0</module>
     <module>10.14.0-fp1</module>
     <module>10.16.0</module>
+    <module>10.16.1</module>
   </modules>
 
   <dependencies>

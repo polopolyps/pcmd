@@ -19,6 +19,6 @@ public abstract class AbstractSolrSearchClientApplicationComponentProvider imple
 		appication.addApplicationComponent(searchClient);
 	}
 	
-	abstract String getIndexName();
+	public abstract String getIndexName();
 	
 }

@@ -3,7 +3,7 @@ package com.polopoly.pcmd.application;
 public class SolrInternalSearchClientApplicationComponentProvider extends AbstractSolrSearchClientApplicationComponentProvider {
 
 	@Override
-	String getIndexName() {
+	public String getIndexName() {
 		return "Internal";
 	}
 
