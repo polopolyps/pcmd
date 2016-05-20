@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.polopoly.ps.tools</groupId>
   <artifactId>pcmd-top</artifactId>
-  <version>3.2-beta</version>
+  <version>3.3-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Polopoly Command Tool - TOP</name>
   <organization>
@@ -53,7 +53,7 @@
     <url>https://github.com/polopolyps/pcmd</url>
     <connection>scm:git:https://github.com/polopolyps/pcmd.git</connection>
     <developerConnection>scm:git:https://github.com/polopolyps/pcmd.git</developerConnection>
-    <tag>RELEASE3.2-beta</tag>
+    <tag>HEAD</tag>
   </scm>
   <distributionManagement>
     <repository>
