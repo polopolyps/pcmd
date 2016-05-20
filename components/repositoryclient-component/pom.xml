@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>com.polopoly.ps.tools</groupId>
 		<artifactId>components</artifactId>
-		<version>3.2-SNAPSHOT</version>
+		<version>3.2-beta</version>
 	</parent>
   
   <dependencies>

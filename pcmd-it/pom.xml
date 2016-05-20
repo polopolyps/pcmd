@@ -8,7 +8,7 @@
   <parent>
     <groupId>com.polopoly.ps.tools</groupId>
     <artifactId>pcmd-top</artifactId>
-    <version>3.2-SNAPSHOT</version>
+    <version>3.2-beta</version>
   </parent>
   <name>Polopoly Command Tool - Integration test</name>
 
@@ -115,7 +115,7 @@
     <dependency>
       <groupId>com.polopoly.ps.tools</groupId>
       <artifactId>pcmd</artifactId>
-      <version>3.2-SNAPSHOT</version>
+      <version>3.2-beta</version>
     </dependency>
   </dependencies>
 
