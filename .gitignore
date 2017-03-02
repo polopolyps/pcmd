@@ -2,3 +2,8 @@
 .project
 target
 .settings
+.idea
+# jenv
+.java-version
+# mvnenv
+.mvn-version
