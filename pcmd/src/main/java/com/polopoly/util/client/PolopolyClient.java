@@ -8,6 +8,7 @@ import java.lang.management.ManagementFactory;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -140,15 +141,19 @@ public class PolopolyClient {
 
 	private boolean testConnection(String url) {
 		try {
-			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			URLConnection connection = new URL(url).openConnection();
 			connection.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
 			connection.setReadTimeout(DEFAULT_CONNECTION_TIMEOUT);
 			connection.connect();
 
-			if (connection.getResponseCode() >= 400 && connection.getResponseCode() < 600) {
-				connection.disconnect();
-				return false;
+			if (connection instanceof HttpURLConnection) {
+			    final HttpURLConnection httpConnection = (HttpURLConnection) connection;
+				if (httpConnection.getResponseCode() >= 400 && httpConnection.getResponseCode() < 600) {
+					httpConnection.disconnect();
+					return false;
+				}
 			}
+
 			
 			 InputStream inputStream = connection.getInputStream();
 			 String string = IOUtils.toString(inputStream);
@@ -166,9 +171,12 @@ public class PolopolyClient {
 			 } 
 			 
 			 logger.debug("------------------------------------------------------------------------------------------------------------------");
-			 
-             connection.disconnect();
-           
+
+			if (connection instanceof HttpURLConnection) {
+				final HttpURLConnection httpConnection = (HttpURLConnection) connection;
+				httpConnection.disconnect();
+			}
+
 			return true;
 		} catch (MalformedURLException e) {
 			javaUtilLogger.log(Level.WARNING, "URL(" + url + ") is invalid: " + e.getMessage(), e);
@@ -282,21 +290,29 @@ public class PolopolyClient {
 			for (ApplicationComponentProvider applicationComponentProvider : applicationComponentProviders) {
 				try {
 				applicationComponentProvider.add(app);
-				logger.debug("Added application compoment: "+ applicationComponentProvider);
+				logger.debug("Added application component: "+ applicationComponentProvider);
 				} catch(IllegalApplicationStateException e) {
 					logger.error(e.getMessage(), e);
 				}
 			}
-			
+
+			logger.debug("read ConnectionProperties");
+
 			// Read connection properties.
 			app.readConnectionProperties(connectionProperties);
-			
+
+			logger.debug("application init");
+
 			// Init.
 			app.init();
-			
+
+			logger.debug("init context");
+
 			PolopolyContext context = new PolopolyContext(app, getLogger());
 
 			login(context);
+
+			logger.debug("invoke listeners");
 
 			for (ConnectListener listener : getConnectListeners()) {
 				listener.connectedToPolopoly(context);
@@ -387,7 +403,7 @@ public class PolopolyClient {
 
 	/**
 	 * Intended for overriding.
-	 * @param connectionProperties 
+	 * @param cmClient
 	 */
 	protected void setUpCmClient(CmClientBase cmClient) {
 	}
