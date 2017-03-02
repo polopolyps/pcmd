@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <name>Polopoly Command Tool - Clients Top</name>
   <artifactId>pcmd-clients</artifactId>
@@ -9,7 +8,7 @@
   <parent>
     <groupId>com.polopoly.ps.tools</groupId>
     <artifactId>pcmd-top</artifactId>
-    <version>3.3-SNAPSHOT</version>
+    <version>3.3</version>
   </parent>
 
   <properties>
@@ -148,8 +147,7 @@
               <webApp>server-content-hub</webApp>
             </excludedWebApps>
             <connectors>
-              <connector
-                implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+              <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
                 <port>${jetty.port}</port>
                 <maxIdleTime>60000</maxIdleTime>
                 <requestHeaderSize>20000</requestHeaderSize>
@@ -190,8 +188,7 @@
               </systemProperty>
             </systemProperties>
             <externalArtifactContextHandlers>
-              <contextHandler
-                implementation="org.mortbay.jetty.plugin.JettyWebAppContext">
+              <contextHandler implementation="org.mortbay.jetty.plugin.JettyWebAppContext">
                 <warArtifact>
                   <groupId>com.polopoly</groupId>
                   <artifactId>solr-war</artifactId>
@@ -200,8 +197,7 @@
                 </warArtifact>
                 <contextPath>/solr</contextPath>
               </contextHandler>
-              <contextHandler
-                implementation="org.mortbay.jetty.plugin.JettyWebAppContext">
+              <contextHandler implementation="org.mortbay.jetty.plugin.JettyWebAppContext">
                 <warArtifact>
                   <groupId>com.polopoly.ps.tools</groupId>
                   <artifactId>server-solr-indexer</artifactId>
