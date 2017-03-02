@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>com.polopoly.ps.tools</groupId>
 		<artifactId>pcmd-clients</artifactId>
-		<version>3.3</version>
+		<version>3.4-SNAPSHOT</version>
 	</parent>
 
 	<properties>
